@@ -1,0 +1,61 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="home-toolbar px-8">
+    <ion-button slot="start" size="large" color="light">
+      <ion-icon slot="icon-only" name="settings" class="text-2xl"></ion-icon>
+    </ion-button>
+    <ion-avatar slot="end" class="relative">
+      <img src="/assets/avatar.jpg" alt="avatar" class="border-black">
+      <div
+        class="absolute h-[3.75rem] w-[3.75rem] bg-primary -top-0.5 -right-0.5 -z-10 rounded-[1.075rem]"
+        style="background: conic-gradient(var(--ion-color-light) 0 180deg, var(--ion-color-primary) 180deg 360deg)"></div>
+      <div class="font-semibold text-sm px-1 rounded absolute -bottom-2.5 left-1/2 transform -translate-x-1/2"
+           style="background: var(--ion-color-primary); color: var(--ion-color-primary-contrast);">1
+      </div>
+    </ion-avatar>
+  </ion-toolbar>
+</ion-header>
+<ion-content [fullscreen]="true">
+  <div class="flex flex-col gap-6 w-full items-center shrink-0">
+    <section class="px-8 flex items-center self-stretch">
+        <span class="text-4xl font-semibold">
+            <div class="text-primary">Witaj,</div>
+            <div>Imię</div>
+        </span>
+    </section>
+    <section class="px-8 gap-1 flex items-center flex-col w-full">
+      <div class="flex items-center self-stretch font-semibold text-base text-primary">
+        POZIOM 22
+      </div>
+      <ion-progress-bar [value]="0.25" class="rounded-full h-3"></ion-progress-bar>
+      <div class="flex justify-end items-center gap-2 self-stretch">
+        <div class="text-xs">
+          brakuje 25PD do
+        </div>
+        <div class="text-primary text-sm">
+          POZIOMU 23
+        </div>
+      </div>
+    </section>
+    <app-home-calendar class="flex px-4 flex-col items-center gap-5 self-stretch"></app-home-calendar>
+    <section class="flex flex-col self-stretch gap-6">
+      <div class="text-2xl font-semibold px-8">Odkryj plan dla siebie</div>
+      <div class="flex self-stretch gap-4 overflow-x-scroll snap-x scroll-px-4 px-4">
+        <ion-card class="workout-card snap-start min-w-60" *ngFor="let _ of [1, 2, 3, 4, 5]">
+          <ion-card-header>
+            <ion-card-title>Nazwa Planu</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="flex items-center self-stretch gap-2">
+              <ion-icon name="flash"></ion-icon>
+              <div class="text-base">10 ćwiczeń</div>
+            </div>
+            <div class="flex items-center self-stretch gap-2">
+              <ion-icon name="time-outline"></ion-icon>
+              <div class="text-base">45 minut</div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </section>
+  </div>
+</ion-content>

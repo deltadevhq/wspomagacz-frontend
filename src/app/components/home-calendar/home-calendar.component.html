@@ -1,0 +1,50 @@
+<div class="flex justify-between items-center self-stretch">
+  <ion-button fill="clear"
+              color="dark"
+              *ngIf="weekAgo$ | async as weekAgo"
+              (click)="setWeekFirstDay(weekAgo)">
+    <ion-icon slot="icon-only" name="caret-back"></ion-icon>
+  </ion-button>
+  <ion-button fill="clear" color="dark" (click)="resetWeek()">
+    {{
+      selectedDay$.value.toLocaleDateString('pl-PL', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      })
+    }}
+  </ion-button>
+  <ion-button fill="clear"
+              color="dark"
+              *ngIf="weekAhead$ | async as weekAhead"
+              (click)="setWeekFirstDay(weekAhead)">
+    <ion-icon slot="icon-only" name="caret-forward"></ion-icon>
+  </ion-button>
+</div>
+<div class="flex justify-between items-center self-stretch overflow-y-clip">
+  <ng-container *ngIf="weekDays$ | async as currentWeekDays">
+    <app-home-calendar-day
+      *ngFor="let day of currentWeekDays"
+      [day]="day"
+      [color]="(selectedDay$ | async)?.toDateString() === day.toDateString() ? 'primary' : 'medium'"
+      [fill]="(selectedDay$ | async)?.toDateString() === day.toDateString() ? 'solid' : 'clear'"
+      (click)="setSelectedDay(day)"
+      class="flex flex-col items-center gap-2"
+    ></app-home-calendar-day>
+  </ng-container>
+</div>
+<div>
+  <div *ngIf="selectedDayWorkout$ | async as selectedWorkout; else noWorkouts">
+    {{ selectedWorkout.name }}
+  </div>
+  <ng-template #noWorkouts>
+    <div class="flex justify-center items-center gap-2">
+      <ion-icon name="alert-circle-outline" color="medium" class="text-2xl"></ion-icon>
+      <ion-text class="text-center" color="medium">Nie zaplanowałeś treningu na ten dzień.</ion-text>
+    </div>
+  </ng-template>
+</div>
+<ion-button class="w-full">
+  Zaplanuj trening
+</ion-button>

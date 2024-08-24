@@ -1,0 +1,10 @@
+ion-avatar {
+    --border-radius: 1rem;
+    width: 3.5rem;
+    height: 3.5rem;
+    margin-right: 0.125rem;
+
+    img {
+        border: 2px var(--ion-background-color) solid;
+    }
+}

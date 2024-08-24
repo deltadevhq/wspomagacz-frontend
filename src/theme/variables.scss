@@ -1,0 +1,36 @@
+// For information on how to create your own theme, please see:
+// http://ionicframework.com/docs/theming/
+
+@import url('https://fonts.googleapis.com/css2?family=Saira:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+    font-family: 'Saira', sans-serif;
+}
+
+:root {
+    --ion-color-primary: #F87171;
+    --ion-color-primary-rgb: 248, 113, 113;
+    --ion-color-primary-contrast: #121212;
+    --ion-color-primary-contrast-rgb: 18, 18, 18;
+    --ion-color-primary-shade: #da6363;
+    --ion-color-primary-tint: #f97f7f;
+}
+
+ion-button {
+    --border-radius: 1rem;
+    --box-shadow: none;
+    --padding-bottom: 1rem;
+    --padding-top: 1rem;
+}
+
+ion-card.workout-card {
+    border-radius: 1rem;
+    box-shadow: none;
+    margin: 0;
+}
+
+ion-toolbar.home-toolbar {
+    --background: var(--ion-background-color);
+    --padding-top: 2rem;
+    --padding-bottom: 2rem;
+}
