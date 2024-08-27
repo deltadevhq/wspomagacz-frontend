@@ -31,19 +31,28 @@ export enum UserGender {
     NotSpecified = 3,
 }
 
+interface UserWeight {
+    weight: number;
+    date: Date;
+}
+
 export interface User {
     id: number;
     username: string;
-    email: string;
+    display_name: string;
     gender: UserGender;
+    birthday: Date;
     status: UserStatus;
-    last_logged_at: Date | null;
+    level: number;
+    exp: number;
+    weights: UserWeight[];
+    height: number;
     created_at: Date;
-    modified_at: Date | null;
 }
 
 export interface Workout {
     id: number;
+    related_workout_id: number | null;
     user: User;
     name: string;
     date: Date;

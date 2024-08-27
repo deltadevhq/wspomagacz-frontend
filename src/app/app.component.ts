@@ -12,7 +12,9 @@ import {
     personOutline,
     settings,
     timeOutline,
-    trophyOutline
+    trophyOutline,
+    playCircleOutline,
+    checkmarkCircleOutline
 } from "ionicons/icons";
 
 @Component({
@@ -35,6 +37,8 @@ export class AppComponent {
             caretForward,
             cloudyOutline,
             alertCircleOutline,
+            playCircleOutline,
+            checkmarkCircleOutline
         })
     }
 }

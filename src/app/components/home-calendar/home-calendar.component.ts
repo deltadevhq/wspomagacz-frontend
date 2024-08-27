@@ -1,10 +1,17 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
-import {IonicModule} from "@ionic/angular";
-import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
-import {HomeCalendarDayComponent} from "./home-calendar-day/home-calendar-day.component";
-import {BehaviorSubject, map} from "rxjs";
-import {workouts} from "../../data/workouts";
-import {FormsModule} from "@angular/forms";
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { IonicModule } from '@ionic/angular';
+import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
+import {
+    BehaviorSubject,
+    catchError,
+    map,
+    Observable,
+    of,
+    switchMap,
+} from 'rxjs';
+import { workouts } from '../../data/workouts';
+import { FormsModule } from '@angular/forms';
+import { Workout } from '../../Workout';
 
 @Component({
     standalone: true,
@@ -12,66 +19,88 @@ import {FormsModule} from "@angular/forms";
     templateUrl: './home-calendar.component.html',
     styleUrls: ['./home-calendar.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        IonicModule,
-        NgForOf,
-        HomeCalendarDayComponent,
-        NgIf,
-        FormsModule,
-        AsyncPipe
-    ]
+    imports: [IonicModule, NgForOf, NgIf, FormsModule, AsyncPipe],
 })
 export class HomeCalendarComponent {
     protected readonly today: Date = new Date();
 
-    protected selectedDay$ = new BehaviorSubject<Date>(new Date());
-    protected selectedDayWorkout$ = this.selectedDay$.pipe(
-        map(day => {
-            return workouts.find(workout => {
-                return workout.date.toDateString() === day.toDateString();
-            });
-        }),
-    );
+    protected readonly selectedDay$: BehaviorSubject<Date> =
+        new BehaviorSubject<Date>(new Date());
+    protected readonly weekFirstDay$: BehaviorSubject<Date> =
+        new BehaviorSubject<Date>(this.calculateFirstWeekDay(this.today));
 
-    protected weekFirstDay$ = new BehaviorSubject<Date>(this.calculateFirstWeekDay(this.today));
-    protected weekDays$ = this.weekFirstDay$.pipe(
-        map(firstDay => {
-            return Array.from({length: 7}, (_, i) => {
+    protected readonly selectedDayWorkout$: Observable<Workout | undefined> =
+        this.selectedDay$.pipe(
+            map((day) => {
+                // TODO: Replace with API call from WorkoutService
+                return workouts.find((workout) => {
+                    return workout.date.toDateString() === day.toDateString();
+                });
+            }),
+        );
+
+    protected readonly duration$: Observable<number | null> =
+        this.selectedDayWorkout$.pipe(
+            switchMap((workout) => {
+                if (workout) {
+                    if (workout.started_at && workout.finished_at) {
+                        return of(
+                            this.calculateDuration(
+                                workout.started_at,
+                                workout.finished_at,
+                            ),
+                        );
+                    }
+
+                    // TODO: Replace with API call from WorkoutService
+                    const relatedWorkout = workouts.find(
+                        (w) => w.id === workout.related_workout_id,
+                    );
+
+                    if (
+                        relatedWorkout &&
+                        relatedWorkout.started_at &&
+                        relatedWorkout.finished_at
+                    ) {
+                        return of(
+                            this.calculateDuration(
+                                relatedWorkout.started_at,
+                                relatedWorkout.finished_at,
+                            ),
+                        );
+                    }
+                }
+
+                return of(null);
+            }),
+            catchError(() => of(null)),
+        );
+
+    protected readonly weekDays$: Observable<Date[]> = this.weekFirstDay$.pipe(
+        map((firstDay) => {
+            return Array.from({ length: 7 }, (_, i) => {
                 const day = new Date(firstDay);
                 day.setDate(firstDay.getDate() + i);
                 return day;
             });
-        })
-    )
+        }),
+    );
 
-    protected weekAgo$ = this.weekFirstDay$.pipe(
-        map(day => {
+    protected readonly weekAgo$: Observable<Date> = this.weekFirstDay$.pipe(
+        map((day) => {
             const weekAgo = new Date(day);
             weekAgo.setDate(day.getDate() - 7);
             return this.calculateFirstWeekDay(weekAgo);
-        })
+        }),
     );
 
-    protected weekAhead$ = this.weekFirstDay$.pipe(
-        map(day => {
+    protected readonly weekAhead$: Observable<Date> = this.weekFirstDay$.pipe(
+        map((day) => {
             const weekAhead = new Date(day);
             weekAhead.setDate(day.getDate() + 7);
             return this.calculateFirstWeekDay(weekAhead);
-        })
+        }),
     );
-
-    protected resetWeek() {
-        this.setWeekFirstDay(this.calculateFirstWeekDay(this.today));
-        this.setSelectedDay(this.today);
-    }
-
-    protected setSelectedDay(day: Date) {
-        this.selectedDay$.next(day);
-    }
-
-    protected setWeekFirstDay(date: Date) {
-        this.weekFirstDay$.next(date);
-    }
 
     protected calculateFirstWeekDay(date: Date): Date {
         const firstWeekDay = new Date(date.getTime());
@@ -79,5 +108,11 @@ export class HomeCalendarComponent {
         const diff = firstWeekDay.getDate() - day + (day === 0 ? -6 : 1);
         firstWeekDay.setDate(diff);
         return firstWeekDay;
+    }
+
+    protected calculateDuration(startedAt: Date, finishedAt: Date): number {
+        return Math.round(
+            (finishedAt.getTime() - startedAt.getTime()) / 1000 / 60,
+        );
     }
 }
