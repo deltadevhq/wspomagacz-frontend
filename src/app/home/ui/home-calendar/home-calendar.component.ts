@@ -9,9 +9,9 @@ import {
     of,
     switchMap,
 } from 'rxjs';
-import { workouts } from '../../data/workouts';
+import { workouts } from '../../../shared/data/workouts';
 import { FormsModule } from '@angular/forms';
-import { Workout } from '../../Workout';
+import { Workout } from '../../../shared/models/Workout';
 
 @Component({
     standalone: true,
