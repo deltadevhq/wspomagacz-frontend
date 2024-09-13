@@ -1,0 +1,45 @@
+<ion-header class="ion-no-border">
+    <ion-toolbar class="home-toolbar px-8">
+        <app-avatar-level-progress slot="end"
+            [level]="authService.user()?.level ?? 0"
+            [exp]="authService.user()?.exp ?? 0">
+        </app-avatar-level-progress>
+    </ion-toolbar>
+</ion-header>
+<ion-content [fullscreen]="true">
+    <div class="flex flex-col gap-6 w-full items-center shrink-0 pb-4">
+        <section class="px-8 flex items-center self-stretch">
+        <span class="text-4xl font-semibold">
+            <div class="text-primary">Witaj,</div>
+            <div>{{ authService.user()?.display_name }}</div>
+        </span>
+        </section>
+        <app-level-progress
+            class="px-8 gap-1 flex items-center flex-col w-full"
+            [level]="authService.user()?.level ?? 0"
+            [exp]="authService.user()?.exp ?? 0">
+        </app-level-progress>
+        <app-home-calendar class="flex px-4 flex-col items-center gap-5 self-stretch"></app-home-calendar>
+        <section class="flex flex-col self-stretch gap-6">
+            <div class="text-2xl font-semibold px-8">Odkryj plan dla siebie</div>
+            <div class="flex self-stretch gap-4 overflow-x-scroll snap-x scroll-px-4 px-4">
+                <ion-card class="workout-card snap-start min-w-60" *ngFor="let _ of [1, 2, 3, 4, 5]">
+                    <ion-card-header>
+                        <ion-card-title>Nazwa Planu</ion-card-title>
+                    </ion-card-header>
+                    <ion-card-content>
+                        <div class="flex items-center self-stretch gap-2">
+                            <ion-icon name="flash"></ion-icon>
+                            <div class="text-base">10 ćwiczeń</div>
+                        </div>
+                        <div class="flex items-center self-stretch gap-2">
+                            <ion-icon name="time-outline"></ion-icon>
+                            <div class="text-base">45 minut</div>
+                        </div>
+                    </ion-card-content>
+                </ion-card>
+            </div>
+        </section>
+    </div>
+</ion-content>
+
