@@ -1,6 +1,6 @@
-import {Component} from '@angular/core';
-import {IonApp, IonRouterOutlet} from '@ionic/angular/standalone';
-import {addIcons} from "ionicons";
+import { Component } from '@angular/core';
+import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
 import {
     alertCircleOutline,
     caretBack,
@@ -14,8 +14,9 @@ import {
     timeOutline,
     trophyOutline,
     playCircleOutline,
-    checkmarkCircleOutline
-} from "ionicons/icons";
+    checkmarkCircleOutline,
+    alertCircle,
+} from 'ionicons/icons';
 
 @Component({
     selector: 'app-root',
@@ -38,7 +39,8 @@ export class AppComponent {
             cloudyOutline,
             alertCircleOutline,
             playCircleOutline,
-            checkmarkCircleOutline
-        })
+            checkmarkCircleOutline,
+            alertCircle,
+        });
     }
 }
