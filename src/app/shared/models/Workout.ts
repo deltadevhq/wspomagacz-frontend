@@ -1,3 +1,5 @@
+import { User } from './User';
+
 export interface MuscleGroup {
     id: number;
     name: string;
@@ -16,38 +18,6 @@ export interface Exercise {
     description: string;
     muscle_groups: MuscleGroup[];
     equipment: Equipment[];
-}
-
-export enum UserStatus {
-    Active = 1,
-    Inactive = 2,
-    Blocked = 3,
-    Deleted = 4,
-}
-
-export enum UserGender {
-    Male = 1,
-    Female = 2,
-    NotSpecified = 3,
-}
-
-interface UserWeight {
-    weight: number;
-    date: Date;
-}
-
-export interface User {
-    id: number;
-    username: string;
-    display_name: string;
-    gender: UserGender;
-    birthday: Date;
-    status: UserStatus;
-    level: number;
-    exp: number;
-    weights: UserWeight[];
-    height: number;
-    created_at: Date;
 }
 
 export interface Workout {
