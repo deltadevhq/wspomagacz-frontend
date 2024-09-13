@@ -1,0 +1,13 @@
+<div class="flex items-center self-stretch font-semibold text-base text-primary">
+    POZIOM {{ level() }}
+</div>
+<ion-progress-bar [value]="progress()" class="rounded-full h-3"></ion-progress-bar>
+<div class="flex justify-end items-center gap-2 self-stretch">
+    <div class="text-xs">
+        brakuje {{ 100 - exp() }}PD do
+    </div>
+    <div class="text-primary text-sm">
+        POZIOMU {{ level() + 1 }}
+    </div>
+</div>
+
