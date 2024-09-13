@@ -1,24 +1,20 @@
-import {
-    Exercise,
-    User,
-    UserGender,
-    UserStatus,
-    Workout,
-    WorkoutExerciseStatus,
-} from '../Workout';
+import { Exercise, Workout, WorkoutExerciseStatus } from '../models/Workout';
+import { User, UserGender, UserStatus } from '../models/User';
 
 export const user: User = {
     birthday: new Date('2001-08-21'),
     display_name: 'Remigiusz',
-    exp: 0,
+    exp: 12,
     height: 0,
-    level: 1,
+    level: 10,
     weights: [],
     id: 1,
     username: 'user1',
     gender: UserGender.Male,
     status: UserStatus.Active,
     created_at: new Date(),
+    modified_at: new Date(),
+    last_logged_at: new Date(),
 };
 
 export const exercises: Exercise[] = [
