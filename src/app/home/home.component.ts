@@ -31,12 +31,4 @@ export class HomeComponent {
             }
         });
     }
-
-    //protected readonly levelProgressDegree: number =
-    //    this.calculateLevelProgressDegree(this.levelProgress);
-
-    //protected calculateLevelProgressDegree(levelProgress: number): number {
-    // TODO: Get level for current exp from API, for now just assume 100 exp per level
-    //return 360 * levelProgress;
-    //}
 }
