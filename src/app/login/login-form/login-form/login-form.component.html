@@ -1,0 +1,19 @@
+<form [formGroup]="loginForm" (ngSubmit)="login.emit(loginForm.getRawValue())"
+      class="flex w-full gap-3 flex-col">
+    <ion-input type="text" fill="outline" class="input" placeholder="Nazwa Użytkownika"
+               formControlName="username" errorText="To pole nie może być puste!"></ion-input>
+    <ion-input type="password" fill="outline" class="input" placeholder="Hasło"
+               formControlName="password" errorText="To pole nie może być puste!">
+            <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+    </ion-input>
+    @if (loginStatus() === 'error') {
+        <ion-toast [isOpen]="true" message="Nieprawidłowa nazwa użytkownika lub hasło!" [duration]="5000" icon="alert-circle" color="primary"></ion-toast>
+    }
+    @if (loginStatus() === 'authenticating') {
+        <ion-toast [isOpen]="true" message="Logowanie..." [duration]="1000" color="light"></ion-toast>
+    }
+    <ion-button color="primary" fill="clear" class="self-end -mb-2 -mt-1">Nie pamiętasz hasła?</ion-button>
+    <ion-button class="w-full" type="submit"
+                [disabled]="this.loginForm.invalid || loginStatus() === 'authenticating'">Zaloguj się
+    </ion-button>
+</form>
