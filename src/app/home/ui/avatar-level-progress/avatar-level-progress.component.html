@@ -1,0 +1,9 @@
+<ion-avatar slot="end" class="relative">
+    <img src="/assets/avatar.jpg" alt="avatar" class="border-black">
+    <div
+        class="absolute h-[3.75rem] w-[3.75rem] bg-primary -top-0.5 -right-0.5 -z-10 rounded-[1.075rem] rotate-180"
+        [style.background]="'conic-gradient(var(--ion-color-primary) 0' + degree() + 'deg, var(--ion-color-light)' + degree() + 'deg 360deg)'"></div>
+    <div class="font-semibold text-sm px-1 rounded absolute -bottom-2.5 left-1/2 transform -translate-x-1/2"
+         style="background: var(--ion-color-primary); color: var(--ion-color-primary-contrast);">{{ level() }}
+    </div>
+</ion-avatar>
