@@ -1,8 +1,8 @@
-import { Component, effect, inject, input } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { NgForOf } from '@angular/common';
 import { HomeCalendarComponent } from './ui/home-calendar/home-calendar.component';
-import { AuthService, AuthUser } from '../shared/data-access/auth.service';
+import { AuthService } from '../shared/data-access/auth.service';
 import { Router } from '@angular/router';
 import { LevelProgressComponent } from './ui/level-progress/level-progress.component';
 import { AvatarLevelProgressComponent } from './ui/avatar-level-progress/avatar-level-progress.component';
