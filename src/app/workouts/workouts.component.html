@@ -1,3 +1,13 @@
-<p>
-  workouts works!
-</p>
+<ion-header class="ion-no-border">
+    <ion-toolbar class="home-toolbar px-8">
+        <app-avatar-level-progress slot="end"
+                                   [level]="authService.user()?.level ?? 0"
+                                   [exp]="authService.user()?.exp ?? 0">
+        </app-avatar-level-progress>
+    </ion-toolbar>
+</ion-header>
+<ion-content [fullscreen]="true">
+    <div class="flex flex-col gap-6 w-full items-center shrink-0 pb-4">
+        <app-workouts-calendar class="flex px-4 flex-col items-center gap-5 self-stretch"></app-workouts-calendar>
+    </div>
+</ion-content>
