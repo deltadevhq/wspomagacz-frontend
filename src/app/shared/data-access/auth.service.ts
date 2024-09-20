@@ -1,27 +1,25 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { User, UserGender, UserStatus, UserWeight } from '../models/User';
-import { BehaviorSubject, concatMap, tap } from 'rxjs';
+import { BehaviorSubject, catchError, concatMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { environment } from '../../../environments/environment';
 
 export interface UserResponse {
-    user: {
-        id: number;
-        username: string;
-        display_name: string;
-        email: string;
-        birthday: string;
-        exp: number;
-        level: number;
-        height: number;
-        status: string;
-        gender: string;
-        weights: UserWeight[];
-        last_logged_at: string;
-        modified_at: string;
-        created_at: string;
-    };
+    id: number;
+    username: string;
+    display_name: string;
+    email: string;
+    birthday: string;
+    exp: number;
+    level: number;
+    height: number;
+    status: string;
+    gender: string;
+    weights: UserWeight[];
+    last_logged_at: string;
+    modified_at: string;
+    created_at: string;
 }
 
 export type AuthUser = User | null;
@@ -35,9 +33,8 @@ export type Credentials = {
     password: string;
 };
 
-export type NewAccount = {
+export type CreateUserCredentials = {
     username: string;
-    displayName: string;
     email: string;
     password: string;
 };
@@ -79,8 +76,12 @@ export class AuthService {
         return this.http
             .get<UserResponse>(`${environment.baseUrl}auth/user`)
             .pipe(
-                tap(({ user }) => {
+                tap((user) => {
                     this.user$.next(this.parseUser(user));
+                }),
+                catchError(() => {
+                    this.user$.next(null);
+                    return [];
                 }),
             );
     }
@@ -93,20 +94,20 @@ export class AuthService {
         );
     }
 
-    register(newAccount: NewAccount) {
+    register(createUser: CreateUserCredentials) {
         return this.http
-            .post<UserResponse>(
-                `${environment.baseUrl}auth/register`,
-                newAccount,
-            )
+            .post(`${environment.baseUrl}auth/register`, createUser)
             .pipe(
-                tap(({ user }) => {
-                    this.user$.next(this.parseUser(user));
-                }),
+                concatMap(() =>
+                    this.login({
+                        username: createUser.username,
+                        password: createUser.password,
+                    } as Credentials),
+                ),
             );
     }
 
-    private parseUser(user: UserResponse['user']): User {
+    private parseUser(user: UserResponse): User {
         const {
             birthday,
             modified_at,
