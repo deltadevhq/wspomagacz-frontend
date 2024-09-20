@@ -9,9 +9,6 @@
     @if (loginStatus() === 'error') {
         <ion-toast [isOpen]="true" message="Nieprawidłowa nazwa użytkownika lub hasło!" [duration]="5000" icon="alert-circle" color="primary"></ion-toast>
     }
-    @if (loginStatus() === 'authenticating') {
-        <ion-toast [isOpen]="true" message="Logowanie..." [duration]="1000" color="light"></ion-toast>
-    }
     <ion-button color="primary" fill="clear" class="self-end -mb-2 -mt-1">Nie pamiętasz hasła?</ion-button>
     <ion-button class="w-full" type="submit"
                 [disabled]="this.loginForm.invalid || loginStatus() === 'authenticating'">Zaloguj się
