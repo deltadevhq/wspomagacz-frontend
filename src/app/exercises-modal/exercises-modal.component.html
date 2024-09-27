@@ -1,0 +1,52 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button color="primary" (click)="cancel()">
+                <ion-icon name="close"></ion-icon>
+                Anuluj
+            </ion-button>
+        </ion-buttons>
+        <ion-title>Dodaj ćwiczenia</ion-title>
+    </ion-toolbar>
+    <ion-toolbar>
+        <ion-searchbar placeholder="Szukaj ćwiczenia" show-clear-button="always" (ionInput)="handleInput($event)"></ion-searchbar>
+    </ion-toolbar>
+</ion-header>
+<ion-content>
+    <ion-list>
+        <ion-item-group>
+            <ion-item-divider>
+                <ion-label>
+                    Predefiniowane ćwiczenia
+                </ion-label>
+            </ion-item-divider>
+            <ion-item button detail="true" lines="full" *ngFor="let exercise of standardExercises()" (click)="openExerciseDetailsModal(exercise)">
+                {{exercise.exercise_name}}
+            </ion-item>
+        </ion-item-group>
+        <ion-item-group>
+            <ion-item-divider>
+                <ion-label>
+                    Własne ćwiczenia
+                </ion-label>
+            </ion-item-divider>
+            <ion-item button detail="true" lines="full" *ngFor="let exercise of customExercises()" (click)="openExerciseDetailsModal(exercise)">
+                {{exercise.exercise_name}}
+            </ion-item>
+            <ng-container *ngIf="customExercises().length === 0">
+                <div class="flex items-center justify-center gap-2 px-4">
+                    <ion-icon
+                        name="alert-circle-outline"
+                        color="medium"
+                        class="text-2xl"
+                    ></ion-icon>
+                    <ion-text class="text-center" color="medium">
+                        Nie dodałeś jeszcze żadnego własnego ćwiczenia.
+                    </ion-text>
+                </div>
+            </ng-container>
+        </ion-item-group>
+    </ion-list>
+</ion-content>
+
+
