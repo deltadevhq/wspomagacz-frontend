@@ -19,18 +19,20 @@ export const user: User = {
 
 export const exercises: Exercise[] = [
     {
-        id: 1,
-        name: 'Exercise 1',
+        exercise_id: 1,
+        exercise_name: 'Exercise 1',
         description: 'Exercise 1 description',
         muscle_groups: [],
         equipment: [],
+        exercise_type: 'standard',
     },
     {
-        id: 2,
-        name: 'Exercise 2',
+        exercise_id: 2,
+        exercise_name: 'Exercise 2',
         description: 'Exercise 2 description',
         muscle_groups: [],
         equipment: [],
+        exercise_type: 'standard',
     },
 ];
 
@@ -46,8 +48,8 @@ export const workouts: Workout[] = [
         exercises: [
             {
                 exercise: {
-                    id: 1,
-                    name: 'Exercise 1',
+                    exercise_id: 1,
+                    exercise_name: 'Exercise 1',
                     description: 'Exercise 1 description',
                     muscle_groups: [],
                     equipment: [
@@ -57,6 +59,7 @@ export const workouts: Workout[] = [
                             description: 'Equipment 1 description',
                         },
                     ],
+                    exercise_type: 'standard',
                 },
                 status: WorkoutExerciseStatus.Done,
                 sets: [

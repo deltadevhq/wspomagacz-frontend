@@ -13,11 +13,12 @@ export interface Equipment {
 }
 
 export interface Exercise {
-    id: number;
-    name: string;
+    exercise_id: number;
+    exercise_name: string;
     description: string;
     muscle_groups: MuscleGroup[];
     equipment: Equipment[];
+    exercise_type: 'standard' | 'custom';
 }
 
 export interface Workout {
