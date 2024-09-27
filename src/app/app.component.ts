@@ -16,6 +16,14 @@ import {
     playCircleOutline,
     checkmarkCircleOutline,
     alertCircle,
+    calendarOutline,
+    close,
+    barbell,
+    add,
+    informationCircleOutline,
+    repeat,
+    trashBin,
+    pencil,
 } from 'ionicons/icons';
 
 @Component({
@@ -41,6 +49,14 @@ export class AppComponent {
             playCircleOutline,
             checkmarkCircleOutline,
             alertCircle,
+            calendarOutline,
+            close,
+            barbell,
+            add,
+            informationCircleOutline,
+            repeat,
+            trashBin,
+            pencil,
         });
     }
 }
