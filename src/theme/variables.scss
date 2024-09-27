@@ -34,3 +34,11 @@ ion-toolbar.home-toolbar {
     --padding-top: 2rem;
     --padding-bottom: 2rem;
 }
+
+.list-md {
+    background: var(--ion-background-color);
+}
+
+ion-item {
+    --background: var(--ion-background-color);
+}
