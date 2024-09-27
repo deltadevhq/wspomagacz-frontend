@@ -1,0 +1,42 @@
+<ng-container *ngIf="selectedDay$ | async as selectedDay">
+    <div class="flex items-center justify-between self-stretch">
+        <ion-button fill="clear" color="dark" *ngIf="monthAgo$ | async as monthAgo"
+                    (click)="monthFirstDay$.next(monthAgo)">
+            <ion-icon slot="icon-only" name="caret-back"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" color="dark" (click)="monthFirstDay$.next(calculateMonthFirstDay(selectedDay))">
+            {{
+                selectedDay.toLocaleDateString("pl-PL", {
+                    weekday: "short",
+                    month: "long",
+                    day: "numeric",
+                })
+            }}
+        </ion-button>
+        <ion-button fill="clear" color="dark" *ngIf="monthAhead$ | async as monthAhead"
+                    (click)="monthFirstDay$.next(monthAhead)">
+            <ion-icon slot="icon-only" name="caret-forward"></ion-icon>
+        </ion-button>
+    </div>
+    <div class="-mb-3 flex flex-col self-stretch items-center justify-center gap-2">
+        <div class="grid grid-cols-7 items-center justify-between self-stretch overflow-y-clip">
+            <div *ngFor="let day of weekdays" class="flex h-[1.375rem] items-center justify-center">
+                {{ day }}
+            </div>
+        </div>
+        <div class="grid grid-cols-7 items-center justify-between self-stretch overflow-y-clip">
+            <ng-container *ngIf="monthDays$ | async as currentMonthDays">
+                <div *ngFor="let day of currentMonthDays" class="flex items-center justify-center gap-2">
+                    <ion-button *ngIf="day" class="date-select"
+                                [fill]="fillDate(day)"
+                                [color]="colorDate(day)"
+                                (click)="selectedDay$.next(day)">
+                        <ion-text slot="icon-only" class="flex h-[1.375rem] w-[1.375rem] items-center justify-center">
+                            {{ day.getDate() }}
+                        </ion-text>
+                    </ion-button>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</ng-container>
