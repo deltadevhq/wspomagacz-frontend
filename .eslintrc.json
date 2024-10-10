@@ -22,6 +22,17 @@
         "@typescript-eslint"
       ],
       "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "paths": [
+              {
+                "name": "@ionic/angular",
+                "message": "All Ionic imports should be imported from the @ionic/angular/standalone submodule. See https://ionicframework.com/docs/angular/build-options#standalone for more information."
+              }
+            ]
+          }
+        ],
         "@angular-eslint/component-class-suffix": [
           "error",
           {
