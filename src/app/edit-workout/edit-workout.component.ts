@@ -107,7 +107,7 @@ export class EditWorkoutComponent implements OnInit, OnDestroy {
     switchMap((workout) =>
       this.calendarWorkout$.pipe(
         map((calendarWorkout) => ({
-          canSave: calendarWorkout?.status !== 'completed',
+          canSave: calendarWorkout?.status !== 'completed' && this.calendarDate$.value >= this.dateService.today,
           canDelete: !!workout.id,
           calendarWorkoutExists: !!calendarWorkout && calendarWorkout.id !== workout.id && calendarWorkout.status !== 'completed',
           calendarWorkoutError: calendarWorkout?.status === 'completed',
