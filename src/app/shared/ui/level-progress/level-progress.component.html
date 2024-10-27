@@ -1,0 +1,16 @@
+<ng-container *ngIf="level$ | async as level">
+  <div class="flex items-center self-stretch font-semibold text-base text-primary">
+    POZIOM {{ level.level }}
+  </div>
+  <ion-progress-bar [value]="level.progress" class="rounded-full h-3"></ion-progress-bar>
+  <div class="flex justify-end items-center gap-2 self-stretch">
+    <div class="text-xs">
+      brakuje {{ level.missing_xp }}PD do
+    </div>
+    <div class="text-primary text-sm">
+      POZIOMU {{ level.level + 1 }}
+    </div>
+  </div>
+</ng-container>
+
+
