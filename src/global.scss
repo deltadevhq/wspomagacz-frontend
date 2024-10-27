@@ -39,3 +39,72 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+* {
+  font-family: 'Saira', sans-serif;
+}
+
+:root {
+  ion-tab-bar {
+    box-shadow: 0 0 30px 5px var(--ion-color-light-shade);
+    --background: var(--ion-color-light);
+  }
+
+  .searchbar {
+    --border-radius: 1rem;
+    --box-shadow: none;
+  }
+
+  ion-toolbar {
+    --background: var(--ion-background-color);
+  }
+
+  .list-md {
+    background: var(--ion-background-color);
+  }
+
+  ion-button {
+    --border-radius: 1rem;
+    --box-shadow: none;
+    --padding-bottom: 1rem;
+    --padding-top: 1rem;
+  }
+
+  ion-card {
+    border-radius: 1rem;
+    margin: 0;
+    box-shadow: none;
+  }
+
+  ion-button.date-select {
+    --border-radius: 50%;
+    --padding-bottom: 0;
+    --padding-top: 0;
+    aspect-ratio: 1 / 1;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    ion-list {
+      background: transparent;
+    }
+
+    ion-item {
+      --background: var(--ion-background-color);
+    }
+
+    ion-tab-bar {
+      box-shadow: 0 0 30px 5px var(--ion-background-color);
+    }
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    ion-card {
+      border-color: var(--ion-color-medium);
+      border: 1px solid;
+    }
+  }
+}
