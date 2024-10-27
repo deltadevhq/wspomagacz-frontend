@@ -1,0 +1,54 @@
+@if (workoutExercises.length > 0) {
+  <ion-list class="ion-padding-vertical" lines="none">
+    <ion-reorder-group (ionItemReorder)="handleReorder($any($event))" [disabled]="false" class="flex gap-2 flex-col">
+      <ion-item-sliding *ngFor="let workoutExercise of workoutExercises; let i = index">
+        <ion-item class="rounded-2xl" color="light">
+          <ion-label>
+            <ion-text class="font-medium">
+              {{ workoutExercise.exercise.exercise_name }}
+            </ion-text>
+            <ion-text class="flex gap-2 text-sm" color="medium">
+              <div class="flex items-center self-stretch gap-1">
+                <ion-icon name="repeat"></ion-icon>
+                {{ workoutExercise.sets.length }}
+              </div>
+
+              <div class="flex items-center self-stretch gap-1">
+                <ion-icon name="barbell"></ion-icon>
+                {{ getWeightRange(workoutExercise) }}
+              </div>
+            </ion-text>
+          </ion-label>
+          <ion-reorder slot="end"></ion-reorder>
+        </ion-item>
+
+        <ion-item-options class="pr-2" side="start">
+          <ion-item-option (click)="removeWorkoutExercise(i)" class="rounded-2xl" color="primary">
+            <ion-icon name="trash-bin" slot="start"></ion-icon>
+            Usuń
+          </ion-item-option>
+        </ion-item-options>
+
+        <ion-item-options class="pl-2" side="end">
+          <ion-item-option (click)="editWorkoutExercise(i)" class="rounded-2xl"
+                           color="secondary">
+            <ion-icon name="pencil" slot="start"></ion-icon>
+            Edytuj
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-reorder-group>
+  </ion-list>
+} @else {
+  <div class="flex items-center justify-center gap-2 ion-padding">
+    <ion-icon class="text-2xl" color="medium" name="alert-circle-outline"></ion-icon>
+    <ion-text class="text-center" color="medium">
+      Brak ćwiczeń.
+    </ion-text>
+  </div>
+}
+<ion-button (click)="addWorkoutExercises()" color="success" expand="block">
+  <ion-icon name="add" slot="start"></ion-icon>
+  Dodaj ćwiczenia
+</ion-button>
+

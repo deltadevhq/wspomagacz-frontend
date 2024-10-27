@@ -1,0 +1,50 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="ion-padding-top">
+    <ion-buttons slot="start">
+      <ion-button (click)="modalController.dismiss()" color="primary">
+        Anuluj
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Edycja ćwiczenia</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ng-container *ngIf="workoutExercise as workout">
+  <ion-content>
+    <div class="flex flex-col gap-6 px-4">
+      <section>
+        <ion-text class="text-3xl font-bold">
+          {{ workout.exercise.exercise_name }}
+        </ion-text>
+      </section>
+
+      <section>
+        <ion-text>
+          <div class="text-xl font-semibold">
+            Serie
+          </div>
+        </ion-text>
+        <app-edit-workout-exercise-sets-list [sets]="workoutExercise.sets" />
+      </section>
+
+      <section>
+        <ion-button color="primary" fill="clear" expand="block"
+                    (click)="modalController.dismiss(workoutExercise, 'delete')">
+          <ion-icon name="trash-bin" slot="start"></ion-icon>
+          Usuń ćwiczenie
+        </ion-button>
+      </section>
+    </div>
+
+  </ion-content>
+  <ion-footer class="ion-no-border">
+    <ion-toolbar>
+      <ion-buttons slot="end">
+        <ion-button (click)="modalController.dismiss(workoutExercise, 'save')" color="success">
+          <ion-icon name="save" slot="start"></ion-icon>
+          Zapisz
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-footer>
+</ng-container>
+

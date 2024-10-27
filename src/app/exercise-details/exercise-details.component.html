@@ -1,3 +1,75 @@
-<p>
-  exercise-details works!
-</p>
+<ion-header class="ion-no-border">
+  <ion-toolbar class="ion-padding-top">
+    <ion-buttons slot="start">
+      <ion-button (click)="modalController.dismiss()" color="dark">
+        <ion-icon name="chevron-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ng-container *ngIf="exercise">
+    <div class="flex flex-col gap-6 px-4">
+      <section>
+        <ion-text class="text-3xl font-bold">
+          {{ exercise.exercise_name }}
+        </ion-text>
+      </section>
+
+      <section>
+        <div>
+          <ion-text class="text-xl font-semibold">
+            Sprzęt
+          </ion-text>
+          <ion-list lines="none" class="flex gap-2 flex-col">
+            <ion-item *ngFor="let equipment of exercise.equipment" class="rounded-2xl" color="light">
+              <ion-label>
+                <ion-text class="font-medium">
+                  {{ equipment.name }}
+                </ion-text>
+              </ion-label>
+            </ion-item>
+          </ion-list>
+        </div>
+      </section>
+
+      <section>
+        <div>
+          <ion-text class="text-xl font-semibold">
+            Partie mięśniowe
+          </ion-text>
+          <ion-list lines="none" class="flex gap-2 flex-col">
+            <ion-item *ngFor="let muscle of exercise.muscles" class="rounded-2xl" color="light">
+              <ion-label>
+                <ion-text class="font-medium">
+                  {{ muscle.name }}
+                </ion-text>
+              </ion-label>
+            </ion-item>
+          </ion-list>
+        </div>
+      </section>
+
+
+      <section>
+        <ion-button color="success" expand="block" (click)="modalController.dismiss(exercise, 'add')">
+          <ion-icon name="add"></ion-icon>
+          Dodaj do planu
+        </ion-button>
+      </section>
+
+      <section>
+        <div>
+          <ion-text class="text-xl font-semibold">
+            Twoje rekordy
+          </ion-text>
+        </div>
+        <div>
+          <canvas #canvas id="canvas">{{ chart }}</canvas>
+        </div>
+      </section>
+    </div>
+  </ng-container>
+</ion-content>
+
+

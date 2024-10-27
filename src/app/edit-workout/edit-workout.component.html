@@ -1,0 +1,133 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="ion-padding-top">
+    <ion-buttons slot="start">
+      <ion-button (click)="modalController.dismiss()" color="primary">
+        Anuluj
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Planowanie treningu</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ng-container *ngIf="workout$ | async as workout">
+  <ion-content>
+    <div class="flex flex-col gap-6 px-4">
+      <section>
+        <ion-input class="text-3xl font-bold"
+                   maxlength="30"
+                   minlength="3"
+                   placeholder="Nazwa Treningu"
+                   pattern="^[a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+(?:\s[a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+)*$"
+                   required
+                   [(ngModel)]="workout.name"
+                   #workoutName="ngModel"
+        />
+        <ion-button (click)="showCalendar$.next(!showCalendar$.value)" class="relative -left-3 self-start date-toggle"
+                    color="dark"
+                    fill="clear"
+                    size="small">
+          <ng-container *ngIf="calendarDate$ | async as date">
+            {{ date.toLocaleDateString("pl-PL", {
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+          }) }}
+          </ng-container>
+          <ion-icon [name]="(dateIcon$ | async)" slot="end"></ion-icon>
+        </ion-button>
+        <app-workouts-calendar [ngClass]="{'hidden': (showCalendar$ | async) === false}"
+                               [initialDate]="initialDate"
+                               (selectedDate)="calendarDate$.next($event)"
+                               (selectedWorkout)="calendarWorkout$.next($event)"
+                               class="relative -top-3"
+        />
+      </section>
+
+      <ion-card color="primary" *ngIf="(state$ | async)?.pastDateError">
+        <ion-card-header>
+          <ion-card-title class="flex items-center gap-2">
+            <ion-icon name="alert-circle-outline"></ion-icon>
+            Uwaga
+          </ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          Punkty doświadczenia nie są przyznawane za treningi ukończone w przeszłości.
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card color="primary" *ngIf="(state$ | async)?.calendarWorkoutError">
+        <ion-card-header>
+          <ion-card-title class="flex items-center gap-2">
+            <ion-icon name="alert-circle-outline"></ion-icon>
+            Uwaga
+          </ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          Trening z tą datą został już ukończony i nie można go edytować ani nadpisać.
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card color="secondary" *ngIf="(state$ | async)?.calendarWorkoutExists">
+        <ion-card-header>
+          <ion-card-title class="flex items-center gap-2">
+            <ion-icon name="information-circle-outline"></ion-icon>
+            Informacja
+          </ion-card-title>
+        </ion-card-header>
+        <ion-card-content class="flex flex-col gap-2 w-full">
+          Trening z tą datą już istnieje. Czy chcesz go edytować? W innym przypadku ten trening
+          zostanie nadpisany.
+          <ion-button (click)="this.workout$.next(transformWorkoutToRequest(this.calendarWorkout$.value!))"
+                      class="self-end"
+                      color="light"
+                      fill="clear">
+            Edytuj trening
+          </ion-button>
+        </ion-card-content>
+      </ion-card>
+
+      <section>
+        <ion-text>
+          <div class="text-xl font-semibold">
+            Zaplanowane Ćwiczenia
+          </div>
+        </ion-text>
+        <app-edit-workout-exercises-list [workoutExercises]="workout.exercises" />
+      </section>
+
+      <section class="flex flex-col gap-2">
+        <ion-text class="text-xl font-semibold">
+          Notatka
+        </ion-text>
+        <ion-textarea [(ngModel)]="workout.notes" [counter]="true" fill="outline" maxlength="100"
+                      placeholder="Treść notatki..." />
+      </section>
+
+      <section *ngIf="(state$ | async)?.canDelete">
+        <ion-button color="primary" fill="clear" expand="block" id="delete-workout">
+          <ion-icon name="trash-bin" slot="start"></ion-icon>
+          Usuń trening
+        </ion-button>
+        <ion-alert
+          (didDismiss)="deleteAlert($event)"
+          [buttons]="alertButtons"
+          header="Czy na pewno chcesz usunąć ten trening?"
+          message="Tej operacji nie można cofnąć."
+          trigger="delete-workout"
+        ></ion-alert>
+      </section>
+    </div>
+
+  </ion-content>
+  <ion-footer class="ion-no-border">
+    <ion-toolbar>
+      <ion-buttons slot="end">
+        <ion-button (click)="this.workoutService.put$.next(this.workout$.value)"
+                    [disabled]="!(state$ | async)?.canSave || workoutName.invalid"
+                    color="success">
+          <ion-icon name="save" slot="start"></ion-icon>
+          Zapisz
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-footer>
+</ng-container>
