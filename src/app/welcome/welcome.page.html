@@ -1,0 +1,21 @@
+<ion-content [fullscreen]="true">
+  @if (authService.user() === null) {
+    @defer (on timer(1000)) {
+      <div class="welcome-bg flex justify-end flex-col w-full h-full p-8 gap-6">
+        <div class="flex flex-col items-center gap-2">
+          <div class="text-3xl font-bold">
+            WSPOMAGACZ
+          </div>
+          <div class="text-center text-sm">
+            Rozpocznij swoją przygodę<br />już teraz!
+          </div>
+        </div>
+
+        <div class="flex flex-col">
+          <ion-button [routerLink]="['/login']" color="primary" expand="block">Zaloguj się</ion-button>
+          <ion-button [routerLink]="['/register']" color="light" expand="block">Zarejestruj się</ion-button>
+        </div>
+      </div>
+    }
+  }
+</ion-content>
