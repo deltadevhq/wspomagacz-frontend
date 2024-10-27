@@ -1,0 +1,50 @@
+@defer (when authService.user() !== null) {
+  <ion-header class="ion-no-border">
+    <ion-toolbar class="ion-padding">
+      <div class="flex ion-align-items-center gap-2" slot="end">
+        <app-notifications />
+        <app-avatar-level-progress />
+      </div>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content [fullscreen]="true">
+    <div class="flex flex-col gap-6">
+      <section class="px-4">
+        <app-workouts-calendar (selectedWorkout)="selectedWorkout$.next($event)"
+                               (selectedDate)="selectedDate$.next($event)" />
+        <app-workout-summary [workout]="(selectedWorkout$ | async) ?? undefined"
+                             [date]="(selectedDate$ | async) ?? undefined" />
+      </section>
+
+      <section>
+        <div class="px-8 pb-6">
+          <ion-text class="text-2xl font-semibold">
+            Ostatnie treningi
+          </ion-text>
+        </div>
+        <div class="flex flex-col gap-2 scroll-px-4 px-4 pb-4">
+          <ion-card *ngFor="let _ of [1, 2, 3, 4, 5]">
+            <ion-card-header>
+              <ion-card-title>Nazwa Planu</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <div class="flex ion-align-items-center gap-1">
+                <ion-icon name="flash"></ion-icon>
+                <div class="text-base">10 ćwiczeń</div>
+              </div>
+              <div class="flex ion-align-items-center gap-1">
+                <ion-icon name="time-outline"></ion-icon>
+                <div class="text-base">45 minut</div>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </div>
+      </section>
+    </div>
+  </ion-content>
+} @loading {
+  <div class="flex justify-center items-center w-full h-full">
+    <ion-spinner name="crescent" color="primary" />
+  </div>
+}
