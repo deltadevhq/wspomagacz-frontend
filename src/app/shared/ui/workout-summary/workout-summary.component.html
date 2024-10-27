@@ -1,0 +1,124 @@
+<div class="flex flex-col gap-2">
+  <ng-container *ngIf="workout; else noWorkout">
+    <div class="font-semibold text-2xl text-center py-2">
+      {{ workout.name }}
+    </div>
+    <div class="grid grid-cols-2 gap-2">
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>
+            <div class="flex items-center gap-2">
+              <ion-icon name="barbell" />
+              Ćwiczenia
+            </div>
+          </ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          {{ workout.exercises.length }}
+        </ion-card-content>
+      </ion-card>
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>
+            <div class="flex items-center gap-2">
+              <ion-icon name="time-outline" />
+              Czas
+            </div>
+          </ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          {{ duration }}
+        </ion-card-content>
+      </ion-card>
+    </div>
+    @switch (workout.status) {
+      @case (WorkoutStatuses.Planned) {
+        <div class="flex justify-center py-2">
+          <ion-text color="medium" class="flex items-center gap-1">
+            <ion-icon name="information-circle-outline" class="text-2xl" />
+            Trening jest planowany.
+          </ion-text>
+        </div>
+        <div class="grid grid-cols-2 gap-1">
+          <ion-button (click)="openWorkoutEditModal('edit')" color="light"
+                      [ngClass]="{'col-span-2': !dateService.isToday(workout.date)}">
+            <ion-icon name="pencil" slot="start" />
+            Edytuj
+          </ion-button>
+          <ion-button class="w-full" color="success" (click)="workoutService.start$.next(workout.id)"
+                      *ngIf="dateService.isToday(workout.date)">
+            <ion-icon name="play" slot="start" />
+            Rozpocznij
+          </ion-button>
+        </div>
+      }
+      @case (WorkoutStatuses.InProgress) {
+        <div class="flex justify-center py-2">
+          <ion-text color="secondary" class="flex items-center gap-1">
+            <ion-icon name="play-circle-outline" class="text-2xl" />
+            Trening w trakcie.
+          </ion-text>
+        </div>
+        <div class="grid grid-cols-2 gap-1">
+          <ion-button (click)="openWorkoutEditModal('edit')" color="light">
+            <ion-icon name="pencil" slot="start" />
+            Edytuj
+          </ion-button>
+          <ion-button class="w-full" color="success" (click)="workoutService.finish$.next(workout.id)">
+            <ion-icon name="stop" slot="start" />
+            Zakończ
+          </ion-button>
+        </div>
+      }
+      @case (WorkoutStatuses.Completed) {
+        <div class="flex justify-center py-2">
+          <ion-text color="success" class="flex items-center gap-1">
+            <ion-icon name="checkmark-circle-outline" class="text-2xl" />
+            Trening zakończony.
+          </ion-text>
+        </div>
+        <div class="grid grid-cols-2 gap-1">
+          <ion-button color="light">
+            <ion-icon name="stats-chart" slot="start" />
+            Szczegóły
+          </ion-button>
+          <ion-button (click)="openWorkoutEditModal('create-related')" class="w-full">
+            <ion-icon name="copy" slot="start" />
+            Ponów
+          </ion-button>
+        </div>
+      }
+      @case (WorkoutStatuses.Skipped) {
+        <div class="flex justify-center py-2">
+          <ion-text color="medium" class="flex items-center gap-1">
+            <ion-icon name="close-circle-outline" class="text-2xl" />
+            Nie wykonano tego treningu.
+          </ion-text>
+        </div>
+        <div class="grid grid-cols-2 gap-1">
+          <ion-button (click)="openWorkoutEditModal('edit')" expand="block" color="light">
+            <ion-icon name="pencil" slot="start" />
+            Edytuj
+          </ion-button>
+          <ion-button (click)="openWorkoutEditModal('create-related')" class="w-full">
+            <ion-icon name="copy" slot="start" />
+            Ponów
+          </ion-button>
+        </div>
+      }
+    }
+
+  </ng-container>
+  <ng-template #noWorkout>
+    <div class="flex justify-center py-2">
+      <ion-text color="medium" class="flex items-center gap-1">
+        <ion-icon name="alert-circle-outline" class="text-2xl" />
+        Brak treningu.
+      </ion-text>
+    </div>
+    <ion-button (click)="openWorkoutEditModal('create')" expand="block">
+      Przejdź do planowania
+    </ion-button>
+  </ng-template>
+</div>
+
