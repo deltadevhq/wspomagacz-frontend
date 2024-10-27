@@ -1,0 +1,11 @@
+ion-badge {
+  display: block;
+  min-height: 0.5rem;
+  min-width: 0.5rem;
+  border-radius: 100%;
+}
+
+ion-item.unread {
+  --background: var(--ion-color-light-shade);
+  font-weight: 500;
+}
