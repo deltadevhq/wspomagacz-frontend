@@ -45,6 +45,8 @@
 }
 
 :root {
+  --ion-font-family: 'Saira', sans-serif;
+
   ion-tab-bar {
     box-shadow: 0 0 30px 5px var(--ion-color-light-shade);
     --background: var(--ion-color-light);
