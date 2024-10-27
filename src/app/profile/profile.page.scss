@@ -1,0 +1,19 @@
+ion-avatar {
+  --border-radius: 1rem;
+}
+
+ion-toolbar {
+  --background: color-mix(in srgb, var(--ion-color-primary) 10%, var(--ion-background-color) 90%);
+}
+
+ion-header {
+  background: color-mix(in srgb, var(--ion-color-primary) 10%, var(--ion-background-color) 90%);
+}
+
+ion-segment-button::part(indicator-background) {
+  background: var(--ion-color-primary);
+}
+
+.segment-button-checked.ios::part(native) {
+  color: var(--ion-color-primary-contrast);
+}

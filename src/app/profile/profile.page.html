@@ -1,0 +1,216 @@
+@defer (when authService.user() !== null) {
+  <ion-header class="ion-no-border pb-8 rounded-b-2xl">
+    <ion-toolbar class="ion-padding-top ion-padding-horizontal pb-4">
+      <ion-title>Profil</ion-title>
+      <ion-button color="dark" fill="clear" size="large" slot="end">
+        <ion-icon name="settings-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-toolbar>
+
+    <div class="flex flex-col gap-6">
+      <section class="flex justify-center">
+        <ion-avatar class="h-22 w-22">
+          <img alt="avatar" src="/assets/avatar.jpg">
+        </ion-avatar>
+      </section>
+
+      <section class="flex flex-col items-center leading-none">
+        <ion-text class="text-2xl font-semibold">
+          {{ authService.user()?.display_name }}
+        </ion-text>
+        <ion-text color="medium">
+          {{ authService.user()?.username }}
+        </ion-text>
+      </section>
+
+      <section class="px-8">
+        <app-level-progress class="flex flex-col gap-1" />
+      </section>
+
+      <section class="px-8">
+        <ion-segment mode="ios" (ionChange)="segmentChanged($event)" [(ngModel)]="segment">
+          <ion-segment-button value="feed">
+            <ion-label>Aktywność</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="achievements">
+            <ion-label>Osiągnięcia</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="stats">
+            <ion-label>Statystyki</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+      </section>
+    </div>
+  </ion-header>
+
+  <ion-content [fullscreen]="true" class="ion-padding">
+    <ng-container *ngIf="segment === 'feed'">
+      <div class="flex flex-col gap-4">
+        <div class="bg-[var(--ion-color-light)] flex flex-col gap-4 rounded-2xl">
+          <div class="flex items-center gap-2 px-3 pt-3">
+            <ion-avatar class="h-12 w-12">
+              <img alt="avatar" src="/assets/avatar.jpg">
+            </ion-avatar>
+            <div class="flex flex-col">
+              <ion-text class="font-semibold">
+                Test User ukończył trening.
+              </ion-text>
+              <div class="flex items-center gap-1">
+                <ion-icon name="time-outline" slot="start" color="medium"></ion-icon>
+                <ion-text class="text-sm" color="medium">
+                  2 godz. temu
+                </ion-text>
+              </div>
+            </div>
+          </div>
+
+          <div class="px-3">
+            <div class="font-semibold text-2xl text-center">
+              Arms Day
+            </div>
+          </div>
+
+          <div class="px-3">
+            <div class="grid grid-cols-2 gap-2">
+              <div class="flex flex-col gap-2 border-[1px] border-[var(--ion-color-light-tint)] rounded-xl p-3">
+                <ion-text class="font-semibold flex items-center gap-1">
+                  <ion-icon name="barbell"></ion-icon>
+                  Ćwiczenia
+                </ion-text>
+                <div class="self-end leading-none">
+                  <ion-text>1</ion-text>
+                </div>
+              </div>
+              <div class="flex flex-col gap-2 border-[1px] border-[var(--ion-color-light-tint)] rounded-xl p-3">
+                <ion-text class="font-semibold flex items-center gap-1">
+                  <ion-icon name="time-outline"></ion-icon>
+                  Czas
+                </ion-text>
+                <div class="self-end leading-none">
+                  <ion-text>1 min</ion-text>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-evenly border-t-[1px] border-[var(--ion-color-light-tint)]">
+            <ion-buttons>
+              <ion-button>
+                <ion-icon name="heart-outline" slot="start"></ion-icon>
+                Lubię to
+              </ion-button>
+              <ion-button>
+                <ion-icon name="share-social-outline" slot="start"></ion-icon>
+                Udostępnij
+              </ion-button>
+            </ion-buttons>
+          </div>
+        </div>
+
+        <div class="bg-[var(--ion-color-light)] flex flex-col gap-4 rounded-2xl">
+          <div class="flex items-center gap-2 px-3 pt-3">
+            <ion-avatar class="h-12 w-12">
+              <img alt="avatar" src="/assets/avatar.jpg">
+            </ion-avatar>
+            <div class="flex flex-col">
+              <ion-text class="font-semibold">
+                Test User zdobył osiągnięcie.
+              </ion-text>
+              <div class="flex items-center gap-1">
+                <ion-icon name="time-outline" slot="start" color="medium"></ion-icon>
+                <ion-text class="text-sm" color="medium">
+                  12 godz. temu
+                </ion-text>
+              </div>
+            </div>
+          </div>
+
+          <div class="px-3">
+            <div class="flex gap-3 w-full border-[1px] border-[var(--ion-color-light-tint)] rounded-xl p-3">
+              <div
+                class="bg-gradient-to-br from-[var(--ion-color-primary)] to-[var(--ion-color-secondary)] flex items-center justify-center w-14 h-14 p-4 rounded-xl">
+                <ion-icon name="trophy-outline" color="light" size="large"></ion-icon>
+              </div>
+              <div class="flex flex-col w-full justify-between">
+                <ion-text class="font-semibold">
+                  Testowe osiągnięcie.
+                </ion-text>
+                <div class="flex flex-col gap-1">
+                  <ion-progress-bar value="1" class="rounded-full" color="secondary" />
+                  <div class="self-end font-semibold leading-none">
+                    <ion-text color="secondary">1 z 1</ion-text>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-evenly border-t-[1px] border-[var(--ion-color-light-tint)]">
+            <ion-buttons>
+              <ion-button>
+                <ion-icon name="heart-outline" slot="start"></ion-icon>
+                Lubię to
+              </ion-button>
+              <ion-button>
+                <ion-icon name="share-social-outline" slot="start"></ion-icon>
+                Udostępnij
+              </ion-button>
+            </ion-buttons>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="segment === 'achievements'">
+      <div class="flex flex-col gap-2">
+        <div class="font-semibold text-2xl">
+          W trakcie
+        </div>
+
+        <div class="flex gap-3 w-full bg-[var(--ion-color-light)] rounded-2xl p-3" *ngFor="let _ of [1,2,3,4,5]">
+          <div
+            class="bg-[var(--ion-color-light-tint)] flex items-center justify-center w-14 h-14 p-4 rounded-xl">
+            <ion-icon name="trophy-outline" color="light" size="large"></ion-icon>
+          </div>
+          <div class="flex flex-col w-full justify-between">
+            <ion-text class="font-semibold">
+              Testowe osiągnięcie.
+            </ion-text>
+            <div class="flex flex-col gap-1">
+              <ion-progress-bar value="0.5" class="rounded-full" color="secondary" />
+              <div class="self-end font-semibold leading-none">
+                <ion-text color="secondary">1 z 2</ion-text>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="font-semibold text-2xl">
+          Ukończone
+        </div>
+        <div class="flex gap-3 w-full bg-[var(--ion-color-light)] rounded-2xl p-3" *ngFor="let _ of [1,2,3,4,5]">
+          <div
+            class="bg-gradient-to-br from-[var(--ion-color-primary)] to-[var(--ion-color-secondary)] flex items-center justify-center w-14 h-14 p-4 rounded-xl">
+            <ion-icon name="trophy-outline" color="light" size="large"></ion-icon>
+          </div>
+          <div class="flex flex-col w-full justify-between">
+            <ion-text class="font-semibold">
+              Ukończone testowe osiągnięcie.
+            </ion-text>
+            <div class="flex flex-col gap-1">
+              <ion-progress-bar value="1" class="rounded-full" color="secondary" />
+              <div class="self-end font-semibold leading-none">
+                <ion-text color="secondary">1 z 1</ion-text>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="segment === 'stats'">
+      Statystyki
+    </ng-container>
+  </ion-content>
+}
+
