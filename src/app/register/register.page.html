@@ -21,7 +21,7 @@
       <div class="flex flex-col">
         <app-register-form
           [registerStatus]="registerService.status()"
-          (createUser)="registerService.register.next($event)"
+          (createUser)="registerService.register$.next($event)"
         />
         <div class="text-center m-1">
           <ion-text class="text-sm" color="medium">
