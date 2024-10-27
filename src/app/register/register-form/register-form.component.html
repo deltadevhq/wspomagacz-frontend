@@ -1,19 +1,14 @@
 <form [formGroup]="registerForm" (ngSubmit)="createUser.emit(registerForm.getRawValue())"
       class="flex w-full gap-3 flex-col">
-    <ion-input type="text" fill="outline" class="input" placeholder="Nazwa Użytkownika"
-               formControlName="username" errorText="To pole nie może być puste!"></ion-input>
-    <ion-input type="text" fill="outline" class="input" placeholder="Adres E-mail"
-               formControlName="email" errorText="To pole nie może być puste!"></ion-input>
-    <ion-input type="password" fill="outline" class="input" placeholder="Hasło"
-               formControlName="password" errorText="To pole nie może być puste!">
-        <ion-input-password-toggle slot="end"></ion-input-password-toggle>
-    </ion-input>
-
-    @if (registerStatus() === 'error') {
-        <ion-toast [isOpen]="true" message="Nazwa użytkownika lub adres e-mail są już w użyciu!" [duration]="5000" icon="alert-circle"
-                   color="primary"></ion-toast>
-    }
-    <ion-button class="w-full" type="submit"
-                [disabled]="this.registerForm.invalid || registerStatus() === 'creating'">Zarejestruj się
-    </ion-button>
+  <ion-input type="text" fill="outline" class="input" placeholder="Nazwa Użytkownika"
+             formControlName="username" errorText="To pole nie może być puste!"></ion-input>
+  <ion-input type="text" fill="outline" class="input" placeholder="Adres E-mail"
+             formControlName="email" errorText="To pole nie może być puste!"></ion-input>
+  <ion-input type="password" fill="outline" class="input" placeholder="Hasło"
+             formControlName="password" errorText="To pole nie może być puste!">
+    <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+  </ion-input>
+  <ion-button class="w-full" type="submit"
+              [disabled]="this.registerForm.invalid || registerStatus() === 'creating'">Zarejestruj się
+  </ion-button>
 </form>
