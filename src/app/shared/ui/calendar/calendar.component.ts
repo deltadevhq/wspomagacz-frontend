@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { BehaviorSubject, map } from 'rxjs';
-import { IonButton, IonIcon, IonText } from '@ionic/angular/standalone';
+import { IonButton, IonCol, IonGrid, IonIcon, IonRow, IonText } from '@ionic/angular/standalone';
 import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
+import { DateService } from '../../date.service';
 
 export interface HighlightedDate {
   date: Date;
@@ -13,24 +14,35 @@ export interface HighlightedDate {
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss'],
-  imports: [AsyncPipe, NgIf, NgForOf, IonButton, IonIcon, IonText],
+  imports: [AsyncPipe, NgIf, NgForOf, IonButton, IonIcon, IonText, IonCol, IonRow, IonGrid],
 })
 export class CalendarComponent implements OnInit {
   @Input() highlightedDates: HighlightedDate[] = [];
+  @Input() initialDate?: Date;
+  @Input() type: 'week' | 'month' = 'month';
 
-  @Output() selectedDateChange = new EventEmitter<Date>();
+  @Output() selectedDate = new EventEmitter<Date>();
 
-  readonly selectedDay$ = new BehaviorSubject<Date>(new Date());
+  readonly selectedDate$ = new BehaviorSubject<Date>(new Date());
 
   protected readonly weekdays: string[] = ['P', 'W', 'Ś', 'C', 'P', 'S', 'N'];
-  protected readonly today: Date = new Date(new Date().setHours(0, 0, 0, 0));
+
+  private dateService = inject(DateService);
 
   protected readonly firstDay$ = new BehaviorSubject<Date>(
-    this.calculateFirstDay(this.today),
+    this.calculateFirstDay(this.dateService.today),
   );
 
   protected readonly days$ = this.firstDay$.pipe(
     map((firstDay) => {
+      if (this.type === 'week') {
+        return Array.from({ length: 7 }, (_, i) => {
+          const day = new Date(firstDay);
+          day.setDate(firstDay.getDate() + i);
+          return day;
+        });
+      }
+
       const daysInMonth = new Date(
         firstDay.getFullYear(),
         firstDay.getMonth() + 1,
@@ -55,6 +67,12 @@ export class CalendarComponent implements OnInit {
 
   protected readonly timeAgo$ = this.firstDay$.pipe(
     map((day) => {
+      if (this.type === 'week') {
+        const weekAgo = new Date(day);
+        weekAgo.setDate(day.getDate() - 7);
+        return this.calculateFirstDay(weekAgo);
+      }
+
       const monthAgo = new Date(day);
       monthAgo.setMonth(day.getMonth() - 1);
       return this.calculateFirstDay(monthAgo);
@@ -63,49 +81,59 @@ export class CalendarComponent implements OnInit {
 
   protected readonly timeAhead$ = this.firstDay$.pipe(
     map((day) => {
+      if (this.type === 'week') {
+        const weekAhead = new Date(day);
+        weekAhead.setDate(day.getDate() + 7);
+        return this.calculateFirstDay(weekAhead);
+      }
+
       const monthAhead = new Date(day);
       monthAhead.setMonth(day.getMonth() + 1);
       return this.calculateFirstDay(monthAhead);
     }),
   );
 
-  @Input() set date(date: Date) {
-    this.selectedDay$.next(date);
-    this.firstDay$.next(this.calculateFirstDay(date));
-  }
-
   ngOnInit() {
-    this.selectedDay$.subscribe((date) => {
-      this.selectedDateChange.emit(date);
+    this.selectedDate$.next(this.initialDate ?? new Date());
+    this.firstDay$.next(this.calculateFirstDay(this.selectedDate$.value));
+
+    this.selectedDate$.subscribe((date) => {
+      this.selectedDate.emit(date);
     });
   }
 
-  fillDate(date: Date): string {
-    const selectedDay = this.selectedDay$.value.toDateString();
+  getDateFill(date: Date): string {
+    const selectedDay = this.selectedDate$.value.toDateString();
     const day = date.toDateString();
 
     const isSelectedDay = selectedDay === day;
-    const isToday = day === this.today.toDateString();
+    const isToday = day === this.dateService.today.toDateString();
 
     const isHighlighted = this.highlightedDates.some(
       (highlightedDate) => highlightedDate.date.toDateString() === day,
     );
 
-    if (isSelectedDay || isHighlighted) {
+    if (isSelectedDay) {
       return 'solid';
-    } else if (isToday) {
+    }
+
+    if (isToday) {
       return 'outline';
+    }
+
+    if (isHighlighted) {
+      return 'solid';
     }
 
     return 'clear';
   }
 
-  colorDate(date: Date): string {
-    const selectedDay = this.selectedDay$.value.toDateString();
+  getDateColor(date: Date): string {
+    const selectedDay = this.selectedDate$.value.toDateString();
     const day = date.toDateString();
 
     const isSelectedDay = selectedDay === day;
-    const isToday = day === this.today.toDateString();
+    const isToday = day === this.dateService.today.toDateString();
 
     const highlightedDate = this.highlightedDates.find(
       (highlightedDate) => highlightedDate.date.toDateString() === day,
@@ -115,10 +143,12 @@ export class CalendarComponent implements OnInit {
       switch (highlightedDate.color) {
         case 'dimmed-workout-completed':
           return 'workout-completed';
-        case 'dimmed-workout-in-progress':
-          return 'workout-in-progress';
+        case 'dimmed-workout-in_progress':
+          return 'workout-in_progress';
         case 'dimmed-workout-planned':
           return 'workout-planned';
+        case 'dimmed-workout-skipped':
+          return 'workout-skipped';
       }
     } else if (highlightedDate) {
       return highlightedDate.color;
@@ -130,6 +160,10 @@ export class CalendarComponent implements OnInit {
   }
 
   protected calculateFirstDay(day: Date) {
+    if (this.type === 'week') {
+      return new Date(day.getFullYear(), day.getMonth(), day.getDate() - ((day.getDay() + 6) % 7));
+    }
+
     return new Date(day.getFullYear(), day.getMonth(), 1);
   }
 }
