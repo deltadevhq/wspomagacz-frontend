@@ -1,0 +1,35 @@
+<ion-header [translucent]="true" class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Zarejestruj się</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  @if (authService.user() === null) {
+    <div class="welcome-bg flex justify-center flex-col w-full h-full p-8">
+      <div class="flex flex-col text-center items-center gap-2 mb-16">
+        <div class="text-3xl font-bold">
+          Wyciskaj ze <br />Wspomagaczem!
+        </div>
+        <div class="text-sm">
+          Od pierwszego treningu dzieli Cię <br /> już tylko jeden krok.
+        </div>
+      </div>
+      <div class="flex flex-col">
+        <app-register-form
+          [registerStatus]="registerService.status()"
+          (createUser)="registerService.register.next($event)"
+        />
+        <div class="text-center m-1">
+          <ion-text class="text-sm" color="medium">
+            Masz już konto?
+          </ion-text>
+        </div>
+        <ion-button [routerLink]="['/login']" color="light" class="w-full">Zaloguj się</ion-button>
+      </div>
+    </div>
+  }
+</ion-content>
