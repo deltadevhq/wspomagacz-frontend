@@ -1,164 +1,144 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { AuthService } from './auth.service';
 import { HttpClient } from '@angular/common/http';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import {
-    catchError,
-    exhaustMap,
-    filter,
-    map,
-    Observable,
-    of,
-    retry,
-    Subject,
-    tap,
-} from 'rxjs';
-import { Exercise, Workout } from '../models/Workout';
+import { catchError, EMPTY, filter, retry, Subject } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { Exercise, ExerciseType, ExerciseTypes } from '../models/Exercise';
+import { toObservable } from '@angular/core/rxjs-interop';
 
-export type ExerciseType = 'standard' | 'custom' | 'all';
+const ExerciseRoutes = {
+  Default: `${environment.baseUrl}exercises`,
+  Id: (id: number) => `${environment.baseUrl}exercises/${id}`,
+} as const;
 
 interface ExerciseState {
-    exercises: Exercise[];
-    error: string | null;
+  exercises: Exercise[];
+  error: string | null;
 }
 
 @Injectable({
-    providedIn: 'root',
+  providedIn: 'root',
 })
 export class ExerciseService {
-    private authService = inject(AuthService);
-    private http = inject(HttpClient);
-    private authUser$ = toObservable(this.authService.user);
+  private authService = inject(AuthService);
+  private authUser$ = toObservable(this.authService.user);
+  private http = inject(HttpClient);
 
-    exercises$ = this.getExercises().pipe(
-        retry({
-            delay: () => this.authUser$.pipe(filter((user) => !!user)),
-        }),
-        tap((exercises) => {
-            console.log('Got exercises', exercises);
-        }),
+  // sources
+  exercises$ = this.getExercises().pipe(
+    retry({
+      delay: () => this.authUser$.pipe(filter((user) => !!user)),
+    }),
+  );
+  add$ = new Subject<Exercise>();
+  delete$ = new Subject<number>();
+  error$ = new Subject<string>();
+  logout$ = this.authUser$.pipe(filter((user) => !user));
+
+  // state
+  private state = signal<ExerciseState>({
+    exercises: [],
+    error: null,
+  });
+
+  // selectors
+  exercises = computed(() => this.state().exercises);
+  error = computed(() => this.state().error);
+
+  constructor() {
+    // reducers
+    this.exercises$.subscribe((exercises) =>
+      this.state.update((state) => ({
+        ...state,
+        exercises,
+      })),
     );
 
-    add$ = new Subject<Exercise>();
-    delete$ = new Subject<number>();
-    error$ = new Subject<string>();
-    logout$ = this.authUser$.pipe(filter((user) => !user));
-
-    // state
-    private state = signal<ExerciseState>({
-        exercises: [],
-        error: null,
+    this.add$.subscribe((exercise) => {
+      this.postExercise(exercise).subscribe((response) => {
+        this.state.update((state) => ({
+          ...state,
+          exercises: [...state.exercises, response],
+        }));
+      });
     });
 
-    // selectors
-    exercises = computed(() => this.state().exercises);
-    error = computed(() => this.state().error);
+    this.delete$.subscribe((id) => {
+      this.deleteExerciseById(id).subscribe(() => {
+        this.state.update((state) => ({
+          ...state,
+          exercises: state.exercises.filter((exercise) => exercise.exercise_id !== id && exercise.exercise_type === ExerciseTypes.Custom),
+        }));
+      });
+    });
 
-    constructor() {
-        // reducers
-        this.exercises$.pipe(takeUntilDestroyed()).subscribe((exercises) =>
-            this.state.update((state) => ({
-                ...state,
-                exercises,
-            })),
-        );
+    this.error$.subscribe((error) =>
+      this.state.update((state) => ({
+        ...state,
+        error,
+      })),
+    );
 
-        this.add$
-            .pipe(
-                takeUntilDestroyed(),
-                exhaustMap((exercise) => this.postExercise(exercise)),
-            )
-            .subscribe({
-                error: (err) => {
-                    console.log(err);
-                    this.error$.next('Failed to add workout');
-                },
-            });
+    this.logout$.subscribe(() =>
+      this.state.update((state) => ({ ...state, exercises: [] })),
+    );
+  }
 
-        this.delete$
-            .pipe(
-                takeUntilDestroyed(),
-                exhaustMap((exercise) => this.deleteExerciseById(exercise)),
-            )
-            .subscribe({
-                error: (err) => {
-                    console.log(err);
-                    this.error$.next('Failed to add workout');
-                },
-            });
+  /**
+   * Sends a GET request to the server to get all exercises.
+   * @param type - The type of the exercises to get. See {@link ExerciseType}. Defaults to {@link ExerciseType.All}.
+   */
+  getExercises(type?: ExerciseType) {
+    let url = `${ExerciseRoutes.Default}?user_id=${this.authService.user()?.id}${type ? `&type=${type}` : ''}`;
 
-        this.logout$
-            .pipe(takeUntilDestroyed())
-            .subscribe(() =>
-                this.state.update((state) => ({ ...state, workouts: [] })),
-            );
+    return this.http.get<Exercise[]>(url).pipe(
+      catchError((error) => {
+        this.error$.next(`Error ${error.status}: ${error.statusText}. ${error.error}.`);
+        return EMPTY;
+      }),
+    );
+  }
 
-        this.error$
-            .pipe(takeUntilDestroyed())
-            .subscribe((error) =>
-                this.state.update((state) => ({ ...state, error })),
-            );
-    }
+  /**
+   * Sends a POST request to the server to create an exercise.
+   * @param exercise - The exercise to create.
+   *
+   * @remarks This is used to create a custom exercise tied to the user.
+   */
+  postExercise(exercise: Exercise) {
+    return this.http.post<Exercise>(ExerciseRoutes.Default, exercise).pipe(
+      catchError((error) => {
+        this.error$.next(`Error ${error.status}: ${error.statusText}. ${error.error}.`);
+        return EMPTY;
+      }),
+    );
+  }
 
-    getExercises(type?: ExerciseType): Observable<Exercise[]> {
-        if (!this.authService.user()) {
-            this.error$.next('User not authenticated');
-            return of([]);
-        }
+  /**
+   * Sends a GET request to the server to get an exercise by its ID.
+   * @param id - The ID of the exercise to get.
+   */
+  getExerciseById(id: number) {
+    return this.http.get<Exercise>(ExerciseRoutes.Id(id)).pipe(
+      catchError((error) => {
+        this.error$.next(`Error ${error.status}: ${error.statusText}. ${error.error}.`);
+        return EMPTY;
+      }),
+    );
+  }
 
-        let url = `${environment.baseUrl}exercises?user_id=${this.authService.user()?.id}`;
-
-        if (type) {
-            url += `&type=${type}`;
-        }
-
-        return this.http.get(url).pipe(
-            map((exercises: any) => exercises as Exercise[]),
-            catchError(({ error }) => {
-                this.error$.next(`Failed to get exercises: ${error}`);
-                return of([]);
-            }),
-        );
-    }
-
-    postExercise(exercise: Exercise) {
-        return this.http
-            .post(`${environment.baseUrl}/exercises`, exercise)
-            .pipe(
-                tap((response) => {
-                    console.log('Posted workout', response);
-                }),
-            );
-    }
-
-    getExerciseById(id: number) {
-        if (!this.authService.user()) {
-            this.error$.next('User not authenticated');
-            return of([]);
-        }
-
-        return this.http.get(`${environment.baseUrl}exercises/${id}`).pipe(
-            map((exercise: any) => exercise as Workout),
-            tap((exercise) => {
-                console.log('Got workouts', exercise);
-            }),
-            catchError((error) => {
-                this.error$.next(`Failed to get workout: ${error}`);
-                return of([]);
-            }),
-        );
-    }
-
-    deleteExerciseById(id: number) {
-        return this.http.delete(`${environment.baseUrl}/exercises/${id}`).pipe(
-            tap((response) => {
-                console.log('Deleted exercise', response);
-            }),
-            catchError((error) => {
-                this.error$.next(`Failed to delete exercise: ${error}`);
-                return of([]);
-            }),
-        );
-    }
+  /**
+   * Sends a DELETE request to the server to delete an exercise by its ID.
+   * @param id - The ID of the exercise to delete.
+   *
+   * @remarks This is used to delete a custom exercise created by the user.
+   */
+  deleteExerciseById(id: number) {
+    return this.http.delete(ExerciseRoutes.Id(id)).pipe(
+      catchError((error) => {
+        this.error$.next(`Error ${error.status}: ${error.statusText}. ${error.error}.`);
+        return EMPTY;
+      }),
+    );
+  }
 }
