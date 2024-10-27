@@ -3,42 +3,194 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Saira:ital,wght@0,100..900;1,100..900&display=swap');
 
-* {
-    font-family: 'Saira', sans-serif;
-}
-
 :root {
-    --ion-color-primary: #F87171;
-    --ion-color-primary-rgb: 248, 113, 113;
-    --ion-color-primary-contrast: #121212;
-    --ion-color-primary-contrast-rgb: 18, 18, 18;
-    --ion-color-primary-shade: #da6363;
-    --ion-color-primary-tint: #f97f7f;
+  --ion-background-color: #ffffff;
+
+  --ion-color-primary: #F87171;
+  --ion-color-primary-rgb: 248, 113, 113;
+  --ion-color-primary-contrast: #121212;
+  --ion-color-primary-contrast-rgb: 18, 18, 18;
+  --ion-color-primary-shade: #da6363;
+  --ion-color-primary-tint: #f97f7f;
+
+  --ion-color-dimmed-workout-planned: #A2C6D1;
+  --ion-color-dimmed-workout-planned-rgb: 162, 198, 209;
+  --ion-color-dimmed-workout-planned-contrast: #2c5062;
+  --ion-color-dimmed-workout-planned-contrast-rgb: 44, 80, 98;
+  --ion-color-dimmed-workout-planned-shade: #8BB1C0;
+  --ion-color-dimmed-workout-planned-tint: #B6E0E9;
+
+  --ion-color-dimmed-workout-in-progress: #B78D8B;
+  --ion-color-dimmed-workout-in-progress-rgb: 183, 141, 139;
+  --ion-color-dimmed-workout-in-progress-contrast: #6c3d37;
+  --ion-color-dimmed-workout-in-progress-contrast-rgb: 108, 61, 55;
+  --ion-color-dimmed-workout-in-progress-shade: #A47272;
+  --ion-color-dimmed-workout-in-progress-tint: #C6B2B0;
+
+  --ion-color-dimmed-workout-completed: #A2DFA2;
+  --ion-color-dimmed-workout-completed-rgb: 162, 223, 162;
+  --ion-color-dimmed-workout-completed-contrast: #2d5b2d;
+  --ion-color-dimmed-workout-completed-contrast-rgb: 45, 91, 45;
+  --ion-color-dimmed-workout-completed-shade: #92C692;
+  --ion-color-dimmed-workout-completed-tint: #B4E6B4;
+
+  --ion-color-workout-planned: #2c5062;
+  --ion-color-workout-planned-rgb: 44, 80, 98;
+  --ion-color-workout-planned-contrast: #ffffff;
+  --ion-color-workout-planned-contrast-rgb: 255, 255, 255;
+  --ion-color-workout-planned-shade: #25424c;
+  --ion-color-workout-planned-tint: #4A6168;
+
+  --ion-color-workout-in_progress: #6c3d37;
+  --ion-color-workout-in_progress-rgb: 108, 61, 55;
+  --ion-color-workout-in_progress-contrast: #ffffff;
+  --ion-color-workout-in_progress-contrast-rgb: 255, 255, 255;
+  --ion-color-workout-in_progress-shade: #5B3D3B;
+  --ion-color-workout-in_progress-tint: #7B5E5B;
+
+  --ion-color-workout-completed: #2d5b2d;
+  --ion-color-workout-completed-rgb: 45, 91, 45;
+  --ion-color-workout-completed-contrast: #ffffff;
+  --ion-color-workout-completed-contrast-rgb: 255, 255, 255;
+  --ion-color-workout-completed-shade: #244422;
+  --ion-color-workout-completed-tint: #3b7b3b;
 }
 
-ion-button {
-    --border-radius: 1rem;
-    --box-shadow: none;
-    --padding-bottom: 1rem;
-    --padding-top: 1rem;
+.ion-color-dimmed-workout-planned {
+  --ion-color-base: var(--ion-color-dimmed-workout-planned);
+  --ion-color-base-rgb: var(--ion-color-dimmed-workout-planned-rgb);
+  --ion-color-contrast: var(--ion-color-dimmed-workout-planned-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-dimmed-workout-planned-contrast-rgb);
+  --ion-color-shade: var(--ion-color-dimmed-workout-planned-shade);
+  --ion-color-tint: var(--ion-color-dimmed-workout-planned-tint);
 }
 
-ion-card {
-    border-radius: 1rem;
-    box-shadow: none;
-    margin: 0;
+.ion-color-dimmed-workout-in_progress {
+  --ion-color-base: var(--ion-color-dimmed-workout-in-progress);
+  --ion-color-base-rgb: var(--ion-color-dimmed-workout-in-progress-rgb);
+  --ion-color-contrast: var(--ion-color-dimmed-workout-in-progress-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-dimmed-workout-in-progress-contrast-rgb);
+  --ion-color-shade: var(--ion-color-dimmed-workout-in-progress-shade);
+  --ion-color-tint: var(--ion-color-dimmed-workout-in-progress-tint);
 }
 
-ion-toolbar.home-toolbar {
-    --background: var(--ion-background-color);
-    --padding-top: 2rem;
-    --padding-bottom: 2rem;
+.ion-color-dimmed-workout-skipped {
+  --ion-color-base: var(--ion-color-light);
+  --ion-color-base-rgb: var(--ion-color-light-rgb);
+  --ion-color-contrast: var(--ion-color-medium-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-medium-contrast-rgb);
+  --ion-color-shade: var(--ion-color-light-shade);
+  --ion-color-tint: var(--ion-color-light-tint);
 }
 
-.list-md {
-    background: var(--ion-background-color);
+.ion-color-dimmed-workout-completed {
+  --ion-color-base: var(--ion-color-dimmed-workout-completed);
+  --ion-color-base-rgb: var(--ion-color-dimmed-workout-completed-rgb);
+  --ion-color-contrast: var(--ion-color-dimmed-workout-completed-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-dimmed-workout-completed-contrast-rgb);
+  --ion-color-shade: var(--ion-color-dimmed-workout-completed-shade);
+  --ion-color-tint: var(--ion-color-dimmed-workout-completed-tint);
 }
 
-ion-item {
-    --background: var(--ion-background-color);
+.ion-color-workout-planned {
+  --ion-color-base: var(--ion-color-workout-planned);
+  --ion-color-base-rgb: var(--ion-color-workout-planned-rgb);
+  --ion-color-contrast: var(--ion-color-workout-planned-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-workout-planned-contrast-rgb);
+  --ion-color-shade: var(--ion-color-workout-planned-shade);
+  --ion-color-tint: var(--ion-color-workout-planned-tint);
+}
+
+.ion-color-workout-in_progress {
+  --ion-color-base: var(--ion-color-workout-in_progress);
+  --ion-color-base-rgb: var(--ion-color-workout-in_progress-rgb);
+  --ion-color-contrast: var(--ion-color-workout-in_progress-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-workout-in_progress-contrast-rgb);
+  --ion-color-shade: var(--ion-color-workout-in_progress-shade);
+  --ion-color-tint: var(--ion-color-workout-in_progress-tint);
+}
+
+.ion-color-workout-completed {
+  --ion-color-base: var(--ion-color-workout-completed);
+  --ion-color-base-rgb: var(--ion-color-workout-completed-rgb);
+  --ion-color-contrast: var(--ion-color-workout-completed-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-workout-completed-contrast-rgb);
+  --ion-color-shade: var(--ion-color-workout-completed-shade);
+  --ion-color-tint: var(--ion-color-workout-completed-tint);
+}
+
+.ion-color-workout-skipped {
+  --ion-color-base: var(--ion-color-medium);
+  --ion-color-base-rgb: var(--ion-color-medium-rgb);
+  --ion-color-contrast: var(--ion-color-medium-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-medium-contrast-rgb);
+  --ion-color-shade: var(--ion-color-medium-shade);
+  --ion-color-tint: var(--ion-color-medium-tint);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ion-color-light: #1F1F1F;
+    --ion-color-light-rgb: 38, 38, 38;
+    --ion-color-light-contrast: #ffffff;
+    --ion-color-light-contrast-rgb: 255, 255, 255;
+    --ion-color-light-shade: #212121;
+    --ion-color-light-tint: #3c3c3c;
+
+    --ion-color-medium: #848484;
+    --ion-color-medium-rgb: 132, 132, 132;
+    --ion-color-medium-contrast: #000000;
+    --ion-color-medium-contrast-rgb: 0, 0, 0;
+    --ion-color-medium-shade: #747474;
+    --ion-color-medium-tint: #909090;
+
+    --ion-color-dark: #FEF1F1;
+    --ion-color-dark-rgb: 254, 241, 241;
+    --ion-color-dark-contrast: #000000;
+    --ion-color-dark-contrast-rgb: 0, 0, 0;
+    --ion-color-dark-shade: #e0d4d4;
+    --ion-color-dark-tint: #fef2f2;
+
+    --ion-color-dimmed-workout-planned: #20242C;
+    --ion-color-dimmed-workout-planned-rgb: 32, 36, 44;
+    --ion-color-dimmed-workout-planned-contrast: #6A727E;
+    --ion-color-dimmed-workout-planned-contrast-rgb: 106, 114, 126;
+    --ion-color-dimmed-workout-planned-shade: #1c2027;
+    --ion-color-dimmed-workout-planned-tint: #363a41;
+
+    --ion-color-dimmed-workout-in-progress: #2C2320;
+    --ion-color-dimmed-workout-in-progress-rgb: 44, 35, 32;
+    --ion-color-dimmed-workout-in-progress-contrast: #7C5E5B;
+    --ion-color-dimmed-workout-in-progress-contrast-rgb: 124, 94, 91;
+    --ion-color-dimmed-workout-in-progress-shade: #271f1c;
+    --ion-color-dimmed-workout-in-progress-tint: #413936;
+
+    --ion-color-dimmed-workout-completed: #222C22;
+    --ion-color-dimmed-workout-completed-rgb: 34, 44, 34;
+    --ion-color-dimmed-workout-completed-contrast: #6B8B6B;
+    --ion-color-dimmed-workout-completed-contrast-rgb: 107, 139, 107;
+    --ion-color-dimmed-workout-completed-shade: #1e271e;
+    --ion-color-dimmed-workout-completed-tint: #384138;
+
+    --ion-color-workout-planned: #2c5062;
+    --ion-color-workout-planned-rgb: 44, 80, 98;
+    --ion-color-workout-planned-contrast: #ffffff;
+    --ion-color-workout-planned-contrast-rgb: 255, 255, 255;
+    --ion-color-workout-planned-shade: #25424c;
+    --ion-color-workout-planned-tint: #3e6773;
+
+    --ion-color-workout-in_progress: #6c3d37;
+    --ion-color-workout-in_progress-rgb: 108, 61, 55;
+    --ion-color-workout-in_progress-contrast: #ffffff;
+    --ion-color-workout-in_progress-contrast-rgb: 255, 255, 255;
+    --ion-color-workout-in_progress-shade: #5c3230;
+    --ion-color-workout-in_progress-tint: #7a5c5b;
+
+    --ion-color-workout-completed: #2d5b2d;
+    --ion-color-workout-completed-rgb: 45, 91, 45;
+    --ion-color-workout-completed-contrast: #ffffff;
+    --ion-color-workout-completed-contrast-rgb: 255, 255, 255;
+    --ion-color-workout-completed-shade: #244422;
+    --ion-color-workout-completed-tint: #3b7b3b;
+  }
 }
