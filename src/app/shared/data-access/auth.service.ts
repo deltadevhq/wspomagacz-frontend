@@ -1,131 +1,106 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { User, UserGender, UserStatus, UserWeight } from '../models/User';
-import { BehaviorSubject, catchError, concatMap, tap } from 'rxjs';
+import { transformUser, User, UserResponse } from '../models/User';
+import { BehaviorSubject, catchError, concatMap, EMPTY, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { environment } from '../../../environments/environment';
-
-export interface UserResponse {
-    id: number;
-    username: string;
-    display_name: string;
-    email: string;
-    birthday: string;
-    exp: number;
-    level: number;
-    height: number;
-    status: string;
-    gender: string;
-    weights: UserWeight[];
-    last_logged_at: string;
-    modified_at: string;
-    created_at: string;
-}
 
 export type AuthUser = User | null;
 
 interface AuthState {
-    user: AuthUser;
+  user: AuthUser;
 }
 
 export type Credentials = {
-    username: string;
-    password: string;
+  username: string;
+  password: string;
 };
 
 export type CreateUserCredentials = {
-    username: string;
-    email: string;
-    password: string;
+  username: string;
+  email: string;
+  password: string;
 };
 
 @Injectable({
-    providedIn: 'root',
+  providedIn: 'root',
 })
 export class AuthService {
-    private http = inject(HttpClient);
+  private http = inject(HttpClient);
 
-    // sources
-    private user$ = new BehaviorSubject<AuthUser>(null);
+  // sources
+  private user$ = new BehaviorSubject<AuthUser>(null);
 
-    // state
-    private state = signal<AuthState>({
-        user: null,
-    });
+  // state
+  private state = signal<AuthState>({
+    user: null,
+  });
 
-    user = computed(() => this.state().user);
+  user = computed(() => this.state().user);
 
-    constructor() {
-        this.user$.pipe(takeUntilDestroyed()).subscribe((user) => {
-            this.state.update((state) => ({
-                ...state,
-                user,
-            }));
-        });
+  constructor() {
+    this.user$
+      .pipe(takeUntilDestroyed())
+      .subscribe((user) => {
+        this.state.update((state) => ({
+          ...state,
+          user,
+        }));
+      });
 
-        this.getUser().subscribe();
-    }
+    this.getUser().subscribe();
+  }
 
-    login(credentials: Credentials) {
-        return this.http
-            .post(`${environment.baseUrl}auth/login`, credentials)
-            .pipe(concatMap(() => this.getUser()));
-    }
+  /**
+   * Login the user.
+   * @param credentials - The user credentials.
+   */
+  login(credentials: Credentials) {
+    return this.http
+      .post(`${environment.baseUrl}auth/login`, credentials)
+      .pipe(concatMap(() => this.getUser()));
+  }
 
-    getUser() {
-        return this.http
-            .get<UserResponse>(`${environment.baseUrl}auth/user`)
-            .pipe(
-                tap((user) => {
-                    this.user$.next(this.parseUser(user));
-                }),
-                catchError(() => {
-                    this.user$.next(null);
-                    return [];
-                }),
-            );
-    }
+  /**
+   * Get the current user.
+   */
+  getUser() {
+    return this.http
+      .get<UserResponse>(`${environment.baseUrl}auth/user`)
+      .pipe(
+        tap((user) => this.user$.next(transformUser(user))),
+        catchError(() => {
+          this.user$.next(null);
+          return EMPTY;
+        }),
+      );
+  }
 
-    logout() {
-        return this.http.post(`${environment.baseUrl}auth/logout`, {}).pipe(
-            tap(() => {
-                this.user$.next(null);
-            }),
-        );
-    }
+  /**
+   * Logout the current user.
+   */
+  logout() {
+    return this.http.post(`${environment.baseUrl}auth/logout`, {}).pipe(
+      tap(() => this.user$.next(null)),
+      catchError(() => EMPTY),
+    );
+  }
 
-    register(createUser: CreateUserCredentials) {
-        return this.http
-            .post(`${environment.baseUrl}auth/register`, createUser)
-            .pipe(
-                concatMap(() =>
-                    this.login({
-                        username: createUser.username,
-                        password: createUser.password,
-                    } as Credentials),
-                ),
-            );
-    }
-
-    private parseUser(user: UserResponse): User {
-        const {
-            birthday,
-            modified_at,
-            last_logged_at,
-            created_at,
-            gender,
-            status,
-            ...rest
-        } = user;
-
-        return {
-            birthday: new Date(birthday),
-            created_at: new Date(created_at),
-            modified_at: new Date(modified_at),
-            last_logged_at: new Date(last_logged_at),
-            gender: UserGender[gender as keyof typeof UserGender],
-            status: UserStatus[status as keyof typeof UserStatus],
-            ...rest,
-        };
-    }
+  /**
+   * Register a new user.
+   * @param user - The user to register.
+   */
+  register(user: CreateUserCredentials) {
+    return this.http
+      .post(`${environment.baseUrl}auth/register`, user)
+      .pipe(
+        concatMap(() =>
+          this.login({
+            username: user.username,
+            password: user.password,
+          } as Credentials),
+        ),
+        catchError(() => EMPTY),
+      );
+  }
 }
