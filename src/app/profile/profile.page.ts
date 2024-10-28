@@ -29,13 +29,14 @@ import { LevelProgressComponent } from '../shared/ui/level-progress/level-progre
 import { AuthService } from '../shared/data-access/auth.service';
 import { Router } from '@angular/router';
 import { AvatarLevelProgressComponent } from '../shared/ui/avatar-level-progress/avatar-level-progress.component';
+import { UserActivityFeedComponent } from '../user-details/ui/user-activity-feed/user-activity-feed.component';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.page.html',
   styleUrls: ['./profile.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonAvatar, IonRippleEffect, IonItem, IonLabel, LevelProgressComponent, IonText, IonButton, IonIcon, IonButtons, IonBackButton, IonSegment, IonSegmentButton, AvatarLevelProgressComponent, IonList, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonProgressBar],
+  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonAvatar, IonRippleEffect, IonItem, IonLabel, LevelProgressComponent, IonText, IonButton, IonIcon, IonButtons, IonBackButton, IonSegment, IonSegmentButton, AvatarLevelProgressComponent, IonList, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonProgressBar, UserActivityFeedComponent],
 })
 export class ProfilePage {
   public authService = inject(AuthService);
