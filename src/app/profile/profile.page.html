@@ -1,5 +1,5 @@
 @defer (when authService.user() !== null) {
-  <ion-header class="ion-no-border pb-8 rounded-b-2xl">
+  <ion-header class="ion-no-border rounded-b-2xl">
     <ion-toolbar class="ion-padding-top ion-padding-horizontal pb-4">
       <ion-title>Profil</ion-title>
       <ion-button color="dark" fill="clear" size="large" slot="end">
@@ -7,27 +7,44 @@
       </ion-button>
     </ion-toolbar>
 
-    <div class="flex flex-col gap-6">
-      <section class="flex justify-center">
-        <ion-avatar class="h-22 w-22">
-          <img alt="avatar" src="/assets/avatar.jpg">
-        </ion-avatar>
-      </section>
+    <div class="flex flex-col gap-6 px-8">
+      @if (collapseHeader) {
+        <section class="flex gap-4 items-center">
+          <app-avatar-level-progress />
 
-      <section class="flex flex-col items-center leading-none">
-        <ion-text class="text-2xl font-semibold">
-          {{ authService.user()?.display_name }}
-        </ion-text>
-        <ion-text color="medium">
-          {{ authService.user()?.username }}
-        </ion-text>
-      </section>
+          <div class="flex flex-col leading-none">
+            <ion-text class="text-2xl font-semibold">
+              {{ authService.user()?.display_name }}
+            </ion-text>
+            <ion-text color="medium">
+              {{ authService.user()?.username }}
+            </ion-text>
+          </div>
+        </section>
+      } @else {
+        <section class="flex flex-col gap-4">
+          <div class="flex justify-center">
+            <ion-avatar class="h-24 w-24">
+              <img alt="avatar" src="/assets/avatar.jpg">
+            </ion-avatar>
+          </div>
 
-      <section class="px-8">
-        <app-level-progress class="flex flex-col gap-1" />
-      </section>
+          <div class="flex flex-col leading-none items-center">
+            <ion-text class="text-2xl font-semibold">
+              {{ authService.user()?.display_name }}
+            </ion-text>
+            <ion-text color="medium">
+              {{ authService.user()?.username }}
+            </ion-text>
+          </div>
+        </section>
 
-      <section class="px-8">
+        <section>
+          <app-level-progress class="flex flex-col gap-1" />
+        </section>
+      }
+
+      <section>
         <ion-segment mode="ios" (ionChange)="segmentChanged($event)" [(ngModel)]="segment">
           <ion-segment-button value="feed">
             <ion-label>Aktywność</ion-label>
@@ -41,6 +58,9 @@
         </ion-segment>
       </section>
     </div>
+    <ion-button fill="clear" color="dark" expand="block" size="small" (click)="collapseHeader = !collapseHeader">
+      <ion-icon [name]="collapseHeader ? 'chevron-down' : 'chevron-up'"></ion-icon>
+    </ion-button>
   </ion-header>
 
   <ion-content [fullscreen]="true" class="ion-padding">

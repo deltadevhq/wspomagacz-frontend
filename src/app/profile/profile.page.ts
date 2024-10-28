@@ -42,6 +42,7 @@ export class ProfilePage {
   private router = inject(Router);
 
   segment = 'feed';
+  collapseHeader = false;
 
   constructor() {
     effect(() => {
