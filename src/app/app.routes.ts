@@ -30,6 +30,10 @@ export const routes: Routes = [
         loadComponent: () => import('./workouts/workouts.page').then(m => m.WorkoutsPage),
       },
       {
+        path: 'ranking',
+        loadComponent: () => import('./ranking/ranking.page').then(m => m.RankingPage),
+      },
+      {
         path: 'profile',
         loadComponent: () => import('./profile/profile.page').then(m => m.ProfilePage),
       },
@@ -38,8 +42,4 @@ export const routes: Routes = [
     ],
   },
   { path: '**', redirectTo: '/welcome' },
-  {
-    path: 'ranking',
-    loadComponent: () => import('./ranking/ranking.page').then(m => m.RankingPage),
-  },
 ];
