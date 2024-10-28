@@ -1,14 +1,12 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { transformUser, User, UserResponse } from '../models/User';
+import { AuthUser, AuthUserResponse, transformAuthUser } from '../models/User';
 import { BehaviorSubject, catchError, concatMap, EMPTY, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { environment } from '../../../environments/environment';
 
-export type AuthUser = User | null;
-
 interface AuthState {
-  user: AuthUser;
+  user: AuthUser | null;
 }
 
 export type Credentials = {
@@ -29,7 +27,7 @@ export class AuthService {
   private http = inject(HttpClient);
 
   // sources
-  private user$ = new BehaviorSubject<AuthUser>(null);
+  private user$ = new BehaviorSubject<AuthUser | null>(null);
 
   // state
   private state = signal<AuthState>({
@@ -66,9 +64,9 @@ export class AuthService {
    */
   getUser() {
     return this.http
-      .get<UserResponse>(`${environment.baseUrl}auth/user`)
+      .get<AuthUserResponse>(`${environment.baseUrl}auth/user`)
       .pipe(
-        tap((user) => this.user$.next(transformUser(user))),
+        tap((user) => this.user$.next(transformAuthUser(user))),
         catchError(() => {
           this.user$.next(null);
           return EMPTY;

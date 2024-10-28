@@ -21,11 +21,15 @@ export interface User {
   display_name: string;
   gender: UserGender;
   birthday: Date;
-  status: UserStatus;
-  level: number;
   exp: number;
-  weights: UserWeight[];
+  level: number;
   height: number;
+  weights: UserWeight[];
+  status: UserStatus;
+}
+
+export interface AuthUser extends User {
+  email: string;
   created_at: Date;
   modified_at: Date;
   last_logged_at: Date;
@@ -35,7 +39,6 @@ export interface UserResponse {
   id: number;
   username: string;
   display_name: string;
-  email: string;
   birthday: string;
   exp: number;
   level: number;
@@ -43,12 +46,27 @@ export interface UserResponse {
   status: string;
   gender: string;
   weights: UserWeight[];
+}
+
+export interface AuthUserResponse extends UserResponse {
+  email: string;
   last_logged_at: string;
   modified_at: string;
   created_at: string;
 }
 
 export const transformUser = (user: UserResponse): User => {
+  const { birthday, status, gender, ...rest } = user;
+
+  return {
+    birthday: new Date(birthday),
+    status: UserStatus[status as keyof typeof UserStatus],
+    gender: UserGender[gender as keyof typeof UserGender],
+    ...rest,
+  };
+};
+
+export const transformAuthUser = (user: AuthUserResponse): AuthUser => {
   const {
     birthday,
     modified_at,
