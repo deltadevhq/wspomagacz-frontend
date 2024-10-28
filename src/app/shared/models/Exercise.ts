@@ -10,10 +10,10 @@ export interface Exercise {
   exercise_type: ExerciseType;
 }
 
-export const ExerciseTypes = {
+export const ExerciseType = {
   Standard: 'standard',
   Custom: 'custom',
   All: 'all',
 } as const;
 
-export type ExerciseType = typeof ExerciseTypes[keyof typeof ExerciseTypes];
+export type ExerciseType = typeof ExerciseType[keyof typeof ExerciseType];

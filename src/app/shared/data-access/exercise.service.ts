@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { HttpClient } from '@angular/common/http';
 import { catchError, EMPTY, filter, retry, Subject } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Exercise, ExerciseType, ExerciseTypes } from '../models/Exercise';
+import { Exercise, ExerciseType } from '../models/Exercise';
 import { toObservable } from '@angular/core/rxjs-interop';
 
 const ExerciseRoutes = {
@@ -67,7 +67,7 @@ export class ExerciseService {
       this.deleteExerciseById(id).subscribe(() => {
         this.state.update((state) => ({
           ...state,
-          exercises: state.exercises.filter((exercise) => exercise.exercise_id !== id && exercise.exercise_type === ExerciseTypes.Custom),
+          exercises: state.exercises.filter((exercise) => exercise.exercise_id !== id && exercise.exercise_type === ExerciseType.Custom),
         }));
       });
     });

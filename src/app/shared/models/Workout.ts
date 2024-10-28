@@ -52,14 +52,14 @@ export interface WorkoutExerciseSet {
   order: number;
 }
 
-export const WorkoutStatuses = {
+export const WorkoutStatus = {
   Completed: 'completed',
   InProgress: 'in_progress',
   Planned: 'planned',
   Skipped: 'skipped',
 } as const;
 
-export type WorkoutStatus = typeof WorkoutStatuses[keyof typeof WorkoutStatuses];
+export type WorkoutStatus = typeof WorkoutStatus[keyof typeof WorkoutStatus];
 
 export const transformResponseToWorkout = (workout: WorkoutResponse): Workout => ({
   ...workout,

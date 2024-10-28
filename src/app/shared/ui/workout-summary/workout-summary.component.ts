@@ -14,7 +14,7 @@ import {
 } from '@ionic/angular/standalone';
 import { NgClass, NgIf, NgSwitch, NgSwitchCase } from '@angular/common';
 import { EditWorkoutComponent } from '../../../edit-workout/edit-workout.component';
-import { Workout, WorkoutStatuses } from '../../models/Workout';
+import { Workout, WorkoutStatus } from '../../models/Workout';
 import { WorkoutService } from '../../data-access/workout.service';
 import { DateService } from '../../date.service';
 
@@ -49,5 +49,5 @@ export class WorkoutSummaryComponent {
     await modal.onWillDismiss();
   }
 
-  protected readonly WorkoutStatuses = WorkoutStatuses;
+  protected readonly WorkoutStatuses = WorkoutStatus;
 }
