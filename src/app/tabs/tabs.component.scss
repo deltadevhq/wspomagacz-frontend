@@ -1,1 +1,10 @@
+ion-split-pane {
+  --side-width: 250px;
+}
 
+.active {
+  color: var(--ion-color-primary);
+  --color: var(--ion-color-primary);
+  font-weight: 600;
+  --background: var(--ion-color-light-shade);
+}

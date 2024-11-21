@@ -1,8 +1,8 @@
 import { Component, inject, input, output } from '@angular/core';
-import { CreateUserCredentials } from '../../shared/data-access/auth.service';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RegisterStatus } from '../register.service';
 import { IonButton, IonInput, IonInputPasswordToggle, IonToast } from '@ionic/angular/standalone';
+import { RegisterStatus } from '../../data-access/register.service';
+import { CreateUserCredentials } from '../../../shared/data-access/auth.service';
 
 @Component({
   standalone: true,

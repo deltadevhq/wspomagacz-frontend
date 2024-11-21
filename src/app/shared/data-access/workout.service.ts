@@ -175,7 +175,7 @@ export class WorkoutService {
       this.error$.next('Wartości serii muszą być większe od 0!');
       return EMPTY;
     }
-    
+
     if (workout.exercises.some((exercise) => exercise.sets.some((set) => set.reps === 0))) {
       this.error$.next('Seria nie może mieć 0 powtórzeń!');
       return EMPTY;
@@ -185,7 +185,23 @@ export class WorkoutService {
       map(transformResponseToWorkout),
       tap(() => this.error$.next(null)),
       catchError((err) => {
-        this.error$.next(`Error ${err.status}: ${err.statusText}. ${err.error.error}.`);
+        switch (err.status) {
+          case 400:
+            this.error$.next('Dane treningu są jest niepoprawne!');
+            break;
+          case 401:
+            this.error$.next('Nie jesteś zalogowany!');
+            break;
+          case 403:
+            this.error$.next('Nie masz uprawnień do wykonania tej operacji!');
+            break;
+          case 500:
+            this.error$.next('Wystąpił problem z serwerem!');
+            break;
+          default:
+            this.error$.next(`Error ${err.status}: ${err.statusText}. ${err.error.error}.`);
+            break;
+        }
         return EMPTY;
       }),
     );
@@ -200,7 +216,26 @@ export class WorkoutService {
       map(transformResponseToWorkout),
       tap(() => this.error$.next(null)),
       catchError((err) => {
-        this.error$.next(`Error ${err.status}: ${err.statusText}. ${err.error.error}.`);
+        switch (err.status) {
+          case 400:
+            this.error$.next('Podano nieprawidłowe ID treningu!');
+            break;
+          case 401:
+            this.error$.next('Nie jesteś zalogowany!');
+            break;
+          case 403:
+            this.error$.next('Nie masz uprawnień do wykonania tej operacji!');
+            break;
+          case 404:
+            this.error$.next('Nie znaleziono treningu o podanym ID!');
+            break;
+          case 500:
+            this.error$.next('Wystąpił problem z serwerem!');
+            break;
+          default:
+            this.error$.next(`Error ${err.status}: ${err.statusText}. ${err.error.error}.`);
+            break;
+        }
         return EMPTY;
       }),
     );
@@ -215,7 +250,25 @@ export class WorkoutService {
       map(() => id),
       tap(() => this.error$.next(null)),
       catchError((err) => {
-        this.error$.next(`Error ${err.status}: ${err.statusText}. ${err.error.error}.`);
+        switch (err.status) {
+          case 400:
+            this.error$.next('Podano nieprawidłowe ID treningu!');
+            break;
+          case 401:
+            this.error$.next('Nie jesteś zalogowany!');
+            break;
+          case 403:
+            this.error$.next('Nie masz uprawnień do wykonania tej operacji!');
+            break;
+          case 404:
+            this.error$.next('Nie znaleziono treningu o podanym ID!');
+            break;
+          case 500:
+            this.error$.next('Wystąpił problem z serwerem!');
+            break;
+          default:
+            this.error$.next(`Error ${err.status}: ${err.statusText}. ${err.error.error}.`);
+        }
         return EMPTY;
       }),
     );
@@ -229,7 +282,28 @@ export class WorkoutService {
     return this.http.post(WorkoutRoutes.Start(id), {}).pipe(
       map(() => id),
       catchError((err) => {
-        this.error$.next(`Error ${err.status}: ${err.statusText}. ${err.error.error}.`);
+        switch (err.status) {
+          case 400:
+            this.error$.next('Podano nieprawidłowe ID treningu!');
+            break;
+          case 401:
+            this.error$.next('Nie jesteś zalogowany!');
+            break;
+          case 403:
+            this.error$.next('Nie masz uprawnień do wykonania tej operacji!');
+            break;
+          case 404:
+            this.error$.next('Nie znaleziono treningu o podanym ID!');
+            break;
+          case 409:
+            this.error$.next('Trening jest już rozpoczęty!');
+            break;
+          case 500:
+            this.error$.next('Wystąpił problem z serwerem!');
+            break;
+          default:
+            this.error$.next(`Error ${err.status}: ${err.statusText}. ${err.error.error}.`);
+        }
         return EMPTY;
       }),
     );
@@ -243,7 +317,28 @@ export class WorkoutService {
     return this.http.post(WorkoutRoutes.Finish(id), {}).pipe(
       map(() => id),
       catchError((err) => {
-        this.error$.next(`Error ${err.status}: ${err.statusText}. ${err.error.error}.`);
+        switch (err.status) {
+          case 400:
+            this.error$.next('Podano nieprawidłowe ID treningu!');
+            break;
+          case 401:
+            this.error$.next('Nie jesteś zalogowany!');
+            break;
+          case 403:
+            this.error$.next('Nie masz uprawnień do wykonania tej operacji!');
+            break;
+          case 404:
+            this.error$.next('Nie znaleziono treningu o podanym ID!');
+            break;
+          case 409:
+            this.error$.next('Trening nie został jeszcze rozpoczęty!');
+            break;
+          case 500:
+            this.error$.next('Wystąpił problem z serwerem!');
+            break;
+          default:
+            this.error$.next(`Error ${err.status}: ${err.statusText}. ${err.error.error}.`);
+        }
         return EMPTY;
       }),
     );
@@ -269,7 +364,7 @@ export class WorkoutService {
    */
   async presentErrorToast() {
     const toast = await this.toastController.create({
-      message: `Wystąpił problem przy zapisywaniu treningu!`,
+      message: `${this.error()}`,
       duration: 2000,
       position: 'bottom',
       color: 'primary',

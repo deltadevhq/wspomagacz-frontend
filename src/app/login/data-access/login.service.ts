@@ -2,8 +2,8 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EMPTY, Subject, switchMap } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { AuthService, Credentials } from '../shared/data-access/auth.service';
 import { ToastController } from '@ionic/angular/standalone';
+import { AuthService, Credentials } from '../../shared/data-access/auth.service';
 
 export type LoginStatus = 'pending' | 'authenticating' | 'success' | 'error';
 

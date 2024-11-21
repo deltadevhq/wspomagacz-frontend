@@ -84,29 +84,53 @@
     --padding-top: 0;
     aspect-ratio: 1 / 1;
   }
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    ion-list {
-      background: transparent;
-    }
-
-    ion-item {
-      --background: var(--ion-background-color);
-    }
-
-    ion-tab-bar {
-      box-shadow: 0 0 30px 5px var(--ion-background-color);
-    }
+  ion-list {
+    background: transparent;
   }
-}
 
-@media (prefers-color-scheme: light) {
-  :root {
-    ion-card {
-      border-color: var(--ion-color-medium);
-      border: 1px solid;
-    }
+  ion-item {
+    --background: var(--ion-background-color);
+  }
+
+  ion-tab-bar {
+    box-shadow: 0 0 30px 5px var(--ion-background-color);
+  }
+
+  ion-skeleton-text {
+    margin: 0;
+    padding: 0;
+  }
+
+  ion-action-sheet {
+    --button-color: var(--ion-color-light-contrast);
+    --ion-color-danger: var(--ion-color-primary);
+  }
+
+  ion-action-sheet .action-sheet-button {
+    font-size: 1rem;
+  }
+
+  ion-segment-button::part(indicator-background) {
+    background: var(--ion-color-primary);
+  }
+
+  .segment-button-checked.ios::part(native) {
+    color: var(--ion-color-primary-contrast);
+  }
+
+  ion-modal {
+    --border-radius: 1rem;
+  }
+
+  ion-buttons {
+    --border-radius: 1rem;
+  }
+
+  ion-datetime {
+    border-radius: 1rem;
+
+    --background: transparent;
+    --background-rgb: var(--ion-background-color-rgb);
   }
 }

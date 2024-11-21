@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   IonBadge,
   IonButton,
@@ -10,13 +10,17 @@ import {
   IonLabel,
   IonList,
   IonModal,
+  IonPopover,
   IonText,
   IonTitle,
   IonToolbar,
+  ModalController,
 } from '@ionic/angular/standalone';
-import { NotificationsService } from '../../data-access/notifications.service';
+import { AsyncPipe, NgClass, NgForOf, NgIf } from '@angular/common';
+import { NotificationListComponent } from './notification-list/notification-list.component';
+import { NotificationService } from '../../data-access/notification.service';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-notifications',
@@ -40,11 +44,28 @@ import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
     NgForOf,
     IonBadge,
     IonText,
+    NgClass,
+    IonPopover,
+    NotificationListComponent,
   ],
 })
 export class NotificationsComponent {
-  notificationService = inject(NotificationsService);
+  notificationService = inject(NotificationService);
   notifications$ = toObservable(this.notificationService.notifications);
 
-  @ViewChild(IonModal) modal!: IonModal;
+  unreadCount$ = this.notifications$.pipe(
+    map((notifications) => notifications.filter((notification) => !notification.read).length),
+  );
+
+  private modalController = inject(ModalController);
+
+  async openNotifications() {
+    const modal = await this.modalController.create({
+      component: NotificationListComponent,
+    });
+
+    await modal.present();
+
+    await modal.onDidDismiss();
+  }
 }

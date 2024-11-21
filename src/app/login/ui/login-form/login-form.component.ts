@@ -1,9 +1,9 @@
 import { Component, inject, input, output } from '@angular/core';
-import { LoginStatus } from '../login.service';
-import { Credentials } from '../../shared/data-access/auth.service';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonButton, IonInput, IonInputPasswordToggle, IonToast } from '@ionic/angular/standalone';
 import { NgIf } from '@angular/common';
+import { LoginStatus } from '../../data-access/login.service';
+import { Credentials } from '../../../shared/data-access/auth.service';
 
 @Component({
   standalone: true,
@@ -19,7 +19,7 @@ export class LoginFormComponent {
   private fb = inject(FormBuilder);
 
   loginForm = this.fb.nonNullable.group({
-    username: ['testowicz', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
-    password: ['Test123!', [Validators.required, Validators.minLength(8), Validators.maxLength(100)]],
+    username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
+    password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(100)]],
   });
 }

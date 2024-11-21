@@ -1,123 +1,144 @@
-@defer (when authService.user() !== null) {
-  <ion-header class="ion-no-border rounded-b-2xl">
-    <ion-toolbar class="ion-padding-top ion-padding-horizontal pb-4">
-      <ion-title>Profil</ion-title>
-      <ion-button color="dark" fill="clear" size="large" slot="end">
-        <ion-icon name="settings-outline" slot="icon-only"></ion-icon>
-      </ion-button>
-    </ion-toolbar>
+<ion-header class="ion-no-border rounded-b-2xl">
+  <ion-toolbar class="ion-padding-top ion-padding-horizontal pb-4">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
 
-    <div class="flex flex-col gap-6 px-8">
-      @if (collapseHeader) {
-        <section class="flex gap-4 items-center">
-          <app-avatar-level-progress />
+    <ion-title>Profil</ion-title>
+    @defer {
+      <ng-container *ngIf="user$ | async as user">
+        <ion-button color="dark" fill="clear" size="large" slot="end" (click)="openSettingsModal()"
+                    *ngIf="user.id === authService.user()?.id">
+          <ion-icon name="settings-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+
+        <!--<ng-template #friend>
+          <ion-button color="success" size="large" slot="end">
+            <ion-icon name="person-add-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+          <ion-button color="primary" size="large" slot="end">
+            <ion-icon name="person-remove-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ng-template>-->
+      </ng-container>
+    }
+  </ion-toolbar>
+
+  <div class="flex flex-col gap-6 px-8 pb-8">
+    @defer {
+      <ng-container *ngIf="user$ | async as user; else noUser">
+        <section class="flex items-center transition-all duration-500" [ngClass]="collapseHeader ? 'gap-4' : 'gap-6'">
+          <ion-avatar class="transition-all duration-500" [ngClass]="collapseHeader ? 'size-16' : 'size-24'">
+            <img alt="" [ngSrc]="environment.baseUrl + 'users/' + user.id + '/avatar'" width="128"
+                 height="128">
+          </ion-avatar>
 
           <div class="flex flex-col leading-none">
             <ion-text class="text-2xl font-semibold">
-              {{ authService.user()?.display_name }}
+              {{ user.display_name }}
             </ion-text>
             <ion-text color="medium">
-              {{ authService.user()?.username }}
-            </ion-text>
-          </div>
-        </section>
-      } @else {
-        <section class="flex flex-col gap-4">
-          <div class="flex justify-center">
-            <ion-avatar class="h-24 w-24">
-              <img alt="avatar" src="/assets/avatar.jpg">
-            </ion-avatar>
-          </div>
-
-          <div class="flex flex-col leading-none items-center">
-            <ion-text class="text-2xl font-semibold">
-              {{ authService.user()?.display_name }}
-            </ion-text>
-            <ion-text color="medium">
-              {{ authService.user()?.username }}
+              {{ user.username }}
             </ion-text>
           </div>
         </section>
 
-        <section>
-          <app-level-progress class="flex flex-col gap-1" />
+        <section class="grid transition-[grid-template-rows] duration-500"
+                 [ngClass]="collapseHeader ? 'grid-rows-[0fr]' : 'grid-rows-[1fr]'">
+          <app-level-progress class="flex flex-col gap-1 overflow-hidden" />
         </section>
-      }
+      </ng-container>
 
-      <section>
-        <ion-segment mode="ios" (ionChange)="segmentChanged($event)" [(ngModel)]="segment">
-          <ion-segment-button value="feed">
-            <ion-label>Aktywność</ion-label>
-          </ion-segment-button>
-          <ion-segment-button value="achievements">
-            <ion-label>Osiągnięcia</ion-label>
-          </ion-segment-button>
-          <ion-segment-button value="stats">
-            <ion-label>Statystyki</ion-label>
-          </ion-segment-button>
-        </ion-segment>
+      <ng-template #noUser>
+        <div class="flex items-center gap-2">
+          <ion-icon name="alert-circle-outline" size="large"></ion-icon>
+          <ion-text class="font-semibold text-xl">
+            Nie znaleziono podanego użytkownika.
+          </ion-text>
+        </div>
+        Możliwe przyczyny:
+        <ul class="list-item list-disc">
+          <li>Użytkownik nie istnieje.</li>
+          <li>Konto zostało usunięte lub ma ograniczoną widoczność.</li>
+          <li>Wystąpiły problemy z serwerem.</li>
+        </ul>
+      </ng-template>
+    } @placeholder {
+      <section class="flex items-center transition-all duration-500" [ngClass]="collapseHeader ? 'gap-4' : 'gap-6'">
+        <ion-skeleton-text animated class="rounded-2xl transition-all duration-500"
+                           [ngClass]="collapseHeader ? 'size-16' : 'size-24'"></ion-skeleton-text>
+        <div class="flex flex-col gap-2">
+          <ion-skeleton-text animated class="h-6 w-24 rounded-2xl"></ion-skeleton-text>
+          <ion-skeleton-text animated class="h-4 w-16 rounded-2xl"></ion-skeleton-text>
+        </div>
       </section>
-    </div>
-    <ion-button fill="clear" color="dark" expand="block" size="small" (click)="collapseHeader = !collapseHeader">
-      <ion-icon [name]="collapseHeader ? 'chevron-down' : 'chevron-up'"></ion-icon>
-    </ion-button>
-  </ion-header>
 
-  <ion-content [fullscreen]="true" class="ion-padding">
-    <ng-container *ngIf="segment === 'feed'">
-      <app-user-activity-feed [user]="authService.user()!" />
-    </ng-container>
-
-    <ng-container *ngIf="segment === 'achievements'">
-      <div class="flex flex-col gap-2">
-        <div class="font-semibold text-2xl">
-          W trakcie
+      <section class="grid transition-[grid-template-rows] duration-500"
+               [ngClass]="collapseHeader ? 'grid-rows-[0fr]' : 'grid-rows-[1fr]'">
+        <div class="flex flex-col gap-2 overflow-hidden">
+          <ion-skeleton-text animated class="h-4 w-24 rounded-2xl"></ion-skeleton-text>
+          <ion-skeleton-text animated class="h-3 w-full rounded-full"></ion-skeleton-text>
+          <ion-skeleton-text animated class="self-end h-3 w-36 rounded-2xl"></ion-skeleton-text>
         </div>
+      </section>
+    }
 
-        <div class="flex gap-3 w-full bg-[var(--ion-color-light)] rounded-2xl p-3" *ngFor="let _ of [1,2,3,4,5]">
-          <div
-            class="bg-[var(--ion-color-light-tint)] flex items-center justify-center w-14 h-14 p-4 rounded-xl">
-            <ion-icon name="trophy-outline" color="light" size="large"></ion-icon>
+    <section class="transition-all duration-500" [ngClass]="{'-mt-6': collapseHeader}">
+      <ion-segment mode="ios" (ionChange)="segmentChanged($event)" [(ngModel)]="segment">
+        <ion-segment-button value="feed">
+          <ion-label>Aktywność</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="achievements">
+          <ion-label>Osiągnięcia</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="stats">
+          <ion-label>Statystyki</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </section>
+  </div>
+</ion-header>
+
+<ion-content scroll-y="false">
+  <swiper-container
+    #profileSwiper
+    (swiperslidechange)="slideChanged($event)"
+    class="w-full h-full">
+    <ng-container *ngIf="user$ | async as user">
+      <swiper-slide class="ion-padding h-full overflow-y-scroll ion-content-scroll-host"
+                    (scroll)="onContentScroll($event)">
+        <app-user-activity-feed [userId]="user.id" />
+      </swiper-slide>
+
+      <swiper-slide class="ion-padding h-full overflow-y-scroll" (scroll)="onContentScroll($event)">
+        <div class="flex flex-col gap-2">
+          <div class="font-semibold text-2xl">
+            Ukończone
           </div>
-          <div class="flex flex-col w-full justify-between">
-            <ion-text class="font-semibold">
-              Testowe osiągnięcie.
-            </ion-text>
-            <div class="flex flex-col gap-1">
-              <ion-progress-bar value="0.5" class="rounded-full" color="secondary" />
-              <div class="self-end font-semibold leading-none">
-                <ion-text color="secondary">1 z 2</ion-text>
+          <div class="flex gap-3 w-full bg-[var(--ion-color-light)] rounded-2xl p-3" *ngFor="let _ of [1,2,3,4,5]">
+            <div
+              class="bg-gradient-to-br from-[var(--ion-color-primary)] to-[var(--ion-color-secondary)] flex items-center justify-center w-14 h-14 p-4 rounded-xl">
+              <ion-icon name="trophy-outline" color="light" size="large"></ion-icon>
+            </div>
+            <div class="flex flex-col w-full justify-between">
+              <ion-text class="font-semibold">
+                Ukończone testowe osiągnięcie.
+              </ion-text>
+              <div class="flex flex-col gap-1">
+                <ion-progress-bar value="1" class="rounded-full" color="secondary" />
+                <div class="self-end font-semibold leading-none">
+                  <ion-text color="secondary">1 z 1</ion-text>
+                </div>
               </div>
             </div>
           </div>
         </div>
+      </swiper-slide>
 
-        <div class="font-semibold text-2xl">
-          Ukończone
-        </div>
-        <div class="flex gap-3 w-full bg-[var(--ion-color-light)] rounded-2xl p-3" *ngFor="let _ of [1,2,3,4,5]">
-          <div
-            class="bg-gradient-to-br from-[var(--ion-color-primary)] to-[var(--ion-color-secondary)] flex items-center justify-center w-14 h-14 p-4 rounded-xl">
-            <ion-icon name="trophy-outline" color="light" size="large"></ion-icon>
-          </div>
-          <div class="flex flex-col w-full justify-between">
-            <ion-text class="font-semibold">
-              Ukończone testowe osiągnięcie.
-            </ion-text>
-            <div class="flex flex-col gap-1">
-              <ion-progress-bar value="1" class="rounded-full" color="secondary" />
-              <div class="self-end font-semibold leading-none">
-                <ion-text color="secondary">1 z 1</ion-text>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <swiper-slide class="ion-padding overflow-y-scroll" (scroll)="onContentScroll($any($event))">
+        Statystyki
+      </swiper-slide>
     </ng-container>
-
-    <ng-container *ngIf="segment === 'stats'">
-      Statystyki
-    </ng-container>
-  </ion-content>
-}
-
+  </swiper-container>
+</ion-content>

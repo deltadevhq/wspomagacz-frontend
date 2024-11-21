@@ -14,7 +14,6 @@ import {
 } from '@ionic/angular/standalone';
 import { NgForOf, NgIf } from '@angular/common';
 import Chart from 'chart.js/auto';
-import { ExerciseService } from '../shared/data-access/exercise.service';
 import { Exercise } from '../shared/models/Exercise';
 
 @Component({
@@ -29,8 +28,6 @@ export class ExerciseDetailsComponent implements AfterViewInit {
 
   @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
   chart: any = [];
-
-  private exerciseService = inject(ExerciseService);
 
   modalController = inject(ModalController);
   private cdr = inject(ChangeDetectorRef);

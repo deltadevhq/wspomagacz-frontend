@@ -14,9 +14,8 @@ import {
 } from '@ionic/angular/standalone';
 import { AuthService } from '../shared/data-access/auth.service';
 import { Router, RouterLink } from '@angular/router';
-import { LoginService } from './login.service';
-import { LoginFormComponent } from './login-form/login-form.component';
-import { timer } from 'rxjs';
+import { LoginFormComponent } from './ui/login-form/login-form.component';
+import { LoginService } from './data-access/login.service';
 
 @Component({
   selector: 'app-login',
@@ -33,10 +32,8 @@ export class LoginPage {
   constructor() {
     effect(() => {
       if (this.authService.user()) {
-        this.router.navigate(['/tabs/home']);
+        this.router.navigate(['/home']);
       }
     });
   }
-
-  protected readonly timer = timer;
 }

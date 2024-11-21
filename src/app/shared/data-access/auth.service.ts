@@ -1,12 +1,19 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AuthUser, AuthUserResponse, transformAuthUser } from '../models/User';
-import { BehaviorSubject, catchError, concatMap, EMPTY, tap } from 'rxjs';
+import { BehaviorSubject, catchError, concatMap, EMPTY, map, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { environment } from '../../../environments/environment';
 
 interface AuthState {
   user: AuthUser | null;
+}
+
+interface UpdateUserRequest {
+  display_name?: string;
+  gender?: string;
+  birthday?: string;
+  weight?: number;
 }
 
 export type Credentials = {
@@ -19,6 +26,15 @@ export type CreateUserCredentials = {
   email: string;
   password: string;
 };
+
+const AuthenticationRoutes = {
+  Login: `${environment.baseUrl}auth/login`,
+  Register: `${environment.baseUrl}auth/register`,
+  User: `${environment.baseUrl}auth/user`,
+  Logout: `${environment.baseUrl}auth/logout`,
+  Avatar: `${environment.baseUrl}auth/user/avatar`,
+} as const;
+
 
 @Injectable({
   providedIn: 'root',
@@ -55,7 +71,7 @@ export class AuthService {
    */
   login(credentials: Credentials) {
     return this.http
-      .post(`${environment.baseUrl}auth/login`, credentials)
+      .post(AuthenticationRoutes.Login, credentials)
       .pipe(concatMap(() => this.getUser()));
   }
 
@@ -64,9 +80,10 @@ export class AuthService {
    */
   getUser() {
     return this.http
-      .get<AuthUserResponse>(`${environment.baseUrl}auth/user`)
+      .get<AuthUserResponse>(AuthenticationRoutes.User)
       .pipe(
-        tap((user) => this.user$.next(transformAuthUser(user))),
+        map(transformAuthUser),
+        tap((user) => this.user$.next(user)),
         catchError(() => {
           this.user$.next(null);
           return EMPTY;
@@ -78,7 +95,7 @@ export class AuthService {
    * Logout the current user.
    */
   logout() {
-    return this.http.post(`${environment.baseUrl}auth/logout`, {}).pipe(
+    return this.http.get(AuthenticationRoutes.Logout).pipe(
       tap(() => this.user$.next(null)),
       catchError(() => EMPTY),
     );
@@ -90,7 +107,7 @@ export class AuthService {
    */
   register(user: CreateUserCredentials) {
     return this.http
-      .post(`${environment.baseUrl}auth/register`, user)
+      .post(AuthenticationRoutes.Register, user)
       .pipe(
         concatMap(() =>
           this.login({
@@ -100,5 +117,29 @@ export class AuthService {
         ),
         catchError(() => EMPTY),
       );
+  }
+
+  /**
+   * Update the logged-in user.
+   * @param data - The data to update.
+   */
+  updateUser(data: UpdateUserRequest) {
+    return this.http
+      .patch<AuthUserResponse>(AuthenticationRoutes.User, data)
+      .pipe(
+        map(transformAuthUser),
+        tap((user) => this.user$.next(user)),
+        catchError(() => EMPTY),
+      );
+  }
+
+  updateAvatar(avatar: File) {
+    const formData = new FormData();
+    formData.append('avatar', avatar);
+
+    return this.http.patch(AuthenticationRoutes.Avatar, formData).pipe(
+      tap(() => this.getUser().subscribe()),
+      catchError(() => EMPTY),
+    );
   }
 }

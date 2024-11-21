@@ -2,6 +2,7 @@ import { Component, effect, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
+  IonButtons,
   IonCard,
   IonCardContent,
   IonCardHeader,
@@ -11,7 +12,11 @@ import {
   IonGrid,
   IonHeader,
   IonIcon,
+  IonLabel,
+  IonMenuButton,
   IonRow,
+  IonSegment,
+  IonSegmentButton,
   IonSpinner,
   IonText,
   IonTitle,
@@ -33,7 +38,7 @@ import { LevelProgressComponent } from '../shared/ui/level-progress/level-progre
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, AvatarLevelProgressComponent, NotificationsComponent, IonText, IonGrid, IonRow, IonCol, LevelProgressComponent, CalendarComponent, CalendarComponent, WorkoutsCalendarComponent, WorkoutSummaryComponent, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonIcon, IonSpinner, AvatarLevelProgressComponent, LevelProgressComponent],
+  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, AvatarLevelProgressComponent, NotificationsComponent, IonText, IonGrid, IonRow, IonCol, LevelProgressComponent, CalendarComponent, CalendarComponent, WorkoutsCalendarComponent, WorkoutSummaryComponent, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonIcon, IonSpinner, AvatarLevelProgressComponent, LevelProgressComponent, IonSegment, IonSegmentButton, IonLabel, IonButtons, IonMenuButton],
 })
 export class HomePage {
   public authService = inject(AuthService);

@@ -2,7 +2,7 @@ import { Component, effect, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonButton, IonContent, IonHeader, IonSpinner, IonTitle, IonToolbar } from '@ionic/angular/standalone';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../shared/data-access/auth.service';
 
 @Component({
@@ -14,12 +14,13 @@ import { AuthService } from '../shared/data-access/auth.service';
 })
 export class WelcomePage {
   protected authService = inject(AuthService);
+  private route = inject(ActivatedRoute);
   private router = inject(Router);
 
   constructor() {
     effect(() => {
       if (this.authService.user()) {
-        this.router.navigate(['/tabs/home']);
+        this.router.navigate(['/home']);
       }
     });
   }

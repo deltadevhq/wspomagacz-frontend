@@ -3,7 +3,6 @@ import { TabsComponent } from './tabs/tabs.component';
 import { isAuthenticatedGuard } from './shared/guards/auth.guard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/welcome', pathMatch: 'full' },
   {
     path: 'welcome',
     loadComponent: () => import('./welcome/welcome.page').then(m => m.WelcomePage),
@@ -17,7 +16,7 @@ export const routes: Routes = [
     loadComponent: () => import('./register/register.page').then(m => m.RegisterPage),
   },
   {
-    path: 'tabs',
+    path: '',
     component: TabsComponent,
     canActivate: [isAuthenticatedGuard()],
     children: [
@@ -30,16 +29,20 @@ export const routes: Routes = [
         loadComponent: () => import('./workouts/workouts.page').then(m => m.WorkoutsPage),
       },
       {
-        path: 'ranking',
-        loadComponent: () => import('./ranking/ranking.page').then(m => m.RankingPage),
+        path: 'discover',
+        loadComponent: () => import('./discover/discover.page').then(m => m.DiscoverPage),
       },
       {
         path: 'profile',
         loadComponent: () => import('./profile/profile.page').then(m => m.ProfilePage),
       },
-      { path: '', redirectTo: 'tabs/home', pathMatch: 'full' },
-      { path: '**', redirectTo: 'tabs/home' },
+      {
+        path: 'profile/:id',
+        loadComponent: () => import('./profile/profile.page').then(m => m.ProfilePage),
+      },
+      { path: '', redirectTo: 'home', pathMatch: 'full' },
+      { path: '**', redirectTo: 'home' },
     ],
   },
-  { path: '**', redirectTo: '/welcome' },
+  { path: '**', redirectTo: 'welcome' },
 ];

@@ -1,16 +1,75 @@
-<ion-tabs>
-  <ion-tab-bar slot="bottom" class="h-[4.5rem] top-[4.5rem] rounded-t-2xl">
-    <ion-tab-button tab="home">
-      <ion-icon name="home-outline"></ion-icon>
-    </ion-tab-button>
-    <ion-tab-button tab="workouts">
-      <ion-icon name="flame-outline"></ion-icon>
-    </ion-tab-button>
-    <ion-tab-button tab="ranking">
-      <ion-icon name="trophy-outline"></ion-icon>
-    </ion-tab-button>
-    <ion-tab-button tab="profile">
-      <ion-icon name="person-outline"></ion-icon>
-    </ion-tab-button>
-  </ion-tab-bar>
-</ion-tabs>
+<ng-container *ngIf="platform.is('mobile')">
+  <ion-tabs>
+    <ion-tab-bar slot="bottom" class="h-[4.5rem] top-[4.5rem] rounded-t-2xl">
+      <ion-tab-button tab="home">
+        <ion-icon name="home-outline"></ion-icon>
+      </ion-tab-button>
+      <ion-tab-button tab="workouts">
+        <ion-icon name="flame-outline"></ion-icon>
+      </ion-tab-button>
+      <ion-tab-button tab="discover">
+        <ion-icon name="compass-outline"></ion-icon>
+      </ion-tab-button>
+      <ion-tab-button tab="profile">
+        <ion-icon name="person-outline"></ion-icon>
+      </ion-tab-button>
+    </ion-tab-bar>
+  </ion-tabs>
+</ng-container>
+
+<ng-container *ngIf="platform.is('desktop')">
+  <ion-split-pane contentId="main" when="(min-width: 1024px)">
+    <ion-menu contentId="main">
+      <ion-list lines="none" class="flex flex-col gap-2 p-4">
+        <ion-menu-toggle autoHide="false">
+          <ion-item [routerLink]="'/home'" [routerLinkActive]="'active'" routerDirection="root" class="rounded-2xl">
+            <ion-icon name="home-outline" slot="start"></ion-icon>
+            <ion-label>Strona główna</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+
+        <ion-menu-toggle autoHide="false">
+          <ion-item [routerLink]="'/workouts'" [routerLinkActive]="'active'" routerDirection="root"
+                    class="rounded-2xl">
+            <ion-icon name="flame-outline" slot="start"></ion-icon>
+            <ion-label>Treningi</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+
+        <ion-menu-toggle autoHide="false">
+          <ion-item [routerLink]="'/discover'" [routerLinkActive]="'active'" routerDirection="root"
+                    class="rounded-2xl">
+            <ion-icon name="compass-outline" slot="start"></ion-icon>
+            <ion-label>Odkrywaj</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+
+        <ion-menu-toggle autoHide="false">
+          <ion-item [routerLink]="['/profile', authService.user()?.id]" [routerLinkActive]="'active'"
+                    routerDirection="root"
+                    class="rounded-2xl">
+            <ion-icon name="person-outline" slot="start"></ion-icon>
+            <ion-label>Profil</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+
+        <ion-menu-toggle autoHide="false">
+          <ion-item [routerLink]="'/settings'" [routerLinkActive]="'active'" routerDirection="root"
+                    class="rounded-2xl">
+            <ion-icon name="settings-outline" slot="start"></ion-icon>
+            <ion-label>Ustawienia</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+
+        <hr class="border-[var(--ion-color-light-tint)]" />
+
+        <ion-item button (click)="authService.logout().subscribe()" class="rounded-2xl">
+          <ion-icon name="log-out-outline" slot="start"></ion-icon>
+          <ion-label>Wyloguj</ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-menu>
+
+    <ion-router-outlet id="main"></ion-router-outlet>
+  </ion-split-pane>
+</ng-container>

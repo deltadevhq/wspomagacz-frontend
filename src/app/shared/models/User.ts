@@ -1,14 +1,18 @@
-export enum UserStatus {
-  Active = 'Aktywny',
-  Inactive = 'Nieaktywny',
-  Blocked = 'Zawieszony',
-}
+export const UserStatus = {
+  Active: 'active',
+  Inactive: 'inactive',
+  Blocked: 'restricted',
+} as const;
 
-export enum UserGender {
-  Male = 'Mężczyzna',
-  Female = 'Kobieta',
-  NotSpecified = 'Wolę nie podawać',
-}
+export type UserStatus = typeof UserStatus[keyof typeof UserStatus];
+
+export const UserGender = {
+  Male: 'male',
+  Female: 'female',
+  NotSpecified: 'not_specified',
+} as const;
+
+export type UserGender = typeof UserGender[keyof typeof UserGender];
 
 export interface UserWeight {
   weight: number;
@@ -60,8 +64,8 @@ export const transformUser = (user: UserResponse): User => {
 
   return {
     birthday: new Date(birthday),
-    status: UserStatus[status as keyof typeof UserStatus],
-    gender: UserGender[gender as keyof typeof UserGender],
+    gender: UserGender[Object.keys(UserGender).find(key => UserGender[key as keyof typeof UserGender] === gender) as keyof typeof UserGender] || UserGender.NotSpecified,
+    status: UserStatus[Object.keys(UserStatus).find(key => UserStatus[key as keyof typeof UserStatus] === status) as keyof typeof UserStatus] || UserStatus.Inactive,
     ...rest,
   };
 };
@@ -82,8 +86,8 @@ export const transformAuthUser = (user: AuthUserResponse): AuthUser => {
     created_at: new Date(created_at),
     modified_at: new Date(modified_at),
     last_logged_at: new Date(last_logged_at),
-    gender: UserGender[gender as keyof typeof UserGender],
-    status: UserStatus[status as keyof typeof UserStatus],
+    gender: UserGender[Object.keys(UserGender).find(key => UserGender[key as keyof typeof UserGender] === gender) as keyof typeof UserGender] || UserGender.NotSpecified,
+    status: UserStatus[Object.keys(UserStatus).find(key => UserStatus[key as keyof typeof UserStatus] === status) as keyof typeof UserStatus] || UserStatus.Inactive,
     ...rest,
   };
 };

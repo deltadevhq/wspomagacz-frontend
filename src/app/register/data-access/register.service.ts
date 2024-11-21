@@ -1,8 +1,8 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { AuthService, CreateUserCredentials } from '../shared/data-access/auth.service';
 import { catchError, EMPTY, Subject, switchMap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ToastController } from '@ionic/angular/standalone';
+import { AuthService, CreateUserCredentials } from '../../shared/data-access/auth.service';
 
 export type RegisterStatus = 'pending' | 'creating' | 'success' | 'error';
 
@@ -70,7 +70,7 @@ export class RegisterService {
    */
   async presentErrorToast() {
     const toast = await this.toastController.create({
-      message: `Wystąpił problem przy tworzeniu użytkownika!`,
+      message: `Wystąpił problem przy rejestracji!`,
       duration: 2000,
       position: 'bottom',
       color: 'primary',
@@ -85,7 +85,7 @@ export class RegisterService {
    */
   async presentSuccessToast() {
     const toast = await this.toastController.create({
-      message: `Pomyślnie utworzono użytkownika!`,
+      message: `Pomyślnie zarejestrowano!`,
       duration: 2000,
       position: 'bottom',
       color: 'success',

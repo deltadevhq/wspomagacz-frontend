@@ -1,8 +1,9 @@
 import { Component, computed, inject } from '@angular/core';
 import { IonAvatar, IonRippleEffect, ModalController } from '@ionic/angular/standalone';
 import { LevelProgressComponent } from '../level-progress/level-progress.component';
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe, NgIf, NgOptimizedImage } from '@angular/common';
 import { SettingsComponent } from '../../../settings/settings.component';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   standalone: true,
@@ -14,6 +15,7 @@ import { SettingsComponent } from '../../../settings/settings.component';
     NgIf,
     AsyncPipe,
     IonRippleEffect,
+    NgOptimizedImage,
   ],
 })
 export class AvatarLevelProgressComponent extends LevelProgressComponent {
@@ -27,5 +29,9 @@ export class AvatarLevelProgressComponent extends LevelProgressComponent {
     });
 
     await modal.present();
+
+    await modal.onDidDismiss();
   }
+
+  protected readonly environment = environment;
 }

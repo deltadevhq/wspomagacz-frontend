@@ -1,6 +1,9 @@
 @defer (when authService.user() !== null) {
   <ion-header class="ion-no-border">
     <ion-toolbar class="ion-padding">
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
       <div class="flex ion-align-items-center gap-2" slot="end">
         <app-notifications />
         <app-avatar-level-progress />
