@@ -1,0 +1,110 @@
+<ng-container *ngIf="activity">
+  @defer {
+    <article class="bg-[var(--ion-color-light)] flex flex-col rounded-2xl gap-3 p-3" #activityRef>
+      <header class="flex gap-2" *ngIf="header">
+        <ion-avatar class="size-12 min-w-12 cursor-pointer"
+                    [routerLink]="['/profile', activity.user_id]"
+                    [routerDirection]="'root'">
+          <img alt="" [ngSrc]="environment.baseUrl + 'users/' + activity.user_id + '/avatar'" width="128"
+               height="128">
+        </ion-avatar>
+        <div class="flex flex-col w-full overflow-hidden">
+          <ion-text class="line-clamp-2 text-ellipsis">
+            @switch (activity.type) {
+              @case ('workout') {
+                <a [routerLink]="['/profile', activity.user_id]"
+                   [routerDirection]="'root'"
+                   class="font-semibold">{{ activity.user.display_name }}</a> ukończył trening.
+              }
+              @case ('level_up') {
+                <a [routerLink]="['/profile', activity.user_id]"
+                   [routerDirection]="'root'"
+                   class="font-semibold">{{ activity.user.display_name }}</a> osiągnął poziom {{ activity.data.lvl_after }}.
+              }
+              @case ('achievement') {
+                <a [routerLink]="['/profile', activity.user_id]"
+                   [routerDirection]="'root'"
+                   class="font-semibold">{{ activity.user.display_name }}</a> zdobył osiągnięcie.
+              }
+              @case ('friendship') {
+                <a [routerLink]="['/profile', activity.user_id]"
+                   [routerDirection]="'root'"
+                   class="font-semibold">{{ activity.user.display_name }}</a> i <a
+                  [routerLink]="['/profile', activity.created_by]"
+                  [routerDirection]="'root'"
+                  class="font-semibold">{{ activity.creator.display_name }}</a> są teraz znajomymi.
+              }
+              @case ('personal_best') {
+                <a [routerLink]="['/profile', activity.user_id]"
+                   [routerDirection]="'root'"
+                   class="font-semibold">{{ activity.user.display_name }}</a> ustanowił nowy rekord.
+              }
+            }
+          </ion-text>
+          <div class="flex">
+            <div class="flex items-center gap-1 overflow-hidden whitespace-nowrap">
+              <ion-icon name="time-outline" color="medium" class="min-w-4"></ion-icon>
+              <ion-text class="text-sm overflow-hidden overflow-ellipsis" color="medium">
+                {{ dateService.getTimeString(activity.created_at) }}
+              </ion-text>
+            </div>
+            <ion-text color="medium" class="mx-2">•</ion-text>
+            <div class="flex items-center gap-1 overflow-hidden">
+              @if (activity.hidden) {
+                <ion-icon name="eye-off-outline" color="medium" class="min-w-4"></ion-icon>
+              } @else {
+                <ion-icon name="earth-outline" color="medium" class="min-w-4"></ion-icon>
+              }
+            </div>
+          </div>
+        </div>
+        <ion-button fill="clear" class="self-start h-12 w-12 activity-settings-button" color="dark"
+                    (click)="presentActionSheet()" *ngIf="(authUser$ | async)?.id === activity.user_id">
+          <ion-icon name="ellipsis-horizontal" slot="icon-only"></ion-icon>
+        </ion-button>
+      </header>
+
+      <ion-button fill="clear" class="fixed self-end h-12 w-12 activity-settings-button" color="dark"
+                  (click)="presentActionSheet()" *ngIf="(authUser$ | async)?.id === activity.user_id && !header">
+        <ion-icon name="ellipsis-horizontal" slot="icon-only"></ion-icon>
+      </ion-button>
+
+      <ng-content></ng-content>
+
+      <footer class="-mx-3 -mb-3" *ngIf="footer">
+        <div class="flex gap-1 items-center text-sm px-3 pb-3 overflow-hidden"
+             *ngIf="activity.likes > 0">
+          <ion-icon name="heart" color="medium"></ion-icon>
+          <ion-text color="medium" class="whitespace-nowrap truncate">
+            {{ getLikesString(activity) }}
+          </ion-text>
+        </div>
+
+        <div class="flex justify-evenly border-t-[1px] border-[var(--ion-color-light-tint)]">
+          <ion-button [color]="activity.liked ? 'primary' : 'dark'"
+                      (click)="activity.liked ? activityService.unlike$.next(activity.id) : activityService.like$.next(activity.id)"
+                      fill="clear">
+            <ion-icon [name]="activity.liked ? 'heart' : 'heart-outline'" slot="start"></ion-icon>
+            Lubię to
+          </ion-button>
+          <ion-button color="dark" fill="clear" (click)="shareActivity()">
+            <ion-icon name="share-social-outline" slot="start"></ion-icon>
+            Udostępnij
+          </ion-button>
+        </div>
+      </footer>
+    </article>
+  } @placeholder {
+    <div class="bg-[var(--ion-color-light)] flex flex-col gap-4 rounded-2xl min-h-32 infinite-scroll-content">
+      <div class="flex items-center gap-2 px-3 pt-3">
+        <ion-skeleton-text animated class="size-12 min-w-12 rounded-full"></ion-skeleton-text>
+        <div class="flex flex-col w-full gap-1.5">
+          <ion-skeleton-text animated class="w-32 h-3 rounded-2xl"></ion-skeleton-text>
+          <ion-skeleton-text animated class="w-24 h-3 rounded-2xl"></ion-skeleton-text>
+        </div>
+      </div>
+    </div>
+  }
+
+</ng-container>
+

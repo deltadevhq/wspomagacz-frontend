@@ -1,0 +1,15 @@
+<ng-container *ngIf="activity">
+  <app-user-activity [activity]="activity">
+    <div class="flex flex-col items-center gap-1">
+      <div class="font-semibold text-lg flex items-center gap-1">
+        <ion-text color="success">
+          OSIĄGNIĘTO POZIOM {{ activity.data.lvl_after }}!
+        </ion-text>
+      </div>
+      <ion-progress-bar color="success" [value]="1" class="rounded-full h-3"></ion-progress-bar>
+      <ion-text color="medium" class="text-sm">
+        łącznie zdobyto {{ activity.data.exp_after }}PD
+      </ion-text>
+    </div>
+  </app-user-activity>
+</ng-container>

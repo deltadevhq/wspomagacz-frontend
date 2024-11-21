@@ -1,0 +1,22 @@
+<ng-container *ngIf="activity">
+  <app-user-activity [activity]="activity">
+    <div class="flex gap-3 w-full border-[1px] border-[var(--ion-color-light-tint)] rounded-xl">
+      <div
+        class="bg-gradient-to-br from-[var(--ion-color-primary)] to-[var(--ion-color-secondary)] flex items-center justify-center w-14 h-14 p-4 rounded-xl">
+        <ion-icon name="trophy-outline" color="light" size="large"></ion-icon>
+      </div>
+      <div class="flex flex-col w-full justify-between">
+        <ion-text class="font-semibold">
+          {{ activity.data.achievement.name }}
+        </ion-text>
+        <div class="flex flex-col gap-1">
+          <ion-progress-bar value="1" class="rounded-full" color="secondary" />
+          <div class="self-end font-semibold leading-none">
+            <ion-text color="secondary">1 z 1</ion-text>
+          </div>
+        </div>
+      </div>
+    </div>
+  </app-user-activity>
+</ng-container>
+

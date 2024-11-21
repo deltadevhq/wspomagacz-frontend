@@ -1,0 +1,12 @@
+ion-segment-button {
+  height: 3rem;
+}
+
+ion-toolbar {
+  --background: color-mix(in srgb, var(--ion-color-primary) 10%, var(--ion-background-color) 90%);
+}
+
+ion-header {
+  background: color-mix(in srgb, var(--ion-color-primary) 10%, var(--ion-background-color) 90%);
+}
+

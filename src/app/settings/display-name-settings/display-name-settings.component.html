@@ -1,0 +1,28 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="ion-padding-horizontal ion-padding-top">
+    <ion-title>Nazwa</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <div class="flex flex-col gap-4">
+    <div class="text-center">
+      <ion-text color="medium" class="text-sm">
+        Oto jak będziesz się pojawiać we Wspomagaczu. Wybierz nazwę, pod którą rozpoznają Cię znajomi.
+      </ion-text>
+    </div>
+
+    <ion-input fill="outline" labelPlacement="stacked" label="Nazwa"
+               class="rounded-2xl"
+               [formControl]="displayName"></ion-input>
+  </div>
+</ion-content>
+<ion-footer *ngIf="displayName.dirty">
+  <ion-button expand="full" color="success" (click)="save()" [disabled]="displayName.invalid">
+    Zapisz
+  </ion-button>
+</ion-footer>

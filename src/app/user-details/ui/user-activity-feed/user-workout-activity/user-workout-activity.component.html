@@ -1,0 +1,28 @@
+<ng-container *ngIf="activity">
+  <app-user-activity [activity]="activity">
+    <div class="font-semibold text-2xl text-center">
+      {{ activity.data.name }}
+    </div>
+    <div class="grid grid-cols-2 gap-2">
+      <div class="flex flex-col gap-2 border-[1px] border-[var(--ion-color-light-tint)] rounded-xl p-3">
+        <ion-text class="font-semibold flex items-center gap-1">
+          <ion-icon name="barbell"></ion-icon>
+          Ćwiczenia
+        </ion-text>
+        <div class="self-end leading-none">
+          <ion-text>{{ activity.data.exercises.length }}</ion-text>
+        </div>
+      </div>
+      <div class="flex flex-col gap-2 border-[1px] border-[var(--ion-color-light-tint)] rounded-xl p-3">
+        <ion-text class="font-semibold flex items-center gap-1">
+          <ion-icon name="time-outline"></ion-icon>
+          Czas
+        </ion-text>
+        <div class="self-end leading-none">
+          <ion-text>1 min</ion-text>
+        </div>
+      </div>
+    </div>
+  </app-user-activity>
+</ng-container>
+

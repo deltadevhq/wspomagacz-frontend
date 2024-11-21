@@ -1,0 +1,39 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="ion-padding-horizontal ion-padding-top">
+    <ion-title>Płeć</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <div class="flex flex-col gap-4">
+    <div class="text-center">
+      <ion-text color="medium" class="text-sm">
+        Płeć pozwala nam dostosować aplikację do Twoich potrzeb. Wybierz jedną z opcji.
+      </ion-text>
+    </div>
+
+    <ion-radio-group [formControl]="gender">
+      <ion-item lines="none">
+        <ion-label>Mężczyzna</ion-label>
+        <ion-radio slot="start" value="{{ UserGender.Male }}"></ion-radio>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-label>Kobieta</ion-label>
+        <ion-radio slot="start" value="{{ UserGender.Female }}"></ion-radio>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-label>Wolę nie podawać</ion-label>
+        <ion-radio slot="start" value="{{ UserGender.NotSpecified }}"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+  </div>
+</ion-content>
+<ion-footer *ngIf="gender.dirty">
+  <ion-button expand="full" color="success" (click)="save()">
+    Zapisz
+  </ion-button>
+</ion-footer>

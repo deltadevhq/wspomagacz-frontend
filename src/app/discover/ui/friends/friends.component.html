@@ -1,0 +1,51 @@
+<section>
+  <ion-text class="text-2xl font-semibold px-4">
+    Zaproszenia
+    <ion-badge>4</ion-badge>
+  </ion-text>
+
+  <ion-list class="ion-padding-vertical grid grid-cols-2 xs:grid-cols-3 gap-2" lines="none">
+    <ion-item class="friend-request rounded-2xl border border-[var(--ion-color-light-tint)] py-4"
+              *ngFor="let _ of [1,2,3,4]">
+      <div class="flex flex-col gap-2 w-full overflow-hidden">
+        <ion-avatar class="w-full h-auto">
+          <img src="/assets/avatar.jpg" alt="avatar" />
+        </ion-avatar>
+        <div class="flex flex-col leading-none w-full overflow-hidden">
+          <ion-text class="font-semibold text-lg truncate">Jan Kowalski</ion-text>
+          <ion-text class="text-sm truncate" color="medium">jankowalski</ion-text>
+        </div>
+        <div>
+          <ion-button expand="block" color="success" size="small">Akceptuj</ion-button>
+          <ion-button expand="block" color="light" size="small">Ignoruj</ion-button>
+        </div>
+      </div>
+    </ion-item>
+  </ion-list>
+
+  <ion-text class="text-2xl font-semibold px-4">
+    Znajomi
+  </ion-text>
+
+  <ion-list class="ion-padding-vertical flex flex-col gap-2" lines="none">
+    <ion-item class="rounded-2xl" color="light" *ngFor="let _ of [1,2,3]" button detail="true">
+      <ion-label>
+        <ion-text class="flex gap-2 items-center">
+          <div class="flex items-center gap-4 w-full overflow-hidden">
+            <ion-avatar class="size-12 min-w-12">
+              <img src="/assets/avatar.jpg" alt="avatar" />
+            </ion-avatar>
+            <div class="flex flex-col leading-none w-full overflow-hidden">
+              <ion-text class="font-semibold text-lg truncate">Jan Kowalski</ion-text>
+              <ion-text class="text-sm truncate" color="medium">jankowalski</ion-text>
+            </div>
+          </div>
+        </ion-text>
+      </ion-label>
+    </ion-item>
+    <ion-button fill="clear" expand="block" size="h-8">
+      Pokaż więcej
+      <ion-icon name="chevron-forward" slot="end"></ion-icon>
+    </ion-button>
+  </ion-list>
+</section>

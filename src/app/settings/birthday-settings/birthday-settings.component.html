@@ -1,0 +1,26 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="ion-padding-horizontal ion-padding-top">
+    <ion-title>Data urodzenia</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <div class="flex flex-col gap-4">
+    <div class="text-center">
+      <ion-text color="medium" class="text-sm">
+        Wybierz swoją datę urodzenia.
+      </ion-text>
+    </div>
+
+    <ion-datetime presentation="date" (ionChange)="onChanged($event)" [formControl]="birthday"></ion-datetime>
+  </div>
+</ion-content>
+<ion-footer *ngIf="birthday.dirty">
+  <ion-button expand="full" color="success" (click)="save()">
+    Zapisz
+  </ion-button>
+</ion-footer>

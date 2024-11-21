@@ -1,0 +1,44 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="ion-padding-horizontal ion-padding-top">
+    <ion-title>Zdjęcie profilowe</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <div class="flex flex-col gap-4">
+    <div class="text-center">
+      <ion-text color="medium" class="text-sm">
+        Zdjęcie profilowe to pierwsza rzecz, którą inni zobaczą na Twoim profilu. Wybierz zdjęcie, które
+        najlepiej Cię reprezentuje.
+      </ion-text>
+    </div>
+
+    <div class="flex justify-center">
+      <ion-avatar class="size-32 min-w-32">
+        <img [ngSrc]="avatar.value?.toString() || ''" alt=""
+             width="128"
+             height="128" />
+      </ion-avatar>
+    </div>
+
+    <ion-button fill="outline" expand="block" class="rounded-2xl" (click)="fileInput.click()">
+      Wybierz zdjęcie
+    </ion-button>
+    <input type="file" #fileInput style="display: none" accept="image/jpeg" (change)="fileChanged($event)" />
+
+    <div class="text-center">
+      <ion-text color="medium" class="text-sm">
+        Zdjęcie musi być w formacie JPG. Maksymalny rozmiar to 512KB.
+      </ion-text>
+    </div>
+  </div>
+</ion-content>
+<ion-footer *ngIf="avatar.dirty">
+  <ion-button expand="full" color="success" (click)="save()">
+    Zapisz
+  </ion-button>
+</ion-footer>

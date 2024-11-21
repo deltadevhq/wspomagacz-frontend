@@ -1,0 +1,51 @@
+<section role="feed" class="flex flex-col gap-4">
+  <ion-refresher slot="fixed" (ionRefresh)="onIonRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  @if (activities.length > 0) {
+    <ng-container *ngFor="let activity of activities">
+      @switch (activity.type) {
+        @case ('workout') {
+          <app-user-workout-activity role="article" [activity]="activity"></app-user-workout-activity>
+        }
+        @case ('level_up') {
+          <app-user-level-up-activity role="article" [activity]="activity"></app-user-level-up-activity>
+        }
+        @case ('achievement') {
+          <app-user-achievement-activity role="article" [activity]="activity"></app-user-achievement-activity>
+        }
+        @case ('friendship') {
+          <app-user-friendship-activity role="article" [activity]="activity"></app-user-friendship-activity>
+        }
+        @case ('personal_best') {
+          <app-user-personal-best-activity role="article" [activity]="activity"></app-user-personal-best-activity>
+        }
+        @default {
+          <app-user-activity role="article" [activity]="activity"></app-user-activity>
+        }
+      }
+    </ng-container>
+  } @else {
+    <div class="flex items-center justify-center gap-2 ion-padding">
+      <ion-icon class="text-2xl" color="medium" name="alert-circle-outline"></ion-icon>
+      <ion-text class="text-center" color="medium">
+        Brak aktywności.
+      </ion-text>
+    </div>
+  }
+
+  <ion-infinite-scroll #infiniteScroll (ionInfinite)="onIonInfinite($event)">
+    <div class="bg-[var(--ion-color-light)] flex flex-col gap-4 rounded-2xl min-h-32 infinite-scroll-content">
+      <div class="flex items-center gap-2 px-3 pt-3">
+        <ion-skeleton-text animated class="size-12 min-w-12 rounded-full"></ion-skeleton-text>
+        <div class="flex flex-col w-full gap-1.5">
+          <ion-skeleton-text animated class="w-32 h-3 rounded-2xl"></ion-skeleton-text>
+          <ion-skeleton-text animated class="w-24 h-3 rounded-2xl"></ion-skeleton-text>
+        </div>
+      </div>
+    </div>
+  </ion-infinite-scroll>
+</section>
+
+

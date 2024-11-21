@@ -1,0 +1,63 @@
+<section class="flex flex-col">
+  <ion-text class="text-2xl font-semibold px-4">
+    Podniesiony ciężar
+  </ion-text>
+
+  <ion-list class="ion-padding-vertical flex flex-col gap-2" lines="none">
+    <ion-item class="rounded-2xl" color="light" *ngFor="let place of [1,2,3]">
+      <ion-label>
+        <ion-text class="flex gap-2 items-center">
+          <ion-text class="text-2xl font-semibold size-12 flex items-center justify-center pr-2">
+            {{ place }}
+          </ion-text>
+          <div class="flex items-center gap-4 w-full overflow-hidden">
+            <ion-avatar class="size-12 min-w-12">
+              <img src="/assets/avatar.jpg" alt="avatar" />
+            </ion-avatar>
+            <div class="flex flex-col leading-none w-full overflow-hidden">
+              <ion-text class="font-semibold text-lg truncate">Jan Kowalski</ion-text>
+              <ion-text class="text-sm truncate" color="medium">jankowalski</ion-text>
+            </div>
+          </div>
+          <ion-text class="whitespace-nowrap">100 kg</ion-text>
+        </ion-text>
+      </ion-label>
+    </ion-item>
+    <ion-button fill="clear" expand="block" size="h-8">
+      Pokaż więcej
+      <ion-icon name="chevron-forward" slot="end"></ion-icon>
+    </ion-button>
+  </ion-list>
+
+
+  <ion-text class="text-2xl font-semibold px-4">
+    Zdobyte doświadczenie
+  </ion-text>
+
+  <ion-list class="ion-padding-vertical flex flex-col gap-2" lines="none">
+    <ion-item class="rounded-2xl" color="light" *ngFor="let place of [1,2,3]">
+      <ion-label>
+        <ion-text class="flex gap-2 items-center">
+          <ion-text class="text-2xl font-semibold size-12 flex items-center justify-center pr-2">
+            {{ place }}
+          </ion-text>
+          <div class="flex items-center gap-4 w-full overflow-hidden">
+            <ion-avatar class="size-12 min-w-12">
+              <img src="/assets/avatar.jpg" alt="avatar" />
+            </ion-avatar>
+            <div class="flex flex-col leading-none w-full overflow-hidden">
+              <ion-text class="font-semibold text-lg truncate">Jan Kowalski</ion-text>
+              <ion-text class="text-sm truncate" color="medium">jankowalski</ion-text>
+            </div>
+          </div>
+
+          <ion-text class="whitespace-nowrap">100 PD</ion-text>
+        </ion-text>
+      </ion-label>
+    </ion-item>
+    <ion-button fill="clear" expand="block" size="h-8">
+      Pokaż więcej
+      <ion-icon name="chevron-forward" slot="end"></ion-icon>
+    </ion-button>
+  </ion-list>
+</section>

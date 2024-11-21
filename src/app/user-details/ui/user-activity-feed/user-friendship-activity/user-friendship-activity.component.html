@@ -1,0 +1,40 @@
+<ng-container *ngIf="activity">
+  <app-user-activity [activity]="activity" [header]="false">
+    <div class="flex justify-center -space-x-4">
+      <ion-avatar class="size-24 min-w-24 border-4 z-[1] border-[var(--ion-color-light)] cursor-pointer"
+                  [routerLink]="['/profile', activity.user_id]">
+        <img alt="avatar" [ngSrc]="environment.baseUrl + 'users/' + activity.user_id + '/avatar'" width="128"
+             height="128">
+      </ion-avatar>
+      <ion-avatar class="size-24 min-w-24 border-4 border-[var(--ion-color-light)] cursor-pointer"
+                  [routerLink]="['/profile', activity.created_by]">
+        <img alt="avatar" [ngSrc]="environment.baseUrl + 'users/' + activity.created_by + '/avatar'" width="128"
+             height="128">
+      </ion-avatar>
+    </div>
+    <div class="flex flex-col items-center text-center w-full overflow-hidden">
+      <ion-text class="font-semibold line-clamp-2 text-ellipsis">
+        <a [routerLink]="['/profile', activity.user_id]">{{ activity.user.display_name }}</a>
+        i <a
+        [routerLink]="['/profile', activity.created_by]">{{ activity.creator.display_name }}</a> są teraz znajomymi.
+      </ion-text>
+      <div class="flex">
+        <div class="flex items-center gap-1 overflow-hidden whitespace-nowrap">
+          <ion-icon name="time-outline" color="medium" class="min-w-4"></ion-icon>
+          <ion-text class="text-sm overflow-hidden overflow-ellipsis" color="medium">
+            {{ dateService.getTimeString(activity.created_at) }}
+          </ion-text>
+        </div>
+        <ion-text color="medium" class="mx-2">•</ion-text>
+        <div class="flex items-center gap-1 overflow-hidden">
+          @if (activity.hidden) {
+            <ion-icon name="eye-off-outline" color="medium" class="min-w-4"></ion-icon>
+          } @else {
+            <ion-icon name="earth-outline" color="medium" class="min-w-4"></ion-icon>
+          }
+        </div>
+      </div>
+    </div>
+  </app-user-activity>
+</ng-container>
+
