@@ -1,17 +1,97 @@
-<div class="flex gap-3 w-full bg-[var(--ion-color-light)] rounded-2xl">
-  <div
-    class="bg-[var(--ion-color-light-tint)] flex items-center justify-center w-14 h-14 p-4 rounded-xl">
-    <ion-icon name="trophy-outline" color="light" size="large"></ion-icon>
-  </div>
-  <div class="flex flex-col w-full justify-between">
+<div class="flex gap-3 w-full border-[1px] border-[var(--ion-color-light-tint)] rounded-xl p-3">
+  @switch (achievement.achievement.tier) {
+    @case (1) {
+      <ng-container *ngIf="achievement.achieved; else noTier">
+        <ng-container *ngTemplateOutlet="tier1"></ng-container>
+      </ng-container>
+    }
+    @case (2) {
+      <ng-container *ngIf="achievement.achieved; else tier1">
+        <ng-container *ngTemplateOutlet="tier2"></ng-container>
+      </ng-container>
+    }
+    @case (3) {
+      <ng-container *ngIf="achievement.achieved; else tier2">
+        <ng-container *ngTemplateOutlet="tier3"></ng-container>
+      </ng-container>
+    }
+    @case (4) {
+      <ng-container *ngIf="achievement.achieved; else tier3">
+        <ng-container *ngTemplateOutlet="tier4"></ng-container>
+      </ng-container>
+    }
+    @case (5) {
+      <ng-container *ngIf="achievement.achieved; else tier4">
+        <ng-container *ngTemplateOutlet="tier5"></ng-container>
+      </ng-container>
+    }
+    @case (6) {
+      <ng-container *ngIf="achievement.achieved; else tier5">
+        <ng-container *ngTemplateOutlet="tier6"></ng-container>
+      </ng-container>
+    }
+  }
+  <div class="flex flex-col w-full justify-between gap-2">
     <ion-text class="font-semibold">
-      Testowe osiągnięcie.
+      {{ achievement.achievement.description }}
     </ion-text>
     <div class="flex flex-col gap-1">
-      <ion-progress-bar value="0.5" class="rounded-full" color="secondary" />
+      <ion-progress-bar value="{{achievement.current_value / achievement.achievement.target_value}}"
+                        class="rounded-full" color="tier-{{achievement.achievement.tier}}" />
       <div class="self-end font-semibold leading-none">
-        <ion-text color="secondary">1 z 2</ion-text>
+        <ion-text color="tier-{{achievement.achievement.tier}}">
+          {{ achievement.current_value }} z {{ achievement.achievement.target_value }}
+        </ion-text>
       </div>
     </div>
   </div>
 </div>
+
+<ng-template #noTier>
+  <div
+    class="bg-[var(--ion-color-light-shade)] flex items-center justify-center w-14 h-14 p-4 rounded-xl">
+    <ion-icon name="trophy-outline" color="medium" size="large"></ion-icon>
+  </div>
+</ng-template>
+
+<ng-template #tier1>
+  <div
+    class="bg-gradient-to-br from-amber-800 to-amber-900 flex items-center justify-center w-14 h-14 p-4 rounded-xl">
+    <ion-icon name="trophy-outline" color="dark" size="large"></ion-icon>
+  </div>
+</ng-template>
+
+<ng-template #tier2>
+  <div
+    class="bg-gradient-to-br from-stone-400 to-stone-700 flex items-center justify-center w-14 h-14 p-4 rounded-xl">
+    <ion-icon name="trophy-outline" color="dark" size="large"></ion-icon>
+  </div>
+</ng-template>
+
+<ng-template #tier3>
+  <div
+    class="bg-gradient-to-br from-amber-300 to-amber-600 flex items-center justify-center w-14 h-14 p-4 rounded-xl">
+    <ion-icon name="trophy-outline" color="dark" size="large"></ion-icon>
+  </div>
+</ng-template>
+
+<ng-template #tier4>
+  <div
+    class="bg-gradient-to-br from-green-300 to-green-700 flex items-center justify-center w-14 h-14 p-4 rounded-xl">
+    <ion-icon name="trophy-outline" color="dark" size="large"></ion-icon>
+  </div>
+</ng-template>
+
+<ng-template #tier5>
+  <div
+    class="bg-gradient-to-br from-teal-300 to-teal-700 flex items-center justify-center w-14 h-14 p-4 rounded-xl">
+    <ion-icon name="trophy-outline" color="dark" size="large"></ion-icon>
+  </div>
+</ng-template>
+
+<ng-template #tier6>
+  <div
+    class="bg-gradient-to-br from-[var(--ion-color-primary)] to-purple-800 flex items-center justify-center w-14 h-14 p-4 rounded-xl">
+    <ion-icon name="trophy-outline" color="dark" size="large"></ion-icon>
+  </div>
+</ng-template>

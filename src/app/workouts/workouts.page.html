@@ -18,28 +18,41 @@
       </section>
 
       <section>
-        <div class="px-8 pb-6">
+        <div class="px-8">
           <ion-text class="text-2xl font-semibold">
             Ostatnie treningi
           </ion-text>
         </div>
-        <div class="flex flex-col gap-2 scroll-px-4 px-4 pb-4">
-          <ion-card *ngFor="let _ of [1, 2, 3, 4, 5]">
-            <ion-card-header>
-              <ion-card-title>Nazwa Planu</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-              <div class="flex ion-align-items-center gap-1">
-                <ion-icon name="flash"></ion-icon>
-                <div class="text-base">10 ćwiczeń</div>
-              </div>
-              <div class="flex ion-align-items-center gap-1">
-                <ion-icon name="time-outline"></ion-icon>
-                <div class="text-base">45 minut</div>
-              </div>
-            </ion-card-content>
-          </ion-card>
-        </div>
+        <ion-list class="ion-padding-vertical flex flex-col gap-2 scroll-px-4 px-4 pb-4" lines="none">
+          <ion-item class="rounded-2xl" color="light" *ngFor="let workout of workouts"
+                    (click)="workoutService.openWorkoutSummaryModal(workout.id)"
+                    detail="true">
+            <ion-label>
+              <ion-text class="font-medium">
+                {{ workout.name }}
+              </ion-text>
+              <ion-text class="flex gap-2 text-sm" color="medium">
+                <div class="flex items-center self-stretch gap-1">
+                  <ion-icon name="flash"></ion-icon>
+                  <div class="text-base">{{ workout.exercises.length }}</div>
+                </div>
+                <div class="flex items-center self-stretch gap-1">
+                  <ion-icon name="calendar-outline"></ion-icon>
+                  <div class="text-base">{{ workout.date | date: 'dd.MM.yyyy' }}</div>
+                </div>
+              </ion-text>
+            </ion-label>
+            <ion-reorder slot="end"></ion-reorder>
+          </ion-item>
+        </ion-list>
+        <ng-container *ngIf="workouts.length === 0">
+          <div class="flex items-center justify-center gap-2">
+            <ion-icon class="text-2xl" color="medium" name="alert-circle-outline"></ion-icon>
+            <ion-text class="text-center" color="medium">
+              Brak treningów.
+            </ion-text>
+          </div>
+        </ng-container>
       </section>
     </div>
   </ion-content>

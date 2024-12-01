@@ -48,10 +48,6 @@ export class DisplayNameSettingsComponent {
     ],
   });
 
-  async close() {
-    await this.modalController.dismiss();
-  }
-
   async save() {
     this.authService.updateUser({ display_name: this.displayName.getRawValue()! }).subscribe();
 

@@ -10,11 +10,14 @@ import {
   IonText,
   IonTitle,
   IonToolbar,
+  ModalController,
 } from '@ionic/angular/standalone';
 import { RegisterService } from './data-access/register.service';
 import { AuthService } from '../shared/data-access/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { RegisterFormComponent } from './ui/register-form/register-form.component';
+import { TermsOfServiceComponent } from '../terms-of-service/terms-of-service.component';
+import { PrivacyPolicyComponent } from '../privacy-policy/privacy-policy.component';
 
 @Component({
   selector: 'app-register',
@@ -28,11 +31,33 @@ export class RegisterPage {
   authService = inject(AuthService);
   router = inject(Router);
 
+  modalController = inject(ModalController);
+
   constructor() {
     effect(() => {
       if (this.authService.user()) {
         this.router.navigate(['/home']);
       }
     });
+  }
+
+  async openTermsOfService() {
+    const modal = await this.modalController.create({
+      component: TermsOfServiceComponent,
+    });
+
+    await modal.present();
+
+    await modal.onDidDismiss();
+  }
+
+  async openPrivacyPolicy() {
+    const modal = await this.modalController.create({
+      component: PrivacyPolicyComponent,
+    });
+
+    await modal.present();
+
+    await modal.onDidDismiss();
   }
 }

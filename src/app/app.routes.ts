@@ -40,6 +40,14 @@ export const routes: Routes = [
         path: 'profile/:id',
         loadComponent: () => import('./profile/profile.page').then(m => m.ProfilePage),
       },
+      {
+        path: 'workouts/:id',
+        loadComponent: () => import('./workout-details/workout-details.component').then(m => m.WorkoutDetailsComponent),
+      },
+      {
+        path: 'settings',
+        loadComponent: () => import('./settings/settings.component').then(m => m.SettingsComponent),
+      },
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: '**', redirectTo: 'home' },
     ],

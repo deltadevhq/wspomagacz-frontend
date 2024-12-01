@@ -29,4 +29,8 @@ export class DateService {
       return `przed chwilą`;
     }
   }
+
+  getDurationInMinutes(startTime: Date, date: Date) {
+    return Math.floor((date.getTime() - startTime.getTime()) / 60000);
+  }
 }

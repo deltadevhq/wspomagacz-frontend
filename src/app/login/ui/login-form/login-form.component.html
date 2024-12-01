@@ -12,7 +12,9 @@
              type="password">
     <ion-input-password-toggle slot="end"></ion-input-password-toggle>
   </ion-input>
-  <ion-button class="self-end -mb-2 -mt-1" color="primary" fill="clear">Nie pamiętasz hasła?</ion-button>
+  <!--
+    <ion-button class="self-end -mb-2 -mt-1" color="primary" fill="clear">Nie pamiętasz hasła?</ion-button>
+  -->
   <ion-button [disabled]="this.loginForm.invalid || loginStatus() === 'authenticating'" class="w-full"
               type="submit">Zaloguj się
   </ion-button>

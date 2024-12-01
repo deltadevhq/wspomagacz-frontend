@@ -92,9 +92,6 @@
         <ion-segment-button value="achievements">
           <ion-label>Osiągnięcia</ion-label>
         </ion-segment-button>
-        <ion-segment-button value="stats">
-          <ion-label>Statystyki</ion-label>
-        </ion-segment-button>
       </ion-segment>
     </section>
   </div>
@@ -112,28 +109,7 @@
       </swiper-slide>
 
       <swiper-slide class="ion-padding h-full overflow-y-scroll" (scroll)="onContentScroll($event)">
-        <div class="flex flex-col gap-2">
-          <div class="font-semibold text-2xl">
-            Ukończone
-          </div>
-          <div class="flex gap-3 w-full bg-[var(--ion-color-light)] rounded-2xl p-3" *ngFor="let _ of [1,2,3,4,5]">
-            <div
-              class="bg-gradient-to-br from-[var(--ion-color-primary)] to-[var(--ion-color-secondary)] flex items-center justify-center w-14 h-14 p-4 rounded-xl">
-              <ion-icon name="trophy-outline" color="light" size="large"></ion-icon>
-            </div>
-            <div class="flex flex-col w-full justify-between">
-              <ion-text class="font-semibold">
-                Ukończone testowe osiągnięcie.
-              </ion-text>
-              <div class="flex flex-col gap-1">
-                <ion-progress-bar value="1" class="rounded-full" color="secondary" />
-                <div class="self-end font-semibold leading-none">
-                  <ion-text color="secondary">1 z 1</ion-text>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <app-user-achievements [userId]="user.id" />
       </swiper-slide>
 
       <swiper-slide class="ion-padding overflow-y-scroll" (scroll)="onContentScroll($any($event))">

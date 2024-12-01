@@ -1,5 +1,9 @@
 export interface FriendRequestResponse {
-  sender_id: number;
+  sender: {
+    id: number;
+    username: string;
+    display_name: string;
+  }
   receiver_id: number;
   requested_at: string;
   modified_at: string;
@@ -7,7 +11,11 @@ export interface FriendRequestResponse {
 }
 
 export interface FriendRequest {
-  sender_id: number;
+  sender: {
+    id: number;
+    username: string;
+    display_name: string;
+  }
   receiver_id: number;
   requested_at: Date;
   modified_at: Date;

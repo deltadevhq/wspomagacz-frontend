@@ -1,7 +1,15 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { AuthService } from './auth.service';
 import { catchError, EMPTY, exhaustMap, filter, map, Observable, retry, Subject, tap } from 'rxjs';
-import { transformResponseToWorkout, Workout, WorkoutRequest, WorkoutResponse, WorkoutStatus } from '../models/Workout';
+import {
+  transformResponseToWorkout,
+  transformWorkoutSummary,
+  Workout,
+  WorkoutRequest,
+  WorkoutResponse,
+  WorkoutStatus,
+  WorkoutSummaryResponse,
+} from '../models/Workout';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
@@ -12,7 +20,9 @@ const WorkoutRoutes = {
   Default: `${environment.baseUrl}workouts`,
   Id: (id: number) => `${environment.baseUrl}workouts/${id}`,
   Start: (id: number) => `${environment.baseUrl}workouts/${id}/start`,
+  Stop: (id: number) => `${environment.baseUrl}workouts/${id}/stop`,
   Finish: (id: number) => `${environment.baseUrl}workouts/${id}/finish`,
+  Summary: (id: number) => `${environment.baseUrl}workouts/${id}/summary`,
 } as const;
 
 interface WorkoutState {
@@ -41,6 +51,7 @@ export class WorkoutService {
   delete$ = new Subject<number>();
 
   start$ = new Subject<number>();
+  stop$ = new Subject<number>();
   finish$ = new Subject<number>();
 
   error$ = new Subject<string | null>();
@@ -102,23 +113,34 @@ export class WorkoutService {
       })),
     );
 
+    this.stop$
+      .pipe(
+        exhaustMap((id) => this.stopWorkout(id)),
+        takeUntilDestroyed(),
+      ).subscribe((id) =>
+      this.state.update((state) => ({
+        ...state,
+        workouts: state.workouts.map((workout) => workout.id === id ? { ...workout, status: 'planned' } : workout),
+      })),
+    );
 
     this.finish$
       .pipe(
         exhaustMap((id) => this.finishWorkout(id)),
+        tap(() => this.authService.getUser().subscribe()),
         takeUntilDestroyed(),
       ).subscribe((id) => {
         this.state.update((state) => ({
           ...state,
           workouts: state.workouts.map((workout) => workout.id === id ? { ...workout, status: 'completed' } : workout),
         }));
-        this.openWorkoutDetailsModal(this.workouts().find((workout) => workout.id === id));
+        this.openWorkoutSummaryModal(id);
       },
     );
 
     this.logout$
       .pipe(takeUntilDestroyed())
-      .subscribe(() => this.state.update((state) => ({ ...state, workouts: [] })));
+      .subscribe(() => this.state.update((state) => ({ ...state, workouts: [], summaries: [] })));
 
     this.error$
       .pipe(takeUntilDestroyed())
@@ -131,10 +153,11 @@ export class WorkoutService {
   /**
    * Sends a GET request to the server to get all workouts.
    * @param status - The status of the workouts to get.
+   * @param userId - The ID of the user to get the workouts for.
    */
-  getWorkouts(status?: WorkoutStatus): Observable<Workout[]> {
+  getWorkouts(status?: WorkoutStatus, userId?: number): Observable<Workout[]> {
     // Append the user ID and status, if provided, to the URL
-    let url = `${WorkoutRoutes.Default}?user_id=${this.authService.user()?.id}${status ? `&status=${status}` : ''}`;
+    let url = `${WorkoutRoutes.Default}?user_id=${userId ? userId : this.authService.user()?.id}${status ? `&status=${status}` : ''}`;
 
     return this.http.get<WorkoutResponse[]>(url).pipe(
       map((workouts) => workouts.map((workout) => transformResponseToWorkout(workout))),
@@ -310,6 +333,41 @@ export class WorkoutService {
   }
 
   /**
+   * Sends a POST request to the server to stop a workout by its ID.
+   * @param id - The ID of the workout to stop.
+   */
+  stopWorkout(id: number) {
+    return this.http.post(WorkoutRoutes.Stop(id), {}).pipe(
+      map(() => id),
+      catchError((err) => {
+        switch (err.status) {
+          case 400:
+            this.error$.next('Podano nieprawidłowe ID treningu!');
+            break;
+          case 401:
+            this.error$.next('Nie jesteś zalogowany!');
+            break;
+          case 403:
+            this.error$.next('Nie masz uprawnień do wykonania tej operacji!');
+            break;
+          case 404:
+            this.error$.next('Nie znaleziono treningu o podanym ID!');
+            break;
+          case 409:
+            this.error$.next('Trening jest już rozpoczęty!');
+            break;
+          case 500:
+            this.error$.next('Wystąpił problem z serwerem!');
+            break;
+          default:
+            this.error$.next(`Error ${err.status}: ${err.statusText}. ${err.error.error}.`);
+        }
+        return EMPTY;
+      }),
+    );
+  }
+
+  /**
    * Sends a POST request to the server to finish a workout by its ID.
    * @param id - The ID of the workout to finish.
    */
@@ -345,18 +403,50 @@ export class WorkoutService {
   }
 
   /**
-   * Opens the {@link WorkoutDetailsComponent} modal with the given workout.
-   * @param workout - The workout to display in the modal.
+   * Sends a GET request to the server to get a workout summary by its ID.
+   * @param id - The ID of the workout to get the summary for.
    */
-  async openWorkoutDetailsModal(workout?: Workout) {
-    if (!workout) return;
+  getWorkoutSummaryById(id: number) {
+    return this.http.get<WorkoutSummaryResponse>(WorkoutRoutes.Summary(id)).pipe(
+      map(transformWorkoutSummary),
+      tap((summary) => console.log(summary)),
+      catchError((err) => {
+        switch (err.status) {
+          case 400:
+            this.error$.next('Podano nieprawidłowe ID treningu!');
+            break;
+          case 401:
+            this.error$.next('Nie jesteś zalogowany!');
+            break;
+          case 403:
+            this.error$.next('Nie masz uprawnień do wykonania tej operacji!');
+            break;
+          case 404:
+            this.error$.next('Nie znaleziono treningu o podanym ID!');
+            break;
+          case 500:
+            this.error$.next('Wystąpił problem z serwerem!');
+            break;
+          default:
+            this.error$.next(`Error ${err.status}: ${err.statusText}. ${err.error.error}.`);
+        }
+        return EMPTY;
+      }));
+  }
 
+  /**
+   * Opens a modal with the {@link WorkoutDetailsComponent} containing the given workout.
+   * @param workoutId - The ID of the workout to show the summary for.
+   */
+  async openWorkoutSummaryModal(workoutId: number) {
     const modal = await this.modalController.create({
       component: WorkoutDetailsComponent,
-      componentProps: { workout },
+      componentProps: { workoutId },
     });
 
-    return await modal.present();
+    await modal.present();
+
+    return await modal.onDidDismiss();
   }
 
   /**

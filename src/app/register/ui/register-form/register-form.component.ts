@@ -1,6 +1,6 @@
 import { Component, inject, input, output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IonButton, IonInput, IonInputPasswordToggle, IonToast } from '@ionic/angular/standalone';
+import { IonButton, IonInput, IonInputPasswordToggle, IonText, IonToast } from '@ionic/angular/standalone';
 import { RegisterStatus } from '../../data-access/register.service';
 import { CreateUserCredentials } from '../../../shared/data-access/auth.service';
 
@@ -9,7 +9,7 @@ import { CreateUserCredentials } from '../../../shared/data-access/auth.service'
   selector: 'app-register-form',
   templateUrl: './register-form.component.html',
   styleUrls: ['./register-form.component.scss'],
-  imports: [ReactiveFormsModule, IonInput, IonInputPasswordToggle, IonToast, IonButton],
+  imports: [ReactiveFormsModule, IonInput, IonInputPasswordToggle, IonToast, IonButton, IonText],
 })
 export class RegisterFormComponent {
   registerStatus = input.required<RegisterStatus>();

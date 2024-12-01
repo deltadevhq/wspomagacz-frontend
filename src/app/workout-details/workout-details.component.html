@@ -1,3 +1,105 @@
-<p>
-  workout-details works!
-</p>
+<ion-header class="ion-no-border">
+  <ion-toolbar class="ion-padding-horizontal ion-padding-top">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+
+    <ion-title>
+      Szczegóły treningu
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="modalController.dismiss()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <ng-container *ngIf="summary">
+    <div class="flex flex-col gap-6">
+      <ng-container *ngIf="summary.lvl_after > summary.lvl_before">
+        <ion-text class="text-2xl font-semibold" color="primary">
+          OSIĄGNIĘTO {{ summary.lvl_after }} POZIOM!
+        </ion-text>
+        <ion-text>
+
+        </ion-text>
+      </ng-container>
+
+      <ng-container *ngIf="nextLevel && previousLevel">
+        <section class="flex flex-col gap-1">
+          <div class="flex items-center self-stretch font-semibold text-base text-primary">
+            POZIOM {{ nextLevel.level }}
+          </div>
+          @if (summary.lvl_before === summary.lvl_after) {
+            <ion-progress-bar [value]="previousLevel.progress"
+                              [buffer]="nextLevel.progress" color="primary"
+                              class="rounded-full h-3"></ion-progress-bar>
+          } @else {
+            <ion-progress-bar [value]="0"
+                              [buffer]="nextLevel.progress" color="primary"
+                              class="rounded-full h-3"></ion-progress-bar>
+          }
+          <div class="flex justify-end items-center gap-2 self-stretch">
+            <div class="text-xs">
+              brakuje {{ nextLevel.missing_xp - getTotalExpGranted() }}PD do
+            </div>
+            <div class="text-primary text-sm">
+              POZIOMU {{ nextLevel.level + 1 }}
+            </div>
+          </div>
+        </section>
+
+      </ng-container>
+
+      <div class="flex flex-col gap-2 exp-granted">
+        <div class="flex justify-between flex-1">
+          <div class="truncate">
+            <ion-text>Trening</ion-text>
+          </div>
+          <ion-text class="font-semibold">+{{ summary.exp_granted }}PD</ion-text>
+        </div>
+        <ng-container *ngFor="let achievement of summary.achievements">
+          <div class="flex justify-between flex-1" *ngIf="achievement.achieved">
+            <div class="truncate">
+              <ion-text>{{ achievement.achievement.description }}</ion-text>
+            </div>
+            <ion-text class="font-semibold">+{{ achievement.achievement.xp }}PD</ion-text>
+          </div>
+        </ng-container>
+        <div class="h-[1px] w-full flex bg-[rgba(var(--ion-color-primary-rgb),_0.2)] my-2"></div>
+        <div class="flex justify-between flex-1">
+          <ion-text>Łącznie</ion-text>
+          <ion-text class="font-semibold">+{{ getTotalExpGranted() }}PD</ion-text>
+        </div>
+      </div>
+
+      <div class="font-semibold text-2xl text-center">
+        {{ summary.name }}
+      </div>
+
+      <div class="flex items-center justify-between p-4 rounded-xl bg-[var(--ion-color-light)]">
+        <div class="flex items-center font-medium gap-2">
+          <ion-icon name="time-outline" class="text-xl" />
+          Czas trwania
+        </div>
+        <ion-text>
+          {{ getDuration() }}
+        </ion-text>
+      </div>
+
+      <div>
+        <ion-text class="font-semibold text-2xl">Ćwiczenia</ion-text>
+        <app-workout-exercises-list [workoutExercises]="summary.exercises"></app-workout-exercises-list>
+      </div>
+
+      <div class="flex flex-col gap-4">
+        <ion-text class="font-semibold text-2xl">Powiązane Osiągnięcia</ion-text>
+        <app-user-achievement *ngFor="let achievement of summary.achievements"
+                              [achievement]="achievement"></app-user-achievement>
+      </div>
+    </div>
+  </ng-container>
+</ion-content>
+
+

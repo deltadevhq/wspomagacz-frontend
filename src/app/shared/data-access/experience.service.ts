@@ -38,6 +38,7 @@ export class ExperienceService {
   level$ = this.getLevelByExperience(this.authService.user()?.exp).pipe(
     retry({
       delay: () => this.authUser$.pipe(filter((user) => !!user)),
+      resetOnSuccess: true,
     }),
   );
 

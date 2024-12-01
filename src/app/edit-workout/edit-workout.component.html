@@ -102,19 +102,29 @@
                       placeholder="Treść notatki..." />
       </section>
 
-      <section *ngIf="(state$ | async)?.canDelete">
-        <ion-button color="primary" fill="clear" expand="block" id="delete-workout">
-          <ion-icon name="trash-bin" slot="start"></ion-icon>
-          Usuń trening
-        </ion-button>
-        <ion-alert
-          (didDismiss)="deleteAlert($event)"
-          [buttons]="alertButtons"
-          header="Czy na pewno chcesz usunąć ten trening?"
-          message="Tej operacji nie można cofnąć."
-          trigger="delete-workout"
-        ></ion-alert>
+      <section>
+        <section *ngIf="(state$ | async)?.canSave">
+          <ion-button color="medium" fill="clear" expand="block" (click)="this.workoutService.stop$.next(workout.id!)">
+            <ion-icon name="stop" slot="start"></ion-icon>
+            Zatrzymaj trening
+          </ion-button>
+        </section>
+
+        <section *ngIf="(state$ | async)?.canDelete">
+          <ion-button color="primary" fill="clear" expand="block" id="delete-workout">
+            <ion-icon name="trash-bin" slot="start"></ion-icon>
+            Usuń trening
+          </ion-button>
+          <ion-alert
+            (didDismiss)="deleteAlert($event)"
+            [buttons]="alertButtons"
+            header="Czy na pewno chcesz usunąć ten trening?"
+            message="Tej operacji nie można cofnąć."
+            trigger="delete-workout"
+          ></ion-alert>
+        </section>
       </section>
+
     </div>
 
   </ion-content>

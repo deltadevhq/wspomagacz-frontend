@@ -49,10 +49,6 @@ export class GenderSettingsComponent {
 
   gender = new FormControl<string>(`${this.authService.user()?.gender}`);
 
-  async close() {
-    await this.modalController.dismiss();
-  }
-
   async save() {
     this.authService.updateUser({ gender: this.gender.getRawValue()! }).subscribe();
 

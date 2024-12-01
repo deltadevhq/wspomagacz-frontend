@@ -47,6 +47,7 @@ import {
   settings,
   settingsOutline,
   shareSocialOutline,
+  star,
   statsChart,
   stop,
   timeOutline,
@@ -120,6 +121,7 @@ export class AppComponent {
       trendingUpOutline,
       trophyOutline,
       personRemoveOutline,
+      star,
     });
   }
 }

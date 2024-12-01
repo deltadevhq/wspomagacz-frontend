@@ -9,7 +9,8 @@
       </ion-buttons>
     </ion-toolbar>
     <ion-toolbar class="ion-padding-horizontal">
-      <ion-button expand="block" size="small" fill="clear" color="dark" [disabled]="notifications.length === 0">
+      <ion-button expand="block" size="small" fill="clear" color="dark" [disabled]="notifications.length === 0"
+                  (click)="notificationService.readAll$.next()">
         <ion-icon slot="start" name="checkmark-done"></ion-icon>
         Przeczytaj wszystkie
       </ion-button>
@@ -37,7 +38,7 @@
             </ion-icon>
           }
           @case ('friend_request_accepted') {
-            <ion-icon size="large" name="person-check-outline" slot="start"
+            <ion-icon size="large" name="people-outline" slot="start"
                       [ngClass]="{'text-[var(--ion-color-light-tint)]': notification.read}"
                       class="border-r-2 border-[var(--ion-color-light-tint)] pr-4 mr-4">
             </ion-icon>

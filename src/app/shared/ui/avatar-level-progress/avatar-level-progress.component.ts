@@ -4,6 +4,7 @@ import { LevelProgressComponent } from '../level-progress/level-progress.compone
 import { AsyncPipe, NgIf, NgOptimizedImage } from '@angular/common';
 import { SettingsComponent } from '../../../settings/settings.component';
 import { environment } from '../../../../environments/environment';
+import { AuthService } from '../../data-access/auth.service';
 
 @Component({
   standalone: true,
@@ -22,6 +23,7 @@ export class AvatarLevelProgressComponent extends LevelProgressComponent {
   degree = computed(() => (this.experienceService.level()?.progress ?? 0) * 360);
 
   modalController = inject(ModalController);
+  authService = inject(AuthService);
 
   async openSettingsModal() {
     const modal = await this.modalController.create({

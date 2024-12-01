@@ -1,8 +1,9 @@
 export interface Achievement {
   id: number;
-  name: string;
   description: string;
-  goal: number;
+  target_value: number;
+  min_value: number;
   xp: number;
-  category: string;
+  type: string;
+  tier: number;
 }

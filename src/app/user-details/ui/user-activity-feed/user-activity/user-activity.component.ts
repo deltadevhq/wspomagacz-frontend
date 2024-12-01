@@ -184,24 +184,12 @@ export class UserActivityComponent {
   }
 
   getLikesString(activity: UserActivity) {
-    if (activity.liked) {
-      if (activity.likes === 1) {
-        return 'Tylko Ty polubiłeś/aś tą aktywność.';
-      } else if (activity.likes === 2) {
-        return 'Ty i 1 osoba polubiła tą aktywność.';
-      } else if (activity.likes > 2 && activity.likes < 6) {
-        return `Ty i ${activity.likes - 1} osoby polubiły tą aktywność.`;
-      } else {
-        return `Ty i ${activity.likes - 1} osób polubiło tą aktywność.`;
-      }
+    if (activity.likes === 1) {
+      return '1 osoba polubiła tą aktywność';
+    } else if (activity.likes > 1 && activity.likes < 6) {
+      return `${activity.likes} osoby polubiły tą aktywność.`;
     } else {
-      if (activity.likes === 1) {
-        return '1 osoba polubiła tą aktywność';
-      } else if (activity.likes > 1 && activity.likes < 6) {
-        return `${activity.likes} osoby polubiły tą aktywność.`;
-      } else {
-        return `${activity.likes} osób polubiło tą aktywność.`;
-      }
+      return `${activity.likes} osób polubiło tą aktywność.`;
     }
   }
 
@@ -220,7 +208,7 @@ export class UserActivityComponent {
       link.download = `activity-${this.activity?.id}.png`;
       link.click();
       link.remove();
-    } else if (this.platform.is('capacitor')) {
+    } else if (this.platform.is('mobile')) {
       await Share.share({
         url: dataUrl,
       });

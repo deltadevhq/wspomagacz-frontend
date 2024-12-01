@@ -43,18 +43,21 @@
           </ion-text>
         </div>
         <div class="flex gap-4 overflow-x-scroll snap-x scroll-px-4 px-4 pb-4">
-          <ion-card *ngFor="let _ of [1, 2, 3, 4, 5]" class="snap-start min-w-60">
+          <ion-card *ngFor="let workout of workouts" class="snap-start min-w-60"
+                    (click)="openWorkoutEditModal(workout, 'create-related')">
             <ion-card-header>
-              <ion-card-title>Nazwa Planu</ion-card-title>
+              <ion-card-title>{{ workout.name }}</ion-card-title>
             </ion-card-header>
             <ion-card-content>
               <div class="flex ion-align-items-center gap-1">
                 <ion-icon name="flash"></ion-icon>
-                <div class="text-base">10 ćwiczeń</div>
+                <div class="text-base">{{ workout.exercises.length }} ćwiczeń</div>
               </div>
               <div class="flex ion-align-items-center gap-1">
                 <ion-icon name="time-outline"></ion-icon>
-                <div class="text-base">45 minut</div>
+                <div class="text-base">{{ dateService.getDurationInMinutes(workout.started_at!, workout.finished_at!) }}
+                  minut
+                </div>
               </div>
             </ion-card-content>
           </ion-card>

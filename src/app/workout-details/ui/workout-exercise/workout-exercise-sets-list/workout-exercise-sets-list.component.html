@@ -1,0 +1,39 @@
+@if (sets.length > 0) {
+  <ion-list class="ion-padding-vertical flex flex-col gap-2" lines="none">
+    <ion-item class="rounded-2xl" color="light" *ngFor="let set of sets; let i = index">
+      <ion-label>
+        <ion-text class="flex gap-2 items-center">
+          <ion-text class="text-2xl font-semibold w-32 text-center pr-2">
+            {{ i + 1 }}
+          </ion-text>
+          <ion-input label="Powtórzenia"
+                     labelPlacement="stacked"
+                     [(ngModel)]="set.reps"
+                     [value]="set.reps"
+                     inputmode="numeric"
+                     [disabled]="true"
+                     class="-mt-2 ion-input-disabled">
+            <ion-icon name="repeat" slot="start" aria-hidden="true"></ion-icon>
+          </ion-input>
+          <ion-input label="Waga" labelPlacement="stacked"
+                     [(ngModel)]="set.weight"
+                     [value]="set.weight"
+                     placeholder="Brak"
+                     [disabled]="true"
+                     class="-mt-2 ion-input-disabled">
+            <ion-icon name="barbell" slot="start" aria-hidden="true"></ion-icon>
+          </ion-input>
+        </ion-text>
+      </ion-label>
+      <ion-reorder slot="end"></ion-reorder>
+    </ion-item>
+  </ion-list>
+} @else {
+  <div class="flex items-center justify-center gap-2 ion-padding">
+    <ion-icon class="text-2xl" color="medium" name="alert-circle-outline"></ion-icon>
+    <ion-text class="text-center" color="medium">
+      Brak serii.
+    </ion-text>
+  </div>
+}
+

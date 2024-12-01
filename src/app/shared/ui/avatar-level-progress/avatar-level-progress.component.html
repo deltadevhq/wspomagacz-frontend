@@ -1,7 +1,7 @@
 <ng-container *ngIf="level$ | async as level">
   <ion-avatar class="relative ion-activatable" slot="end" (click)="openSettingsModal()">
     <ion-ripple-effect class="rounded-2xl" />
-    <img alt="avatar" [ngSrc]="environment.baseUrl + 'users/' + '1' + '/avatar'" width="128"
+    <img alt="avatar" [ngSrc]="environment.baseUrl + 'users/' + this.authService.user()?.id + '/avatar'" width="128"
          height="128">
     <div
       [style.background]="'conic-gradient(var(--ion-color-primary) 0' + degree() + 'deg, var(--ion-color-light)' + degree() + 'deg 360deg)'"

@@ -65,10 +65,6 @@ export class AvatarSettingsComponent {
     };
   }
 
-  async close() {
-    await this.modalController.dismiss();
-  }
-
   async presentErrorToast(message: string) {
     const toast = await this.toastController.create({
       color: 'primary',

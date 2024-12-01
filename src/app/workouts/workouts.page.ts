@@ -11,6 +11,14 @@ import {
   IonGrid,
   IonHeader,
   IonIcon,
+  IonItem,
+  IonItemOption,
+  IonItemOptions,
+  IonItemSliding,
+  IonLabel,
+  IonList,
+  IonReorder,
+  IonReorderGroup,
   IonRow,
   IonSpinner,
   IonText,
@@ -25,17 +33,21 @@ import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { Workout } from '../shared/models/Workout';
 import { AvatarLevelProgressComponent } from '../shared/ui/avatar-level-progress/avatar-level-progress.component';
+import { WorkoutService } from '../shared/data-access/workout.service';
 
 @Component({
   selector: 'app-workouts',
   templateUrl: './workouts.page.html',
   styleUrls: ['./workouts.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, AvatarLevelProgressComponent, NotificationsComponent, IonGrid, IonRow, IonCol, WorkoutsCalendarComponent, WorkoutSummaryComponent, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonIcon, IonSpinner, IonText, AvatarLevelProgressComponent],
+  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, AvatarLevelProgressComponent, NotificationsComponent, IonGrid, IonRow, IonCol, WorkoutsCalendarComponent, WorkoutSummaryComponent, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonIcon, IonSpinner, IonText, AvatarLevelProgressComponent, IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel, IonList, IonReorder, IonReorderGroup],
 })
 export class WorkoutsPage {
   authService = inject(AuthService);
+  workoutService = inject(WorkoutService);
   private router = inject(Router);
+
+  workouts: Workout[] = [];
 
   selectedWorkout$ = new BehaviorSubject<Workout | undefined>(undefined);
   selectedDate$ = new BehaviorSubject<Date>(new Date());
@@ -46,5 +58,10 @@ export class WorkoutsPage {
         this.router.navigate(['/welcome']);
       }
     });
+
+    const monthAgo = new Date();
+    monthAgo.setDate(monthAgo.getDate() - 31);
+
+    this.workouts = this.workoutService.workouts().filter(workout => workout.date >= monthAgo && workout.status === 'completed');
   }
 }

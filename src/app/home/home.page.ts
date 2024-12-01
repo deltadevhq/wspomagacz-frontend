@@ -21,6 +21,7 @@ import {
   IonText,
   IonTitle,
   IonToolbar,
+  ModalController,
 } from '@ionic/angular/standalone';
 import { CalendarComponent } from '../shared/ui/calendar/calendar.component';
 import { AuthService } from '../shared/data-access/auth.service';
@@ -32,6 +33,9 @@ import { WorkoutsCalendarComponent } from '../shared/ui/calendar/workouts-calend
 import { BehaviorSubject } from 'rxjs';
 import { AvatarLevelProgressComponent } from '../shared/ui/avatar-level-progress/avatar-level-progress.component';
 import { LevelProgressComponent } from '../shared/ui/level-progress/level-progress.component';
+import { WorkoutService } from '../shared/data-access/workout.service';
+import { DateService } from '../shared/date.service';
+import { EditWorkoutComponent } from '../edit-workout/edit-workout.component';
 
 @Component({
   selector: 'app-home',
@@ -42,10 +46,15 @@ import { LevelProgressComponent } from '../shared/ui/level-progress/level-progre
 })
 export class HomePage {
   public authService = inject(AuthService);
+  workoutService = inject(WorkoutService);
+  dateService = inject(DateService);
   private router = inject(Router);
+  modalController = inject(ModalController);
 
   selectedWorkout$ = new BehaviorSubject<Workout | undefined>(undefined);
   selectedDate$ = new BehaviorSubject<Date>(new Date());
+
+  workouts: Workout[] = [];
 
   constructor() {
     effect(() => {
@@ -53,5 +62,22 @@ export class HomePage {
         this.router.navigate(['/welcome']);
       }
     });
+
+    this.workoutService.getWorkouts('completed', 1).subscribe((workouts) => {
+      this.workouts = workouts.slice(0, 5);
+    });
+  }
+
+  async openWorkoutEditModal(workout: Workout, role: string) {
+    const modal = await this.modalController.create({
+      component: EditWorkoutComponent,
+      componentProps: {
+        initialWorkout: workout,
+        role: role,
+      },
+    });
+
+    await modal.present();
+    await modal.onWillDismiss();
   }
 }

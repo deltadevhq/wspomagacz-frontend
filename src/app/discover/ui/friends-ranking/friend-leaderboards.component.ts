@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   IonAvatar,
   IonButton,
@@ -16,9 +16,19 @@ import {
   IonList,
   IonReorder,
   IonReorderGroup,
+  IonRouterLink,
   IonText,
 } from '@ionic/angular/standalone';
-import { NgForOf } from '@angular/common';
+import { NgForOf, NgIf, NgOptimizedImage } from '@angular/common';
+import {
+  ExpLeaderboardEntry,
+  LeaderboardsService,
+  WeightLeaderboardEntry,
+} from '../../../shared/data-access/leaderboards.service';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { AuthService } from '../../../shared/data-access/auth.service';
+import { environment } from '../../../../environments/environment';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-friend-leaderboards',
@@ -44,7 +54,36 @@ import { NgForOf } from '@angular/common';
     IonReorderGroup,
     IonAvatar,
     IonButton,
+    NgIf,
+    NgOptimizedImage,
+    RouterLink,
+    IonRouterLink,
   ],
 })
 export class FriendLeaderboardsComponent {
+  expLeaderboard: ExpLeaderboardEntry[] | null = [];
+  weightLeaderboard: WeightLeaderboardEntry[] | null = [];
+
+  userExpLeaderboardEntry: ExpLeaderboardEntry | null = null;
+  userWeightLeaderboardEntry: WeightLeaderboardEntry | null = null;
+
+  leaderboardsService = inject(LeaderboardsService);
+  expLeaderboard$ = toObservable(this.leaderboardsService.expLeaderboard);
+  weightLeaderboard$ = toObservable(this.leaderboardsService.weightLeaderboard);
+
+  authService = inject(AuthService);
+
+  constructor() {
+    this.expLeaderboard$.subscribe((expLeaderboard) => {
+      this.expLeaderboard = expLeaderboard;
+      this.userExpLeaderboardEntry = expLeaderboard?.find((entry) => entry.user.id === this.authService.user()?.id) ?? null;
+    });
+
+    this.weightLeaderboard$.subscribe((weightLeaderboard) => {
+      this.weightLeaderboard = weightLeaderboard;
+      this.userWeightLeaderboardEntry = weightLeaderboard?.find((entry) => entry.user.id === this.authService.user()?.id) ?? null;
+    });
+  }
+
+  protected readonly environment = environment;
 }

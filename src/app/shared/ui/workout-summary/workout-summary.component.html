@@ -3,34 +3,6 @@
     <div class="font-semibold text-2xl text-center py-2">
       {{ workout.name }}
     </div>
-    <div class="grid grid-cols-2 gap-2">
-      <ion-card>
-        <ion-card-header>
-          <ion-card-title>
-            <div class="flex items-center gap-2">
-              <ion-icon name="barbell" />
-              Ćwiczenia
-            </div>
-          </ion-card-title>
-        </ion-card-header>
-        <ion-card-content>
-          {{ workout.exercises.length }}
-        </ion-card-content>
-      </ion-card>
-      <ion-card>
-        <ion-card-header>
-          <ion-card-title>
-            <div class="flex items-center gap-2">
-              <ion-icon name="time-outline" />
-              Czas
-            </div>
-          </ion-card-title>
-        </ion-card-header>
-        <ion-card-content>
-          {{ duration }}
-        </ion-card-content>
-      </ion-card>
-    </div>
     @switch (workout.status) {
       @case (WorkoutStatuses.Planned) {
         <div class="flex justify-center py-2">
@@ -40,7 +12,7 @@
           </ion-text>
         </div>
         <div class="grid grid-cols-2 gap-1">
-          <ion-button (click)="openWorkoutEditModal('edit')" color="light"
+          <ion-button (click)="openWorkoutEditModal('edit')" color="secondary"
                       [ngClass]="{'col-span-2': !dateService.isToday(workout.date)}">
             <ion-icon name="pencil" slot="start" />
             Edytuj
@@ -53,6 +25,38 @@
         </div>
       }
       @case (WorkoutStatuses.InProgress) {
+        <div class="flex items-center justify-between p-4 rounded-xl bg-[var(--ion-color-light)]">
+          <div class="flex items-center font-medium gap-2">
+            <ion-icon name="time-outline" class="text-xl" />
+            Czas trwania
+          </div>
+          <ion-text>
+            {{ getDuration() }}
+          </ion-text>
+        </div>
+        <div class="font-semibold text-xl pt-2">
+          Ćwiczenia
+        </div>
+        <ion-list class="flex flex-col gap-2 max-h-[13.5rem] overflow-y-scroll snap-y ion-no-padding ion-no-margin"
+                  lines="none">
+          <ion-item *ngFor="let exercise of workout.exercises" class="rounded-2xl shrink-0 snap-start" color="light">
+            <ion-label>
+              <ion-text class="font-medium">
+                {{ exercise.exercise.exercise_name }}
+              </ion-text>
+              <ion-text class="flex gap-2 text-sm" color="medium">
+                <div class="flex items-center self-stretch gap-1">
+                  <ion-icon name="repeat"></ion-icon>
+                  {{ exercise.sets.length }}
+                </div>
+                <div class="flex items-center self-stretch gap-1">
+                  <ion-icon name="barbell"></ion-icon>
+                  {{ getWeightRange(exercise) }}
+                </div>
+              </ion-text>
+            </ion-label>
+          </ion-item>
+        </ion-list>
         <div class="flex justify-center py-2">
           <ion-text color="secondary" class="flex items-center gap-1">
             <ion-icon name="play-circle-outline" class="text-2xl" />
@@ -60,7 +64,7 @@
           </ion-text>
         </div>
         <div class="grid grid-cols-2 gap-1">
-          <ion-button (click)="openWorkoutEditModal('edit')" color="light">
+          <ion-button (click)="openWorkoutEditModal('edit')" color="secondary">
             <ion-icon name="pencil" slot="start" />
             Edytuj
           </ion-button>
@@ -78,7 +82,7 @@
           </ion-text>
         </div>
         <div class="grid grid-cols-2 gap-1">
-          <ion-button color="light">
+          <ion-button color="light" (click)="workoutService.openWorkoutSummaryModal(workout.id)">
             <ion-icon name="stats-chart" slot="start" />
             Szczegóły
           </ion-button>

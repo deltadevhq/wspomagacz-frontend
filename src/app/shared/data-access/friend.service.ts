@@ -1,19 +1,24 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, EMPTY, map, Subject, tap } from 'rxjs';
+import { catchError, EMPTY, filter, map, retry, Subject } from 'rxjs';
 import { FriendRequest, FriendRequestResponse, transformFriendRequest } from '../models/FriendRequest';
+import { Friend, FriendResponse, transformFriend } from '../models/User';
 import { AuthService } from './auth.service';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { environment } from '../../../environments/environment';
 
 const FriendRoutes = {
-  Add: (userId: number) => `/api/friends/request/${userId}`,
-  Reject: (userId: number) => `/api/friends/reject/${userId}`,
-  Accept: (userId: number) => `/api/friends/accept/${userId}`,
-  Id: (userId: number) => `/api/friends/${userId}`,
-  Default: '/api/friends',
+  Add: (userId: number) => `${environment.baseUrl}friends/request/${userId}`,
+  Reject: (userId: number) => `${environment.baseUrl}friends/reject/${userId}`,
+  Accept: (userId: number) => `${environment.baseUrl}friends/accept/${userId}`,
+  Id: (userId: number) => `${environment.baseUrl}friends/${userId}`,
+  Default: `${environment.baseUrl}friends`,
+  Requests: `${environment.baseUrl}friends/requests`,
 };
 
 interface FriendState {
   friendRequests: FriendRequest[];
+  friends: Friend[];
   error: string | null;
 }
 
@@ -23,16 +28,30 @@ interface FriendState {
 export class FriendService {
   private http = inject(HttpClient);
   private authService = inject(AuthService);
+  private authUser$ = toObservable(this.authService.user);
 
   state = signal<FriendState>({
     friendRequests: [],
+    friends: [],
     error: null,
   });
 
   friendRequests = computed(() => this.state().friendRequests);
+  friends = computed(() => this.state().friends);
   error = computed(() => this.state().error);
 
-  friends$ = new Subject<FriendRequest>();
+  friendRequests$ = this.getFriendRequests().pipe(
+    retry({
+      delay: () => this.authUser$.pipe(filter((user) => !!user)),
+    }),
+  );
+
+  friends$ = this.getFriends().pipe(
+    retry({
+      delay: () => this.authUser$.pipe(filter((user) => !!user)),
+    }),
+  );
+
   error$ = new Subject<string | null>();
 
   add$ = new Subject<number>();
@@ -40,11 +59,20 @@ export class FriendService {
   remove$ = new Subject<number>();
 
   constructor() {
-    this.friends$.subscribe(
-      (friend) => this.state.update(
+    this.friendRequests$.subscribe(
+      (friendRequests) => this.state.update(
         (state) => ({
           ...state,
-          friendRequests: [...state.friendRequests, friend],
+          friendRequests,
+        }),
+      ),
+    );
+
+    this.friends$.subscribe(
+      (friends) => this.state.update(
+        (state) => ({
+          ...state,
+          friends,
         }),
       ),
     );
@@ -57,14 +85,21 @@ export class FriendService {
         }),
       ),
     );
-
-    this.getFriends().subscribe();
   }
 
   getFriends() {
-    return this.http.get<FriendRequestResponse[]>(FriendRoutes.Default).pipe(
-      map((friends) => friends.map(transformFriendRequest)),
-      tap((friends) => friends.forEach((friend) => this.friends$.next(friend))),
+    return this.http.get<FriendResponse[]>(FriendRoutes.Default).pipe(
+      map((friends) => friends.map(transformFriend)),
+      catchError((error) => {
+        this.error$.next(error.message);
+        return EMPTY;
+      }),
+    );
+  }
+
+  getFriendRequests() {
+    return this.http.get<FriendRequestResponse[]>(FriendRoutes.Requests).pipe(
+      map((requests) => requests.map(transformFriendRequest)),
       catchError((error) => {
         this.error$.next(error.message);
         return EMPTY;
@@ -75,7 +110,6 @@ export class FriendService {
   addFriend(userId: number) {
     return this.http.post<FriendRequestResponse>(FriendRoutes.Add(userId), {}).pipe(
       map(transformFriendRequest),
-      tap((friend) => this.friends$.next(friend)),
       catchError((error) => {
         this.error$.next(error.message);
         return EMPTY;
@@ -86,7 +120,6 @@ export class FriendService {
   rejectFriend(userId: number) {
     return this.http.post<FriendRequestResponse>(FriendRoutes.Reject(userId), {}).pipe(
       map(transformFriendRequest),
-      tap((friend) => this.friends$.next(friend)),
       catchError((error) => {
         this.error$.next(error.message);
         return EMPTY;
@@ -97,7 +130,6 @@ export class FriendService {
   acceptFriend(userId: number) {
     return this.http.post<FriendRequestResponse>(FriendRoutes.Accept(userId), {}).pipe(
       map(transformFriendRequest),
-      tap((friend) => this.friends$.next(friend)),
       catchError((error) => {
         this.error$.next(error.message);
         return EMPTY;
@@ -106,6 +138,11 @@ export class FriendService {
   }
 
   removeFriend(userId: number) {
-    return this.http.delete(FriendRoutes.Id(userId));
+    return this.http.delete(FriendRoutes.Id(userId)).pipe(
+      catchError((error) => {
+        this.error$.next(error.message);
+        return EMPTY;
+      }),
+    );
   }
 }

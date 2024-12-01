@@ -1,21 +1,35 @@
 <section>
   <ion-text class="text-2xl font-semibold px-4">
     Zaproszenia
-    <ion-badge>4</ion-badge>
+    <ion-badge>{{ friendRequests ? friendRequests.length : 0 }}</ion-badge>
   </ion-text>
 
-  <ion-list class="ion-padding-vertical grid grid-cols-2 xs:grid-cols-3 gap-2" lines="none">
+  <ion-list
+    class="ion-padding-vertical flex flex-col gap-2"
+    lines="none"
+    *ngIf="friendRequests">
+    <ng-container *ngIf="friendRequests.length === 0">
+      <div class="flex items-center justify-center gap-2 ion-padding">
+        <ion-icon class="text-2xl" color="medium" name="alert-circle-outline"></ion-icon>
+        <ion-text class="text-center" color="medium">
+          Brak zaproszeń.
+        </ion-text>
+      </div>
+    </ng-container>
     <ion-item class="friend-request rounded-2xl border border-[var(--ion-color-light-tint)] py-4"
-              *ngFor="let _ of [1,2,3,4]">
-      <div class="flex flex-col gap-2 w-full overflow-hidden">
-        <ion-avatar class="w-full h-auto">
-          <img src="/assets/avatar.jpg" alt="avatar" />
+              *ngFor="let request of friendRequests">
+      <div class="flex items-center gap-4 w-full overflow-hidden">
+        <ion-avatar class="w-16 min-w-16 cursor-pointer"
+                    [routerLink]="['/profile', request.sender.id]"
+                    [routerDirection]="'forward'">
+          <img alt="" [ngSrc]="environment.baseUrl + 'users/' + request.sender.id + '/avatar'" width="128"
+               height="128">
         </ion-avatar>
         <div class="flex flex-col leading-none w-full overflow-hidden">
-          <ion-text class="font-semibold text-lg truncate">Jan Kowalski</ion-text>
-          <ion-text class="text-sm truncate" color="medium">jankowalski</ion-text>
+          <ion-text class="font-semibold text-lg truncate">{{ request.sender.display_name }}</ion-text>
+          <ion-text class="text-sm truncate" color="medium">{{ request.sender.username }}</ion-text>
         </div>
-        <div>
+        <div class="flex">
           <ion-button expand="block" color="success" size="small">Akceptuj</ion-button>
           <ion-button expand="block" color="light" size="small">Ignoruj</ion-button>
         </div>
@@ -27,17 +41,30 @@
     Znajomi
   </ion-text>
 
-  <ion-list class="ion-padding-vertical flex flex-col gap-2" lines="none">
-    <ion-item class="rounded-2xl" color="light" *ngFor="let _ of [1,2,3]" button detail="true">
+  <ion-list class="ion-padding-vertical flex flex-col gap-2" lines="none"
+            *ngIf="friends">
+    <ng-container *ngIf="friends.length === 0">
+      <div class="flex items-center justify-center gap-2 ion-padding">
+        <ion-icon class="text-2xl" color="medium" name="alert-circle-outline"></ion-icon>
+        <ion-text class="text-center" color="medium">
+          Brak znajomych.
+        </ion-text>
+      </div>
+    </ng-container>
+
+    <ion-item class="rounded-2xl" color="light" *ngFor="let friend of friends.slice(0,5)" button detail="true">
       <ion-label>
         <ion-text class="flex gap-2 items-center">
           <div class="flex items-center gap-4 w-full overflow-hidden">
-            <ion-avatar class="size-12 min-w-12">
-              <img src="/assets/avatar.jpg" alt="avatar" />
+            <ion-avatar class="w-12 min-w-12 cursor-pointer"
+                        [routerLink]="['/profile', friend.id]"
+                        [routerDirection]="'forward'">
+              <img alt="" [ngSrc]="environment.baseUrl + 'users/' + friend.id + '/avatar'" width="128"
+                   height="128">
             </ion-avatar>
             <div class="flex flex-col leading-none w-full overflow-hidden">
-              <ion-text class="font-semibold text-lg truncate">Jan Kowalski</ion-text>
-              <ion-text class="text-sm truncate" color="medium">jankowalski</ion-text>
+              <ion-text class="font-semibold text-lg truncate">{{ friend.display_name }}</ion-text>
+              <ion-text class="text-sm truncate" color="medium">{{ friend.username }}</ion-text>
             </div>
           </div>
         </ion-text>

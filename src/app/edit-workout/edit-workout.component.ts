@@ -117,8 +117,6 @@ export class EditWorkoutComponent implements OnInit, OnDestroy {
     ),
   );
 
-  isWorkoutNameValid = true;
-
   private destroy$ = new Subject<void>();
 
   constructor() {

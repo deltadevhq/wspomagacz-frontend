@@ -1,0 +1,31 @@
+@if (workoutExercises.length > 0) {
+  <ion-list class="ion-padding-vertical" lines="none">
+    <ion-item class="rounded-2xl" color="light" button detail="true" (click)="showWorkoutExercise(i)"
+              *ngFor="let workoutExercise of workoutExercises; let i = index">
+      <ion-label>
+        <ion-text class="font-medium">
+          {{ workoutExercise.exercise.exercise_name }}
+        </ion-text>
+        <ion-text class="flex gap-2 text-sm" color="medium">
+          <div class="flex items-center self-stretch gap-1">
+            <ion-icon name="repeat"></ion-icon>
+            {{ workoutExercise.sets.length }}
+          </div>
+
+          <div class="flex items-center self-stretch gap-1">
+            <ion-icon name="barbell"></ion-icon>
+            {{ getWeightRange(workoutExercise) }}
+          </div>
+        </ion-text>
+      </ion-label>
+      <ion-reorder slot="end"></ion-reorder>
+    </ion-item>
+  </ion-list>
+} @else {
+  <div class="flex items-center justify-center gap-2 ion-padding">
+    <ion-icon class="text-2xl" color="medium" name="alert-circle-outline"></ion-icon>
+    <ion-text class="text-center" color="medium">
+      Brak ćwiczeń.
+    </ion-text>
+  </div>
+}

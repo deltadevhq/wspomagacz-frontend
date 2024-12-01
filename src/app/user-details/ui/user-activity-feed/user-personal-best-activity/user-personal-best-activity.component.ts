@@ -18,12 +18,6 @@ import { WorkoutExerciseSet } from '../../../../shared/models/Workout';
   ],
 })
 export class UserPersonalBestActivityComponent extends UserActivityComponent {
-  constructor() {
-    super();
-
-    console.log(this.activity);
-  }
-
   getMaxWeight(): number {
     return Math.max(...this.activity?.data.sets.map((set: WorkoutExerciseSet) => set.weight) || [0]);
   }

@@ -32,6 +32,10 @@ export interface User {
   status: UserStatus;
 }
 
+export interface Friend extends User {
+  friend_since: Date;
+}
+
 export interface AuthUser extends User {
   email: string;
   created_at: Date;
@@ -50,6 +54,10 @@ export interface UserResponse {
   status: string;
   gender: string;
   weights: UserWeight[];
+}
+
+export interface FriendResponse extends UserResponse {
+  friend_since: string;
 }
 
 export interface AuthUserResponse extends UserResponse {
@@ -86,6 +94,18 @@ export const transformAuthUser = (user: AuthUserResponse): AuthUser => {
     created_at: new Date(created_at),
     modified_at: new Date(modified_at),
     last_logged_at: new Date(last_logged_at),
+    gender: UserGender[Object.keys(UserGender).find(key => UserGender[key as keyof typeof UserGender] === gender) as keyof typeof UserGender] || UserGender.NotSpecified,
+    status: UserStatus[Object.keys(UserStatus).find(key => UserStatus[key as keyof typeof UserStatus] === status) as keyof typeof UserStatus] || UserStatus.Inactive,
+    ...rest,
+  };
+};
+
+export const transformFriend = (friend: FriendResponse): Friend => {
+  const { birthday, friend_since, status, gender, ...rest } = friend;
+
+  return {
+    birthday: new Date(birthday),
+    friend_since: new Date(friend_since),
     gender: UserGender[Object.keys(UserGender).find(key => UserGender[key as keyof typeof UserGender] === gender) as keyof typeof UserGender] || UserGender.NotSpecified,
     status: UserStatus[Object.keys(UserStatus).find(key => UserStatus[key as keyof typeof UserStatus] === status) as keyof typeof UserStatus] || UserStatus.Inactive,
     ...rest,

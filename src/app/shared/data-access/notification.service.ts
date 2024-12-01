@@ -11,7 +11,7 @@ const NotificationRoutes = {
   Events: `${environment.baseUrl}notifications/events`,
   Id: (id: number) => `${environment.baseUrl}notifications/${id}`,
   MarkAsRead: (id: number) => `${environment.baseUrl}notifications/${id}/mark-as-read`,
-  MarkAllAsRead: `${environment.baseUrl}notifications/mark-all-as-read`,
+  MarkAllAsRead: `${environment.baseUrl}notifications/mark-as-read`,
 } as const;
 
 interface NotificationState {
@@ -80,17 +80,19 @@ export class NotificationService implements OnDestroy {
       });
     });
 
-    this.readAll$.pipe(takeUntilDestroyed()).subscribe(() => {
-      this.markAllNotificationsAsRead().subscribe(() => {
-        this.state.update((state) => ({
-          ...state,
-          notifications: state.notifications.map((notification) => ({
-            ...notification,
-            read: true,
-          })),
-        }));
+    this.readAll$
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => {
+        this.markAllNotificationsAsRead().subscribe(() => {
+          this.state.update((state) => ({
+            ...state,
+            notifications: state.notifications.map((notification) => ({
+              ...notification,
+              read: true,
+            })),
+          }));
+        });
       });
-    });
 
     this.error$
       .pipe(takeUntilDestroyed())

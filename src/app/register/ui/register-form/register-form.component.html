@@ -8,6 +8,11 @@
              formControlName="password" errorText="To pole nie może być puste!">
     <ion-input-password-toggle slot="end"></ion-input-password-toggle>
   </ion-input>
+  <ion-text class="text-sm text-center">
+    Klikając przycisk
+    <ion-text color="primary">Zarejestruj się</ion-text>
+    akceptujesz nasze Warunki Korzystania oraz Politykę Prywatności.
+  </ion-text>
   <ion-button class="w-full" type="submit"
               [disabled]="this.registerForm.invalid || registerStatus() === 'creating'">Zarejestruj się
   </ion-button>

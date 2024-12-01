@@ -1,0 +1,5 @@
+<ng-container *ngIf="achievements">
+  <div class="flex flex-col gap-2">
+    <app-user-achievement *ngFor="let achievement of achievements" [achievement]="achievement"></app-user-achievement>
+  </div>
+</ng-container>

@@ -4,18 +4,26 @@ export interface UserAchievementResponse {
   user_id: number;
   achievement_id: number;
   achievement: Achievement;
-  progress: number;
+  current_value: number;
   achieved_at: string | null;
   started_at: string;
+  achieved: boolean;
+  exercise_id: number | null;
 }
 
 export interface UserAchievement {
   user_id: number;
   achievement_id: number;
   achievement: Achievement;
-  progress: number;
+  current_value: number;
   achieved_at: Date | null;
   started_at: Date;
+  achieved: boolean;
+  exercise_id: number | null;
+}
+
+export interface UserAchievementAchieved extends UserAchievement {
+  experience_history: {}
 }
 
 export const transformUserAchievement = (userAchievement: UserAchievementResponse): UserAchievement => {
