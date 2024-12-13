@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { AuthService } from '../shared/data-access/auth.service';
 import { environment } from '../../environments/environment';
-import { DatePipe, NgIf, NgOptimizedImage } from '@angular/common';
+import { DatePipe, NgOptimizedImage } from '@angular/common';
 import { UserGender } from '../shared/models/User';
 import { FormsModule } from '@angular/forms';
 import {
@@ -28,6 +28,7 @@ import { GenderSettingsComponent } from './gender-settings/gender-settings.compo
 import { DisplayNameSettingsComponent } from './display-name-settings/display-name-settings.component';
 import { TermsOfServiceComponent } from '../terms-of-service/terms-of-service.component';
 import { PrivacyPolicyComponent } from '../privacy-policy/privacy-policy.component';
+import { AddCustomExerciseComponent } from './add-custom-exercise/add-custom-exercise.component';
 
 @Component({
   selector: 'app-settings',
@@ -38,7 +39,6 @@ import { PrivacyPolicyComponent } from '../privacy-policy/privacy-policy.compone
     NgOptimizedImage,
     DatePipe,
     FormsModule,
-    NgIf,
     IonText,
     IonContent,
     IonIcon,
@@ -83,4 +83,6 @@ export class SettingsComponent {
       () => this.modalController.dismiss(),
     );
   }
+
+  protected readonly AddCustomExerciseComponent = AddCustomExerciseComponent;
 }

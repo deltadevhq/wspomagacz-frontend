@@ -13,24 +13,24 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <ion-list lines="full">
-    <ion-item-group class="mb-4">
+  <ion-list class="ion-padding" lines="none">
+    <ion-item-group class="flex gap-2 flex-col mb-4">
       <div class="text-xl font-semibold px-4 mb-4">
         Ćwiczenia
       </div>
       <ion-item-sliding *ngFor="let exercise of standardExercises$ | async">
-        <ion-item (click)="openExerciseDetailsModal(exercise)" button detail="true">
-          <div class="flex gap-1 items-center">
-            <ion-text class="font-medium">
+        <ion-item (click)="openExerciseDetailsModal(exercise)" button detail="true" class="rounded-2xl" color="light">
+          <ion-label class="flex gap-1 items-center">
+            <ion-text class="font-semibold">
               {{ exercise.exercise_name }}
             </ion-text>
             <ion-icon name="checkmark-circle-outline" color="success"
                       *ngIf="isExerciseInWorkout(exercise)" />
-          </div>
+          </ion-label>
         </ion-item>
 
-        <ion-item-options side="start">
-          <ion-item-option (click)="addExercise(exercise)" color="success">
+        <ion-item-options class="pr-2" side="start">
+          <ion-item-option (click)="addExercise(exercise)" class="rounded-2xl" color="success">
             <ion-icon name="add" slot="start"></ion-icon>
             Dodaj
           </ion-item-option>

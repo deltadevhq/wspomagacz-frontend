@@ -5,6 +5,8 @@ import { catchError, EMPTY, filter, retry, Subject } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Exercise, ExerciseType } from '../models/Exercise';
 import { toObservable } from '@angular/core/rxjs-interop';
+import { Muscle } from '../models/Muscle';
+import { Equipment } from '../models/Equipment';
 
 const ExerciseRoutes = {
   Default: `${environment.baseUrl}exercises`,
@@ -14,6 +16,12 @@ const ExerciseRoutes = {
 interface ExerciseState {
   exercises: Exercise[];
   error: string | null;
+}
+
+interface PostExercise {
+  name: string;
+  equipment: Equipment[];
+  muscles: Muscle[];
 }
 
 @Injectable({
@@ -30,7 +38,7 @@ export class ExerciseService {
       delay: () => this.authUser$.pipe(filter((user) => !!user)),
     }),
   );
-  add$ = new Subject<Exercise>();
+  add$ = new Subject<PostExercise>();
   delete$ = new Subject<number>();
   error$ = new Subject<string>();
   logout$ = this.authUser$.pipe(filter((user) => !user));
@@ -105,7 +113,7 @@ export class ExerciseService {
    *
    * @remarks This is used to create a custom exercise tied to the user.
    */
-  postExercise(exercise: Exercise) {
+  postExercise(exercise: PostExercise) {
     return this.http.post<Exercise>(ExerciseRoutes.Default, exercise).pipe(
       catchError((error) => {
         this.error$.next(`Error ${error.status}: ${error.statusText}. ${error.error}.`);

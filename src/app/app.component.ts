@@ -41,6 +41,7 @@ import {
   personRemoveOutline,
   play,
   playCircleOutline,
+  remove,
   repeat,
   ribbon,
   save,
@@ -122,6 +123,7 @@ export class AppComponent {
       trophyOutline,
       personRemoveOutline,
       star,
+      remove
     });
   }
 }

@@ -1,0 +1,103 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="ion-padding-horizontal ion-padding-top">
+    <ion-title>Dodaj ćwiczenie</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="modalController.dismiss()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <div class="flex flex-col gap-4">
+    <div class="text-center">
+      <ion-text color="medium" class="text-sm">
+        Dodaj ćwiczenie, którego nie znalazłeś na przygotowanej przez nas liście.
+      </ion-text>
+
+    </div>
+    <div class="text-center">
+      <ion-text color="primary" class="text-sm">
+        UWAGA: Własne ćwiczenia nie wliczają się do osiągnięć i nie są za nie przyznawane punkty doświadczenia.
+      </ion-text>
+    </div>
+
+    <ion-input fill="outline" labelPlacement="stacked" label="Nazwa"
+               class="rounded-2xl"
+               [formControl]="exerciseName"></ion-input>
+
+    <section class="flex flex-col">
+      <div>
+        <ion-text class="text-2xl font-semibold mb-2">
+          Sprzęt
+        </ion-text>
+      </div>
+      @if (equipment.length > 0) {
+        <ion-list class="ion-padding-vertical" lines="none">
+          <ion-item-group class="flex gap-2 flex-col">
+            <ion-item *ngFor="let eq of equipment; let i = index" class="rounded-2xl" color="light" button detail="true"
+                      detail-icon="remove" (click)="removeEquipment(i)">
+              <ion-label>
+                <ion-text class="font-medium">
+                  {{ eq.name }}
+                </ion-text>
+              </ion-label>
+            </ion-item>
+          </ion-item-group>
+        </ion-list>
+      } @else {
+        <div class="flex items-center justify-center gap-2 ion-padding">
+          <ion-icon class="text-2xl" color="medium" name="alert-circle-outline"></ion-icon>
+          <ion-text class="text-center" color="medium">
+            Brak sprzętu.
+          </ion-text>
+        </div>
+      }
+      <ion-button (click)="addEquipment()" color="success" expand="block">
+        <ion-icon name="add" slot="start"></ion-icon>
+        Dodaj Sprzęt
+      </ion-button>
+    </section>
+
+
+    <section class="flex flex-col">
+      <div>
+        <ion-text class="text-2xl font-semibold">
+          Mięśnie
+        </ion-text>
+      </div>
+      @if (muscles.length > 0) {
+        <ion-list class="ion-padding-vertical" lines="none">
+          <ion-item-group class="flex gap-2 flex-col">
+            <ion-item *ngFor="let muscle of muscles; let i = index" class="rounded-2xl" color="light" button
+                      detail="true" detail-icon="remove" (click)="removeMuscle(i)">
+              <ion-label>
+                <ion-text class="font-medium">
+                  {{ muscle.name }}
+                </ion-text>
+              </ion-label>
+            </ion-item>
+          </ion-item-group>
+        </ion-list>
+      } @else {
+        <div class="flex items-center justify-center gap-2 ion-padding">
+          <ion-icon class="text-2xl" color="medium" name="alert-circle-outline"></ion-icon>
+          <ion-text class="text-center" color="medium">
+            Brak mięśni.
+          </ion-text>
+        </div>
+      }
+      <ion-button (click)="addMuscles()" color="success" expand="block">
+        <ion-icon name="add" slot="start"></ion-icon>
+        Dodaj Mięśnie
+      </ion-button>
+    </section>
+  </div>
+
+
+</ion-content>
+<ion-footer *ngIf="exerciseName.dirty">
+  <ion-button expand="full" color="success" (click)="save()" [disabled]="exerciseName.invalid">
+    Zapisz
+  </ion-button>
+</ion-footer>
