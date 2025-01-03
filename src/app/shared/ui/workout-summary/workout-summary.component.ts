@@ -1,30 +1,10 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, Input } from '@angular/core';
-import {
-  IonButton,
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardTitle,
-  IonCol,
-  IonGrid,
-  IonIcon,
-  IonItem,
-  IonLabel,
-  IonList,
-  IonProgressBar,
-  IonRow,
-  IonText,
-  ModalController,
-} from '@ionic/angular/standalone';
-import { AsyncPipe, NgClass, NgForOf, NgIf, NgSwitch, NgSwitchCase } from '@angular/common';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, Input, OnChanges } from '@angular/core';
+import { IonButton, IonIcon, IonItem, IonLabel, IonList, IonText, ModalController } from '@ionic/angular/standalone';
+import { NgClass, NgForOf, NgIf } from '@angular/common';
 import { EditWorkoutComponent } from '../../../edit-workout/edit-workout.component';
 import { Workout, WorkoutExercise, WorkoutStatus } from '../../models/Workout';
 import { WorkoutService } from '../../data-access/workout.service';
 import { DateService } from '../../date.service';
-import { UserActivityFeedComponent } from '../../../user-details/ui/user-activity-feed/user-activity-feed.component';
-import {
-  EditWorkoutExercisesListComponent,
-} from '../../../edit-workout/ui/edit-workout-exercises-list/edit-workout-exercises-list.component';
 
 @Component({
   standalone: true,
@@ -32,11 +12,14 @@ import {
   templateUrl: './workout-summary.component.html',
   styleUrls: ['./workout-summary.component.scss'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  imports: [NgIf, IonText, IonIcon, IonButton, IonGrid, IonCol, IonRow, IonCard, IonCardHeader, IonCardTitle, IonCardContent, NgSwitchCase, NgSwitch, NgClass, AsyncPipe, IonProgressBar, NgForOf, UserActivityFeedComponent, EditWorkoutExercisesListComponent, IonItem, IonList, IonLabel],
+  imports: [NgIf, IonText, IonIcon, IonButton, NgClass, NgForOf, IonItem, IonList, IonLabel],
 })
-export class WorkoutSummaryComponent {
+export class WorkoutSummaryComponent implements OnChanges {
   @Input() workout?: Workout;
   @Input() date?: Date;
+
+  duration: string = '00:00:00';
+  durationInterval: any;
 
   private modalController = inject(ModalController);
 
@@ -61,14 +44,32 @@ export class WorkoutSummaryComponent {
 
   getDuration() {
     if (!this.workout?.started_at) {
-      return 'Brak';
+      this.duration = '00:00:00';
+      return;
     }
 
-    const startTime = new Date(this.workout.started_at);
-    const duration = this.dateService.getDurationInMinutes(startTime, new Date());
-    const hours = Math.floor(duration / 60);
-    const minutes = duration % 60;
-    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+    const duration = () => {
+      const startTime = new Date(this.workout!.started_at!);
+      const duration = this.dateService.getDurationInSeconds(startTime, new Date());
+      const hours = Math.floor(duration / 3600);
+      const minutes = Math.floor((duration % 3600) / 60);
+      const seconds = duration % 60;
+      this.duration = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    };
+
+    duration();
+
+    this.durationInterval = setInterval(() => {
+      duration();
+    }, 1000);
+  }
+
+  ngOnChanges() {
+    if (this.durationInterval) {
+      clearInterval(this.durationInterval);
+    }
+
+    this.getDuration();
   }
 
   getWeightRange(workoutExercise: WorkoutExercise) {

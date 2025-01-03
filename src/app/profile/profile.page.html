@@ -12,15 +12,6 @@
                     *ngIf="user.id === authService.user()?.id">
           <ion-icon name="settings-outline" slot="icon-only"></ion-icon>
         </ion-button>
-
-        <!--<ng-template #friend>
-          <ion-button color="success" size="large" slot="end">
-            <ion-icon name="person-add-outline" slot="icon-only"></ion-icon>
-          </ion-button>
-          <ion-button color="primary" size="large" slot="end">
-            <ion-icon name="person-remove-outline" slot="icon-only"></ion-icon>
-          </ion-button>
-        </ng-template>-->
       </ng-container>
     }
   </ion-toolbar>
@@ -45,7 +36,8 @@
         </section>
 
         <section class="grid transition-[grid-template-rows] duration-500"
-                 [ngClass]="collapseHeader ? 'grid-rows-[0fr]' : 'grid-rows-[1fr]'">
+                 [ngClass]="collapseHeader ? 'grid-rows-[0fr]' : 'grid-rows-[1fr]'"
+                 *ngIf="user.id === authService.user()?.id">
           <app-level-progress class="flex flex-col gap-1 overflow-hidden" />
         </section>
       </ng-container>
@@ -110,10 +102,6 @@
 
       <swiper-slide class="ion-padding h-full overflow-y-scroll" (scroll)="onContentScroll($event)">
         <app-user-achievements [userId]="user.id" />
-      </swiper-slide>
-
-      <swiper-slide class="ion-padding overflow-y-scroll" (scroll)="onContentScroll($any($event))">
-        Statystyki
       </swiper-slide>
     </ng-container>
   </swiper-container>

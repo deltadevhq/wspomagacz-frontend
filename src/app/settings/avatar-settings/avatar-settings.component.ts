@@ -89,6 +89,6 @@ export class AvatarSettingsComponent {
 
     this.authService.updateAvatar(file).subscribe((() => window.location.reload()));
 
-    await this.modalController.dismiss();
+    await this.modalController.dismiss(null, 'save');
   }
 }

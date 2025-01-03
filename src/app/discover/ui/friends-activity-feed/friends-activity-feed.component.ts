@@ -1,7 +1,6 @@
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { UserActivity } from '../../../shared/models/UserActivity';
 import { UserActivityService } from '../../../shared/data-access/user-activity.service';
-import { RefresherCustomEvent } from '@ionic/angular';
 import {
   InfiniteScrollCustomEvent,
   IonIcon,
@@ -10,6 +9,7 @@ import {
   IonRefresherContent,
   IonSkeletonText,
   IonText,
+  RefresherCustomEvent,
 } from '@ionic/angular/standalone';
 import { NgForOf } from '@angular/common';
 import {

@@ -1,7 +1,6 @@
 import { Component, inject, input, output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IonButton, IonInput, IonInputPasswordToggle, IonToast } from '@ionic/angular/standalone';
-import { NgIf } from '@angular/common';
+import { IonButton, IonInput, IonInputPasswordToggle } from '@ionic/angular/standalone';
 import { LoginStatus } from '../../data-access/login.service';
 import { Credentials } from '../../../shared/data-access/auth.service';
 
@@ -10,7 +9,7 @@ import { Credentials } from '../../../shared/data-access/auth.service';
   selector: 'app-login-form',
   templateUrl: './login-form.component.html',
   styleUrls: ['./login-form.component.scss'],
-  imports: [ReactiveFormsModule, IonInput, IonInputPasswordToggle, IonToast, IonButton, NgIf],
+  imports: [ReactiveFormsModule, IonInput, IonInputPasswordToggle, IonButton],
 })
 export class LoginFormComponent {
   loginStatus = input.required<LoginStatus>();

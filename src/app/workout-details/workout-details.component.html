@@ -8,7 +8,7 @@
       Szczegóły treningu
     </ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="modalController.dismiss()">
+      <ion-button (click)="modalController.dismiss(null, 'cancel')">
         <ion-icon slot="icon-only" name="close"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -26,26 +26,32 @@
         </ion-text>
       </ng-container>
 
-      <ng-container *ngIf="nextLevel && previousLevel">
+      <ng-container *ngIf="levelAfterAchievements && levelBeforeWorkout">
         <section class="flex flex-col gap-1">
           <div class="flex items-center self-stretch font-semibold text-base text-primary">
-            POZIOM {{ nextLevel.level }}
+            POZIOM {{ levelAfterAchievements.level }}
           </div>
-          @if (summary.lvl_before === summary.lvl_after) {
-            <ion-progress-bar [value]="previousLevel.progress"
-                              [buffer]="nextLevel.progress" color="primary"
+          @if (summary.lvl_before === levelAfterAchievements.level) {
+            <ion-progress-bar [value]="levelBeforeWorkout.progress"
+                              [buffer]="levelAfterAchievements.progress" color="primary"
                               class="rounded-full h-3"></ion-progress-bar>
           } @else {
             <ion-progress-bar [value]="0"
-                              [buffer]="nextLevel.progress" color="primary"
+                              [buffer]="levelAfterAchievements.progress" color="primary"
                               class="rounded-full h-3"></ion-progress-bar>
           }
           <div class="flex justify-end items-center gap-2 self-stretch">
             <div class="text-xs">
-              brakuje {{ nextLevel.missing_xp - getTotalExpGranted() }}PD do
+              brakuje
+              @if (summary.lvl_before === levelAfterAchievements.level) {
+                {{ levelAfterAchievements.missing_xp - getExpGranted() }}
+              } @else {
+                {{ levelAfterAchievements.missing_xp }}
+              }
+              PD do
             </div>
             <div class="text-primary text-sm">
-              POZIOMU {{ nextLevel.level + 1 }}
+              POZIOMU {{ levelAfterAchievements.level + 1 }}
             </div>
           </div>
         </section>
@@ -55,22 +61,22 @@
       <div class="flex flex-col gap-2 exp-granted">
         <div class="flex justify-between flex-1">
           <div class="truncate">
-            <ion-text>Trening</ion-text>
+            <ion-text color="primary">Trening</ion-text>
           </div>
-          <ion-text class="font-semibold">+{{ summary.exp_granted }}PD</ion-text>
+          <ion-text color="primary">+{{ summary.exp_granted }}PD</ion-text>
         </div>
         <ng-container *ngFor="let achievement of summary.achievements">
           <div class="flex justify-between flex-1" *ngIf="achievement.achieved">
             <div class="truncate">
-              <ion-text>{{ achievement.achievement.description }}</ion-text>
+              <ion-text color="primary">{{ achievement.achievement.description }}</ion-text>
             </div>
-            <ion-text class="font-semibold">+{{ achievement.achievement.xp }}PD</ion-text>
+            <ion-text color="primary">+{{ achievement.achievement.xp }}PD</ion-text>
           </div>
         </ng-container>
-        <div class="h-[1px] w-full flex bg-[rgba(var(--ion-color-primary-rgb),_0.2)] my-2"></div>
+        <div class="h-[1px] w-full flex bg-[linear-gradient(90deg,transparent,var(--ion-color-primary),transparent)] my-2"></div>
         <div class="flex justify-between flex-1">
-          <ion-text>Łącznie</ion-text>
-          <ion-text class="font-semibold">+{{ getTotalExpGranted() }}PD</ion-text>
+          <ion-text color="primary">Łącznie</ion-text>
+          <ion-text color="primary">+{{ getExpGranted() }}PD</ion-text>
         </div>
       </div>
 
@@ -94,7 +100,7 @@
       </div>
 
       <div class="flex flex-col gap-4">
-        <ion-text class="font-semibold text-2xl">Powiązane Osiągnięcia</ion-text>
+        <ion-text class="font-semibold text-2xl">Osiągnięcia</ion-text>
         <app-user-achievement *ngFor="let achievement of summary.achievements"
                               [achievement]="achievement"></app-user-achievement>
       </div>

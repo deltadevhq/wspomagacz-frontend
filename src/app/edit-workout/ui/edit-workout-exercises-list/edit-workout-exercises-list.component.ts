@@ -1,13 +1,6 @@
 import { Component, inject, Input } from '@angular/core';
 import {
   IonButton,
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardTitle,
-  IonCol,
-  IonContent,
-  IonGrid,
   IonIcon,
   IonItem,
   IonItemOption,
@@ -17,12 +10,11 @@ import {
   IonList,
   IonReorder,
   IonReorderGroup,
-  IonRow,
   IonText,
   ItemReorderEventDetail,
   ModalController,
 } from '@ionic/angular/standalone';
-import { NgForOf, NgIf } from '@angular/common';
+import { NgForOf } from '@angular/common';
 import { WorkoutExercise } from '../../../shared/models/Workout';
 import { EditWorkoutExerciseComponent } from '../edit-workout-exercise/edit-workout-exercise.component';
 import { ExerciseListComponent } from '../../../exercise-list/exercise-list.component';
@@ -36,7 +28,6 @@ import { ExerciseListComponent } from '../../../exercise-list/exercise-list.comp
     IonButton,
     IonIcon,
     IonText,
-    NgIf,
     IonItem,
     IonItemOption,
     IonItemOptions,
@@ -46,14 +37,6 @@ import { ExerciseListComponent } from '../../../exercise-list/exercise-list.comp
     IonReorderGroup,
     NgForOf,
     IonList,
-    IonCard,
-    IonCardHeader,
-    IonCardContent,
-    IonCardTitle,
-    IonCol,
-    IonRow,
-    IonGrid,
-    IonContent,
   ],
 })
 export class EditWorkoutExercisesListComponent {
@@ -131,7 +114,7 @@ export class EditWorkoutExercisesListComponent {
     const { data, role } = await modal.onWillDismiss();
 
     if (role === 'delete') {
-      this.removeWorkoutExercise(data);
+      this.removeWorkoutExercise(data.order);
     } else if (role === 'save') {
       this.workoutExercises[index] = data;
     }

@@ -9,9 +9,6 @@ import {
   IonInput,
   IonItem,
   IonItemGroup,
-  IonItemOption,
-  IonItemOptions,
-  IonItemSliding,
   IonLabel,
   IonList,
   IonText,
@@ -51,9 +48,6 @@ import {
     NgIf,
     ReactiveFormsModule,
     IonItem,
-    IonItemOption,
-    IonItemOptions,
-    IonItemSliding,
     IonLabel,
     IonList,
     NgForOf,
@@ -83,7 +77,7 @@ export class AddCustomExerciseComponent {
       muscles: [],
     });
 
-    await this.modalController.dismiss();
+    await this.modalController.dismiss(null, 'save');
   }
 
   removeEquipment(index: number) {

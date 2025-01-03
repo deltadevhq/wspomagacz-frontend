@@ -52,7 +52,7 @@ export class GenderSettingsComponent {
   async save() {
     this.authService.updateUser({ gender: this.gender.getRawValue()! }).subscribe();
 
-    await this.modalController.dismiss();
+    await this.modalController.dismiss(null, 'save');
   }
 
   protected readonly UserGender = UserGender;

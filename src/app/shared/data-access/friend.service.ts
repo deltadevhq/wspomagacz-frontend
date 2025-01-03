@@ -57,6 +57,7 @@ export class FriendService {
   add$ = new Subject<number>();
   reject$ = new Subject<number>();
   remove$ = new Subject<number>();
+  accept$ = new Subject<number>();
 
   constructor() {
     this.friendRequests$.subscribe(
@@ -76,6 +77,43 @@ export class FriendService {
         }),
       ),
     );
+
+    this.add$.subscribe((userId) => {
+      this.addFriend(userId).subscribe();
+    });
+
+    this.reject$.subscribe((userId) => {
+      this.rejectFriend(userId).subscribe(
+        (friendRequest) => this.state.update(
+          (state) => ({
+            ...state,
+            friendRequests: state.friendRequests.filter((request) => request.sender.id !== userId),
+          }),
+        ),
+      );
+    });
+
+    this.accept$.subscribe((userId) => {
+      this.acceptFriend(userId).subscribe(
+        (friendRequest) => this.state.update(
+          (state) => ({
+            ...state,
+            friendRequests: state.friendRequests.filter((request) => request.sender.id !== userId),
+          }),
+        ),
+      );
+    });
+
+    this.remove$.subscribe((userId) => {
+      this.removeFriend(userId).subscribe(
+        () => this.state.update(
+          (state) => ({
+            ...state,
+            friends: state.friends.filter((friend) => friend.id !== userId),
+          }),
+        ),
+      );
+    });
 
     this.error$.subscribe(
       (error) => this.state.update(

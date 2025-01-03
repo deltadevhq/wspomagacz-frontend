@@ -33,4 +33,8 @@ export class DateService {
   getDurationInMinutes(startTime: Date, date: Date) {
     return Math.floor((date.getTime() - startTime.getTime()) / 60000);
   }
+
+  getDurationInSeconds(startTime: Date, date: Date) {
+    return Math.floor((date.getTime() - startTime.getTime()) / 1000);
+  }
 }

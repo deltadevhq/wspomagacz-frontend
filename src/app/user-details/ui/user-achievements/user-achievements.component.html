@@ -1,5 +1,14 @@
-<ng-container *ngIf="achievements">
+<ng-container *ngIf="achievements.length > 0; else noAchievements">
   <div class="flex flex-col gap-2">
     <app-user-achievement *ngFor="let achievement of achievements" [achievement]="achievement"></app-user-achievement>
   </div>
 </ng-container>
+
+<ng-template #noAchievements>
+  <div class="flex items-center justify-center gap-2 ion-padding">
+    <ion-icon class="text-2xl" color="medium" name="alert-circle-outline"></ion-icon>
+    <ion-text class="text-center" color="medium">
+      Brak osiągnięć.
+    </ion-text>
+  </div>
+</ng-template>

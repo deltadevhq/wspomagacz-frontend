@@ -1,10 +1,11 @@
 <ion-header class="ion-no-border">
   <ion-toolbar class="ion-padding-top">
     <ion-buttons slot="start">
-      <ion-button (click)="modalController.dismiss()" color="dark" shape="round">
+      <ion-button (click)="modalController.dismiss(null, 'cancel')" color="dark" shape="round">
         <ion-icon name="chevron-back" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
+    <ion-title>Szczegóły ćwiczenia</ion-title>
   </ion-toolbar>
 </ion-header>
 <ion-content>
@@ -14,6 +15,19 @@
         <ion-text class="text-3xl font-bold">
           {{ exercise.exercise_name }}
         </ion-text>
+      </section>
+
+      <section>
+        <ion-button color="success" expand="block" (click)="modalController.dismiss(exercise, 'add')">
+          <ion-icon name="add"></ion-icon>
+          Dodaj do planu
+        </ion-button>
+      </section>
+
+      <section>
+        <div>
+          <app-exercise-chart [exerciseId]="exercise.exercise_id"></app-exercise-chart>
+        </div>
       </section>
 
       <section>
@@ -47,25 +61,6 @@
               </ion-label>
             </ion-item>
           </ion-list>
-        </div>
-      </section>
-
-
-      <section>
-        <ion-button color="success" expand="block" (click)="modalController.dismiss(exercise, 'add')">
-          <ion-icon name="add"></ion-icon>
-          Dodaj do planu
-        </ion-button>
-      </section>
-
-      <section>
-        <div>
-          <ion-text class="text-xl font-semibold">
-            Twoje rekordy
-          </ion-text>
-        </div>
-        <div>
-          <canvas #canvas id="canvas">{{ chart }}</canvas>
         </div>
       </section>
     </div>

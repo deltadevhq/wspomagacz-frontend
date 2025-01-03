@@ -23,6 +23,7 @@ import { AuthService } from '../shared/data-access/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../shared/data-access/user.service';
 import { BehaviorSubject } from 'rxjs';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 @Component({
   standalone: true,
@@ -56,7 +57,10 @@ export class UserDetailsComponent implements OnInit {
   user$ = new BehaviorSubject<User | undefined>(undefined);
 
   public authService = inject(AuthService);
+  public authUser$ = toObservable(this.authService.user);
+  
   private userService = inject(UserService);
+  
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
@@ -74,7 +78,7 @@ export class UserDetailsComponent implements OnInit {
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id') || '';
 
-    this.userService.getUserSearchById(id).subscribe((user) => {
+    this.userService.getUserById(Number(id)).subscribe((user) => {
       this.user$.next(user);
     });
   }

@@ -184,7 +184,7 @@ export class WorkoutService {
       return EMPTY;
     }
 
-    if (workout.exercises.some((exercise) => !exercise.exercise.exercise_name.match(/^[a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+(?:\s[a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+)*$/))) {
+    if (workout.exercises.some((exercise) => !exercise.exercise.exercise_name.match(/^[a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ,()]+(?:\s[a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ,()]+)*$/))) {
       this.error$.next('Nazwa ćwiczenia może zawierać tylko litery, cyfry i pojedyńcze spacje!');
       return EMPTY;
     }

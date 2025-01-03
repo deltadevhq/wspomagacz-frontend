@@ -1,9 +1,9 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { AuthService } from './auth.service';
 import { HttpClient } from '@angular/common/http';
-import { catchError, EMPTY, filter, retry, Subject } from 'rxjs';
+import { catchError, EMPTY, filter, Subject, switchMap, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Exercise, ExerciseType } from '../models/Exercise';
+import { Exercise, ExerciseStats, ExerciseType } from '../models/Exercise';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { Muscle } from '../models/Muscle';
 import { Equipment } from '../models/Equipment';
@@ -28,21 +28,15 @@ interface PostExercise {
   providedIn: 'root',
 })
 export class ExerciseService {
-  private authService = inject(AuthService);
-  private authUser$ = toObservable(this.authService.user);
-  private http = inject(HttpClient);
-
   // sources
-  exercises$ = this.getExercises().pipe(
-    retry({
-      delay: () => this.authUser$.pipe(filter((user) => !!user)),
-    }),
-  );
+  exercises$ = new Subject<Exercise>();
   add$ = new Subject<PostExercise>();
   delete$ = new Subject<number>();
   error$ = new Subject<string>();
+  private authService = inject(AuthService);
+  private authUser$ = toObservable(this.authService.user);
   logout$ = this.authUser$.pipe(filter((user) => !user));
-
+  private http = inject(HttpClient);
   // state
   private state = signal<ExerciseState>({
     exercises: [],
@@ -54,13 +48,13 @@ export class ExerciseService {
   error = computed(() => this.state().error);
 
   constructor() {
-    // reducers
-    this.exercises$.subscribe((exercises) =>
+    this.exercises$.subscribe((exercise) => {
       this.state.update((state) => ({
         ...state,
-        exercises,
-      })),
-    );
+        activities: state.exercises.find((e) => e.exercise_id === exercise.exercise_id && e.exercise_type === e.exercise_type) ?
+          state.exercises.map((e) => e.exercise_id === e.exercise_id && e.exercise_type === e.exercise_type ? exercise : e) : [...state.exercises, exercise],
+      }));
+    });
 
     this.add$.subscribe((exercise) => {
       this.postExercise(exercise).subscribe((response) => {
@@ -94,12 +88,25 @@ export class ExerciseService {
 
   /**
    * Sends a GET request to the server to get all exercises.
+   * @param offset
+   * @param limit
+   * @param name
    * @param type - The type of the exercises to get. See {@link ExerciseType}. Defaults to {@link ExerciseType.All}.
    */
-  getExercises(type?: ExerciseType) {
-    let url = `${ExerciseRoutes.Default}?user_id=${this.authService.user()?.id}${type ? `&type=${type}` : ''}`;
+  getExercises(offset?: number, limit?: number, name?: string, type?: ExerciseType) {
+    let url = ExerciseRoutes.Default;
+
+    const params = new URLSearchParams();
+
+    if (offset) params.append('offset', offset.toString());
+    if (limit) params.append('limit', limit.toString());
+    if (name) params.append('name', name);
+    if (type) params.append('type', type);
+
+    url += `?${params.toString()}`;
 
     return this.http.get<Exercise[]>(url).pipe(
+      tap((exercises) => exercises.forEach((exercise) => this.exercises$.next(exercise))),
       catchError((error) => {
         this.error$.next(`Error ${error.status}: ${error.statusText}. ${error.error}.`);
         return EMPTY;
@@ -148,5 +155,21 @@ export class ExerciseService {
         return EMPTY;
       }),
     );
+  }
+
+  /**
+   * Sends a GET request to the server to get the stats of an exercise by its ID.
+   * @param id - The ID of the exercise to get the stats for.
+   */
+  getExerciseStats(id: number) {
+    return this.authUser$.pipe(switchMap(
+      (user) => user ?
+        this.http.get<ExerciseStats>(`${environment.baseUrl}users/${user.id}/exercises/${id}/stats`).pipe(
+          catchError((error) => {
+            this.error$.next(`Error ${error.status}: ${error.statusText}. ${error.error}.`);
+            return EMPTY;
+          }),
+        ) : EMPTY,
+    ));
   }
 }

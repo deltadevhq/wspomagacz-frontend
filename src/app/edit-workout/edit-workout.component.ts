@@ -7,26 +7,20 @@ import {
   IonCardContent,
   IonCardHeader,
   IonCardTitle,
-  IonCol,
   IonContent,
   IonFooter,
-  IonGrid,
   IonHeader,
   IonIcon,
   IonInput,
-  IonRow,
-  IonSpinner,
   IonText,
   IonTextarea,
   IonTitle,
-  IonToast,
   IonToolbar,
   ModalController,
 } from '@ionic/angular/standalone';
 import { transformWorkoutToRequest, Workout, WorkoutRequest } from '../shared/models/Workout';
-import { AsyncPipe, NgClass, NgForOf, NgIf } from '@angular/common';
+import { AsyncPipe, NgClass, NgIf } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CalendarComponent } from '../shared/ui/calendar/calendar.component';
 import { WorkoutService } from '../shared/data-access/workout.service';
 import { BehaviorSubject, map, Subject, switchMap, takeUntil } from 'rxjs';
 import {
@@ -42,10 +36,8 @@ import { DateService } from '../shared/date.service';
   styleUrls: ['./edit-workout.component.scss'],
   imports: [
     NgIf,
-    NgForOf,
     ReactiveFormsModule,
     WorkoutsCalendarComponent,
-    CalendarComponent,
     AsyncPipe,
     NgClass,
     IonHeader,
@@ -64,14 +56,9 @@ import { DateService } from '../shared/date.service';
     IonTextarea,
     IonAlert,
     IonFooter,
-    IonSpinner,
     FormsModule,
     WorkoutsCalendarComponent,
-    IonGrid,
-    IonRow,
-    IonCol,
     EditWorkoutExercisesListComponent,
-    IonToast,
   ],
 })
 export class EditWorkoutComponent implements OnInit, OnDestroy {
@@ -124,7 +111,7 @@ export class EditWorkoutComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((error) => {
         if (error === null) {
-          this.modalController.dismiss();
+          this.modalController.dismiss(null, 'cancel');
         }
       });
 
@@ -207,7 +194,7 @@ export class EditWorkoutComponent implements OnInit, OnDestroy {
 
   deleteAlert(ev: any) {
     if (ev.detail.role === 'delete') {
-      return this.modalController.dismiss();
+      return this.modalController.dismiss(null, 'cancel');
     }
 
     return;

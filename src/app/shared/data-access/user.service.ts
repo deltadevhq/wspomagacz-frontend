@@ -60,10 +60,10 @@ export class UserService {
     );
   }
 
-  getUserSearchById(query: string) {
-    return this.http.get<UserResponse>(`${environment.baseUrl}users/search?id=${query}`).pipe(
-      map(transformUser),
-      tap((user) => this.users$.next(user)),
+  getUsersByUsername(username: string) {
+    return this.http.get<UserResponse[]>(`${environment.baseUrl}users?username=${username}`).pipe(
+      map((users) => users.map(transformUser)),
+      tap((users) => users.forEach((user) => this.users$.next(user))),
       catchError((error) => {
         this.error$.next(error.message);
         return EMPTY;

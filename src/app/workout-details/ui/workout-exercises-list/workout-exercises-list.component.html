@@ -1,5 +1,5 @@
 @if (workoutExercises.length > 0) {
-  <ion-list class="ion-padding-vertical" lines="none">
+  <ion-list class="ion-padding-vertical flex flex-col gap-2" lines="none">
     <ion-item class="rounded-2xl" color="light" button detail="true" (click)="showWorkoutExercise(i)"
               *ngFor="let workoutExercise of workoutExercises; let i = index">
       <ion-label>

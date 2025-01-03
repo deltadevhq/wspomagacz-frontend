@@ -4,11 +4,11 @@
   </ion-text>
 
   <ion-list class="ion-padding-vertical flex flex-col gap-2" lines="none" *ngIf="weightLeaderboard; else noFriends">
-    <ion-item class="rounded-2xl" color="light" *ngFor="let place of weightLeaderboard.slice(0,3)">
+    <ion-item class="rounded-2xl" [color]="place.user.id === authService.user()!.id ? 'primary' : 'light'" *ngFor="let place of weightLeaderboard; let i = index">
       <ion-label>
         <ion-text class="flex gap-2 items-center">
           <ion-text class="text-2xl font-semibold size-12 flex items-center justify-center pr-2">
-            {{ place.rank }}
+            {{ i+1 }}
           </ion-text>
           <div class="flex items-center gap-4 w-full overflow-hidden">
             <ion-avatar class="size-12 min-w-12 cursor-pointer"
@@ -19,43 +19,13 @@
             </ion-avatar>
             <div class="flex flex-col leading-none w-full overflow-hidden">
               <ion-text class="font-semibold text-lg truncate">{{ place.user.display_name }}</ion-text>
-              <ion-text class="text-sm truncate" color="medium">{{ place.user.username }}</ion-text>
+              <ion-text class="text-sm truncate" [color]="place.user.id === authService.user()!.id ? 'light' : 'medium'">{{ place.user.username }}</ion-text>
             </div>
           </div>
           <ion-text class="whitespace-nowrap">{{ place.total_weight_lifted }} KG</ion-text>
         </ion-text>
       </ion-label>
     </ion-item>
-    <div class="flex items-center justify-center my-4">
-      <ion-icon name="ellipsis-horizontal"></ion-icon>
-    </div>
-
-    <ion-item class="rounded-2xl" color="light" *ngIf="userWeightLeaderboardEntry as place">
-      <ion-label>
-        <ion-text class="flex gap-2 items-center">
-          <ion-text class="text-2xl font-semibold size-12 flex items-center justify-center pr-2">
-            {{ place.rank }}
-          </ion-text>
-          <div class="flex items-center gap-4 w-full overflow-hidden">
-            <ion-avatar class="size-12 min-w-12 cursor-pointer"
-                        [routerLink]="['/profile', place.user.id]"
-                        [routerDirection]="'root'">
-              <img alt="" [ngSrc]="environment.baseUrl + 'users/' + place.user.id + '/avatar'" width="128"
-                   height="128">
-            </ion-avatar>
-            <div class="flex flex-col leading-none w-full overflow-hidden">
-              <ion-text class="font-semibold text-lg truncate">{{ place.user.display_name }}</ion-text>
-              <ion-text class="text-sm truncate" color="medium">{{ place.user.username }}</ion-text>
-            </div>
-          </div>
-          <ion-text class="whitespace-nowrap">{{ place.total_weight_lifted }} KG</ion-text>
-        </ion-text>
-      </ion-label>
-    </ion-item>
-    <ion-button fill="clear" expand="block" size="h-8">
-      Pokaż więcej
-      <ion-icon name="chevron-forward" slot="end"></ion-icon>
-    </ion-button>
   </ion-list>
 
   <ion-text class="text-2xl font-semibold px-4">
@@ -63,11 +33,11 @@
   </ion-text>
 
   <ion-list class="ion-padding-vertical flex flex-col gap-2" lines="none" *ngIf="expLeaderboard; else noFriends">
-    <ion-item class="rounded-2xl" color="light" *ngFor="let place of expLeaderboard.slice(0,3)">
+    <ion-item class="rounded-2xl" [color]="place.user.id === authService.user()!.id ? 'primary' : 'light'" *ngFor="let place of expLeaderboard; let i = index">
       <ion-label>
         <ion-text class="flex gap-2 items-center">
           <ion-text class="text-2xl font-semibold size-12 flex items-center justify-center pr-2">
-            {{ place.rank }}
+            {{ i+1 }}
           </ion-text>
           <div class="flex items-center gap-4 w-full overflow-hidden">
             <ion-avatar class="size-12 min-w-12 cursor-pointer"
@@ -78,44 +48,13 @@
             </ion-avatar>
             <div class="flex flex-col leading-none w-full overflow-hidden">
               <ion-text class="font-semibold text-lg truncate">{{ place.user.display_name }}</ion-text>
-              <ion-text class="text-sm truncate" color="medium">{{ place.user.username }}</ion-text>
+              <ion-text class="text-sm truncate" [color]="place.user.id === authService.user()!.id ? 'light' : 'medium'">{{ place.user.username }}</ion-text>
             </div>
           </div>
           <ion-text class="whitespace-nowrap">{{ place.total_exp }} PD</ion-text>
         </ion-text>
       </ion-label>
     </ion-item>
-
-    <div class="flex items-center justify-center my-4">
-      <ion-icon name="ellipsis-horizontal"></ion-icon>
-    </div>
-
-    <ion-item class="rounded-2xl" color="light" *ngIf="userExpLeaderboardEntry as place">
-      <ion-label>
-        <ion-text class="flex gap-2 items-center">
-          <ion-text class="text-2xl font-semibold size-12 flex items-center justify-center pr-2">
-            {{ place.rank }}
-          </ion-text>
-          <div class="flex items-center gap-4 w-full overflow-hidden">
-            <ion-avatar class="size-12 min-w-12 cursor-pointer"
-                        [routerLink]="['/profile', place.user.id]"
-                        [routerDirection]="'root'">
-              <img alt="" [ngSrc]="environment.baseUrl + 'users/' + place.user.id + '/avatar'" width="128"
-                   height="128">
-            </ion-avatar>
-            <div class="flex flex-col leading-none w-full overflow-hidden">
-              <ion-text class="font-semibold text-lg truncate">{{ place.user.display_name }}</ion-text>
-              <ion-text class="text-sm truncate" color="medium">{{ place.user.username }}</ion-text>
-            </div>
-          </div>
-          <ion-text class="whitespace-nowrap">{{ place.total_exp }}PD</ion-text>
-        </ion-text>
-      </ion-label>
-    </ion-item>
-    <ion-button fill="clear" expand="block" size="h-8">
-      Pokaż więcej
-      <ion-icon name="chevron-forward" slot="end"></ion-icon>
-    </ion-button>
   </ion-list>
 
   <ng-template #noFriends>

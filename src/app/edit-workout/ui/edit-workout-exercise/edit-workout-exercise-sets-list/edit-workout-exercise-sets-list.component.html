@@ -4,32 +4,64 @@
       <ion-item-sliding *ngFor="let set of sets; let i = index">
         <ion-item class="rounded-2xl" color="light">
           <ion-label>
-            <ion-text class="flex gap-2 items-center">
-              <ion-text class="text-2xl font-semibold w-32 text-center pr-2">
-                {{ i + 1 }}
-              </ion-text>
-              <ion-input label="Powtórzenia"
-                         labelPlacement="stacked"
-                         [(ngModel)]="set.reps"
-                         [value]="set.reps"
-                         inputmode="numeric"
-                         (ionInput)="filterInput($event, i, 'reps', 1, 1000)"
-                         placeholder="1"
-                         class="-mt-2">
-                <ion-icon name="repeat" slot="start" aria-hidden="true"></ion-icon>
-              </ion-input>
-              <ion-input label="Waga" labelPlacement="stacked"
-                         [(ngModel)]="set.weight"
-                         [value]="set.weight"
-                         inputmode="decimal"
-                         (ionInput)="filterInput($event, i, 'weight', 0, 500)"
-                         placeholder="Brak"
-                         class="-mt-2">
-                <ion-icon name="barbell" slot="start" aria-hidden="true"></ion-icon>
-              </ion-input>
-            </ion-text>
+            <div class="flex flex-col gap-2 p-1">
+              <div class="flex justify-between">
+                <ion-text class="text-2xl font-semibold">Seria {{ i + 1 }}</ion-text>
+                <ion-reorder slot="end"></ion-reorder>
+              </div>
+              <div class="flex gap-2 items-center">
+                <ion-icon name="repeat"></ion-icon>
+                <ion-text>Powtórzenia</ion-text>
+              </div>
+              <div class="flex gap-2 items-center justify-between">
+                <ion-button
+                  class="h-8 min-w-16"
+                  (click)="set.reps = Math.min(Math.max(1, set.reps - 1), 1000)"
+                  color="light" expand="block">
+                  <ion-icon name="remove" slot="icon-only"></ion-icon>
+                </ion-button>
+                <ion-input [(ngModel)]="set.reps"
+                           [value]="set.reps"
+                           inputmode="numeric"
+                           (ionInput)="filterInput($event, i, 'reps', 0, 1000)"
+                           placeholder="1"
+                           class="text-center">
+                </ion-input>
+                <ion-button
+                  class="h-8 min-w-16"
+                  (click)="set.reps = set.reps + 1"
+                  color="light" expand="block">
+                  <ion-icon name="add" slot="icon-only"></ion-icon>
+                </ion-button>
+              </div>
+
+              <div class="flex gap-2 items-center">
+                <ion-icon name="barbell"></ion-icon>
+                <ion-text>Obciążenie</ion-text>
+              </div>
+              <div class="flex gap-2 items-center justify-between">
+                <ion-button
+                  class="h-8 min-w-16"
+                  (click)="set.weight = Math.min(Math.max(0, set.weight - 0.5), 500)"
+                  color="light" expand="block">
+                  <ion-icon name="remove" slot="icon-only"></ion-icon>
+                </ion-button>
+                <ion-input [(ngModel)]="set.weight"
+                           [value]="set.weight"
+                           inputmode="numeric"
+                           (ionInput)="filterInput($event, i, 'weight', 0, 500)"
+                           placeholder="0"
+                           class="text-center">
+                </ion-input>
+                <ion-button
+                  class="h-8 min-w-16"
+                  (click)="set.weight = set.weight + 0.5"
+                  color="light" expand="block">
+                  <ion-icon name="add" slot="icon-only"></ion-icon>
+                </ion-button>
+              </div>
+            </div>
           </ion-label>
-          <ion-reorder slot="end"></ion-reorder>
         </ion-item>
 
         <ion-item-options class="pr-2" side="start">

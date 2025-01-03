@@ -1,7 +1,7 @@
 <ion-header class="ion-no-border">
   <ion-toolbar class="ion-padding-top">
     <ion-buttons slot="start">
-      <ion-button (click)="modalController.dismiss()" color="primary">
+      <ion-button (click)="modalController.dismiss(null, 'cancel')" color="primary">
         Anuluj
       </ion-button>
     </ion-buttons>
@@ -37,14 +37,10 @@
 
   </ion-content>
   <ion-footer class="ion-no-border">
-    <ion-toolbar>
-      <ion-buttons slot="end">
-        <ion-button (click)="modalController.dismiss(workoutExercise, 'save')" color="success">
-          <ion-icon name="save" slot="start"></ion-icon>
-          Zapisz
-        </ion-button>
-      </ion-buttons>
-    </ion-toolbar>
+      <ion-button expand="full" color="success" (click)="modalController.dismiss(workoutExercise, 'save')">
+        <ion-icon name="save" slot="start"></ion-icon>
+        Zapisz
+      </ion-button>
   </ion-footer>
 </ng-container>
 

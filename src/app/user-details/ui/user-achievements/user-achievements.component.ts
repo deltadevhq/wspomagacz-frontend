@@ -1,9 +1,9 @@
 import { Component, inject, input, OnInit } from '@angular/core';
 import { NgForOf, NgIf } from '@angular/common';
-import { IonIcon, IonProgressBar, IonText } from '@ionic/angular/standalone';
 import { AchievementService } from '../../../shared/data-access/achievement.service';
 import { UserAchievement } from '../../../shared/models/UserAchievement';
 import { UserAchievementComponent } from './user-achievement/user-achievement.component';
+import { IonIcon, IonText } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-user-achievements',
@@ -12,11 +12,10 @@ import { UserAchievementComponent } from './user-achievement/user-achievement.co
   standalone: true,
   imports: [
     NgIf,
-    IonIcon,
-    IonProgressBar,
-    IonText,
     NgForOf,
     UserAchievementComponent,
+    IonIcon,
+    IonText,
   ],
 })
 export class UserAchievementsComponent implements OnInit {

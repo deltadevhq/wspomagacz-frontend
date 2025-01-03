@@ -17,3 +17,16 @@ export const ExerciseType = {
 } as const;
 
 export type ExerciseType = typeof ExerciseType[keyof typeof ExerciseType];
+
+export interface ExerciseStats {
+  exercise_id: number;
+  exercise_type: string;
+  user_id: number;
+  data: ExerciseStatsDataEntry[];
+  personal_best: ExerciseStatsDataEntry;
+}
+
+export interface ExerciseStatsDataEntry {
+  date: string;
+  weight: number;
+}

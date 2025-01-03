@@ -58,6 +58,6 @@ export class BirthdaySettingsComponent {
   async save() {
     this.authService.updateUser({ birthday: new Date(this.birthday.getRawValue()!).toLocaleDateString('sv-SE') }).subscribe();
 
-    await this.modalController.dismiss();
+    await this.modalController.dismiss(null, 'cancel');
   }
 }

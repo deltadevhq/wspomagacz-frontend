@@ -36,8 +36,8 @@ import { FormsModule } from '@angular/forms';
     IonReorderGroup,
     IonText,
     NgForOf,
-    IonInput,
     FormsModule,
+    IonInput,
   ],
 })
 export class EditWorkoutExerciseSetsListComponent {
@@ -102,4 +102,6 @@ export class EditWorkoutExerciseSetsListComponent {
       order: this.sets.length,
     });
   }
+
+  protected readonly Math = Math;
 }

@@ -1,8 +1,24 @@
 <section>
   <ion-text class="text-2xl font-semibold px-4">
+    Dodaj znajomego
+  </ion-text>
+
+  <form (ngSubmit)="addFriend()" [formGroup]="addFriendForm"
+        class="flex w-full gap-3 flex-col">
+
+  <ion-input class="input mt-4"
+             fill="outline"
+             formControlName="username"
+             placeholder="Nazwa Użytkownika"
+             type="text"></ion-input>
+
+  <ion-button [disabled]="this.addFriendForm.invalid" class="w-full" type="submit">Dodaj znajomego</ion-button>
+
+  <ion-text class="text-2xl font-semibold px-4">
     Zaproszenia
     <ion-badge>{{ friendRequests ? friendRequests.length : 0 }}</ion-badge>
   </ion-text>
+  </form>
 
   <ion-list
     class="ion-padding-vertical flex flex-col gap-2"
@@ -18,18 +34,21 @@
     </ng-container>
     <ion-item class="friend-request rounded-2xl border border-[var(--ion-color-light-tint)] py-4"
               *ngFor="let request of friendRequests">
-      <div class="flex items-center gap-4 w-full overflow-hidden">
-        <ion-avatar class="w-16 min-w-16 cursor-pointer"
-                    [routerLink]="['/profile', request.sender.id]"
-                    [routerDirection]="'forward'">
-          <img alt="" [ngSrc]="environment.baseUrl + 'users/' + request.sender.id + '/avatar'" width="128"
-               height="128">
-        </ion-avatar>
-        <div class="flex flex-col leading-none w-full overflow-hidden">
-          <ion-text class="font-semibold text-lg truncate">{{ request.sender.display_name }}</ion-text>
-          <ion-text class="text-sm truncate" color="medium">{{ request.sender.username }}</ion-text>
+      <div class="flex items-center flex-wrap gap-4 w-full overflow-hidden">
+        <div class="flex items-center gap-4">
+          <ion-avatar class="w-16 min-w-16 cursor-pointer"
+                      [routerLink]="['/profile', request.sender.id]"
+                      [routerDirection]="'forward'">
+            <img alt="" [ngSrc]="environment.baseUrl + 'users/' + request.sender.id + '/avatar'" width="128"
+                 height="128">
+          </ion-avatar>
+          <div class="flex flex-col leading-none w-full overflow-hidden">
+            <ion-text class="font-semibold text-lg truncate">{{ request.sender.display_name }}</ion-text>
+            <ion-text class="text-sm truncate" color="medium">{{ request.sender.username }}</ion-text>
+          </div>
         </div>
-        <div class="flex">
+
+        <div class="flex justify-between">
           <ion-button expand="block" color="success" size="small">Akceptuj</ion-button>
           <ion-button expand="block" color="light" size="small">Ignoruj</ion-button>
         </div>
@@ -52,13 +71,11 @@
       </div>
     </ng-container>
 
-    <ion-item class="rounded-2xl" color="light" *ngFor="let friend of friends.slice(0,5)" button detail="true">
+    <ion-item class="rounded-2xl" color="light" *ngFor="let friend of friends.slice(0,5)" button detail="true" [routerLink]="['/profile', friend.id]" [routerDirection]="'forward'">
       <ion-label>
         <ion-text class="flex gap-2 items-center">
           <div class="flex items-center gap-4 w-full overflow-hidden">
-            <ion-avatar class="w-12 min-w-12 cursor-pointer"
-                        [routerLink]="['/profile', friend.id]"
-                        [routerDirection]="'forward'">
+            <ion-avatar class="w-12 min-w-12 cursor-pointer">
               <img alt="" [ngSrc]="environment.baseUrl + 'users/' + friend.id + '/avatar'" width="128"
                    height="128">
             </ion-avatar>
@@ -70,9 +87,5 @@
         </ion-text>
       </ion-label>
     </ion-item>
-    <ion-button fill="clear" expand="block" size="h-8">
-      Pokaż więcej
-      <ion-icon name="chevron-forward" slot="end"></ion-icon>
-    </ion-button>
   </ion-list>
 </section>

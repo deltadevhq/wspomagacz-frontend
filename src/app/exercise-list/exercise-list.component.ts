@@ -1,11 +1,14 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { ExerciseService } from '../shared/data-access/exercise.service';
 import {
+  InfiniteScrollCustomEvent,
   IonButton,
   IonButtons,
   IonContent,
+  IonFooter,
   IonHeader,
   IonIcon,
+  IonInfiniteScroll,
   IonItem,
   IonItemGroup,
   IonItemOption,
@@ -14,64 +17,66 @@ import {
   IonLabel,
   IonList,
   IonSearchbar,
+  IonSkeletonText,
   IonText,
   IonTitle,
   IonToolbar,
   ModalController,
 } from '@ionic/angular/standalone';
-import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
+import { NgForOf, NgIf } from '@angular/common';
 import { ExerciseDetailsComponent } from '../exercise-details/exercise-details.component';
 import { WorkoutExercise } from '../shared/models/Workout';
 import { Exercise } from '../shared/models/Exercise';
-import { BehaviorSubject, map, switchMap } from 'rxjs';
-import { toObservable } from '@angular/core/rxjs-interop';
-import {
-  EditWorkoutExercisesListComponent,
-} from '../edit-workout/ui/edit-workout-exercises-list/edit-workout-exercises-list.component';
+import { BehaviorSubject, debounceTime } from 'rxjs';
 
 @Component({
   standalone: true,
   selector: 'app-exercises',
   templateUrl: './exercise-list.component.html',
   styleUrls: ['./exercise-list.component.scss'],
-  imports: [NgForOf, NgIf, IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonTitle, IonSearchbar, IonContent, IonItemGroup, IonList, IonItemSliding, IonItem, IonLabel, IonText, IonItemOptions, IonItemOption, AsyncPipe, EditWorkoutExercisesListComponent],
+  imports: [NgForOf, NgIf, IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonTitle, IonSearchbar, IonContent, IonItemGroup, IonList, IonItemSliding, IonItem, IonLabel, IonText, IonItemOptions, IonItemOption, IonInfiniteScroll, IonSkeletonText, IonFooter],
 })
-export class ExerciseListComponent {
+export class ExerciseListComponent implements OnInit {
   workoutExercises: WorkoutExercise[] = [];
 
   private exerciseService = inject(ExerciseService);
-  exercises$ = toObservable(this.exerciseService.exercises);
 
-  private modalController = inject(ModalController);
+  @ViewChild('infiniteScroll') infiniteScroll?: IonInfiniteScroll;
+
+  exercises: Exercise[] = [];
+
+  modalController = inject(ModalController);
+
+  ngOnInit() {
+    this.exerciseService.getExercises().subscribe((exercises) => {
+      this.exercises = exercises;
+
+      if (this.infiniteScroll && exercises.length === 0) {
+        this.infiniteScroll.disabled = true;
+      }
+    });
+
+    this.searchQuery$.pipe(
+      debounceTime(300),
+    ).subscribe((query) => {
+      this.exerciseService.getExercises(0, 20, query).subscribe((exercises) => {
+        this.exercises = exercises;
+
+        if (this.infiniteScroll) {
+          this.infiniteScroll.disabled = exercises.length === 0;
+        }
+      });
+    });
+  }
 
   private searchQuery$ = new BehaviorSubject<string>('');
 
-  standardExercises$ = this.exercises$.pipe(
-    switchMap((exercises) => {
-      return this.searchQuery$.pipe(
-        map((query) => {
-          return exercises.filter((exercise) => {
-            return exercise.exercise_type === 'standard' && exercise.exercise_name.toLowerCase().includes(query);
-          });
-        }),
-      );
-    }),
-  );
+  getStandardExercises() {
+    return this.exercises.filter((exercise) => exercise.exercise_type === 'standard');
+  }
 
-  customExercises$ = this.exercises$.pipe(
-    switchMap((exercises) => {
-      return this.searchQuery$.pipe(
-        map((query) => {
-          return exercises.filter((exercise) => {
-            return exercise.exercise_type === 'custom' && exercise.exercise_name.toLowerCase().includes(query);
-          });
-        }),
-      );
-    }),
-  );
-
-  cancel() {
-    return this.modalController.dismiss(null, 'cancel');
+  getCustomExercises() {
+    return this.exercises.filter((exercise) => exercise.exercise_type === 'custom');
   }
 
   confirm() {
@@ -125,6 +130,31 @@ export class ExerciseListComponent {
         },
       ],
       order: this.workoutExercises.length,
+    });
+  }
+
+  onIonInfinite(event: InfiniteScrollCustomEvent) {
+    const offset = this.exercises.length + 1;
+
+    this.exerciseService.getExercises(offset, 20, this.searchQuery$.value).subscribe(
+      (exercises) => {
+        console.log(exercises);
+
+        this.exercises = [...this.exercises, ...exercises];
+        event.target.complete();
+
+        if (exercises.length === 0) {
+          event.target.disabled = true;
+        }
+      },
+    );
+  }
+
+  removeWorkoutExercise(index: number) {
+    this.workoutExercises.splice(index, 1);
+
+    this.workoutExercises.forEach((exercise, index) => {
+      exercise.order = index;
     });
   }
 

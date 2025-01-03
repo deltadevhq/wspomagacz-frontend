@@ -67,6 +67,7 @@ export class SettingsComponent {
   protected readonly DisplayNameSettingsComponent = DisplayNameSettingsComponent;
   protected readonly TermsOfServiceComponent = TermsOfServiceComponent;
   protected readonly PrivacyPolicyComponent = PrivacyPolicyComponent;
+  protected readonly AddCustomExerciseComponent = AddCustomExerciseComponent;
 
   async openModal(component: any) {
     const modal = await this.modalController.create({
@@ -80,9 +81,7 @@ export class SettingsComponent {
 
   logout() {
     this.authService.logout().subscribe(
-      () => this.modalController.dismiss(),
+      () => this.modalController.dismiss(null, 'cancel'),
     );
   }
-
-  protected readonly AddCustomExerciseComponent = AddCustomExerciseComponent;
 }

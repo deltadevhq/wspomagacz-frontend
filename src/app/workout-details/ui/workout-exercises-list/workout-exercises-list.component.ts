@@ -1,27 +1,6 @@
 import { Component, inject, Input } from '@angular/core';
-import {
-  IonButton,
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardTitle,
-  IonCol,
-  IonContent,
-  IonGrid,
-  IonIcon,
-  IonItem,
-  IonItemOption,
-  IonItemOptions,
-  IonItemSliding,
-  IonLabel,
-  IonList,
-  IonReorder,
-  IonReorderGroup,
-  IonRow,
-  IonText,
-  ModalController,
-} from '@ionic/angular/standalone';
-import { NgForOf, NgIf } from '@angular/common';
+import { IonIcon, IonItem, IonLabel, IonList, IonReorder, IonText, ModalController } from '@ionic/angular/standalone';
+import { NgForOf } from '@angular/common';
 import { WorkoutExercise } from '../../../shared/models/Workout';
 import { WorkoutExerciseComponent } from '../workout-exercise/workout-exercise.component';
 import { ExerciseListComponent } from '../../../exercise-list/exercise-list.component';
@@ -32,27 +11,13 @@ import { ExerciseListComponent } from '../../../exercise-list/exercise-list.comp
   styleUrls: ['./workout-exercises-list.component.scss'],
   standalone: true,
   imports: [
-    IonButton,
     IonIcon,
     IonText,
-    NgIf,
     IonItem,
-    IonItemOption,
-    IonItemOptions,
-    IonItemSliding,
     IonLabel,
     IonReorder,
-    IonReorderGroup,
     NgForOf,
     IonList,
-    IonCard,
-    IonCardHeader,
-    IonCardContent,
-    IonCardTitle,
-    IonCol,
-    IonRow,
-    IonGrid,
-    IonContent,
   ],
 })
 export class WorkoutExercisesListComponent {

@@ -1,7 +1,7 @@
 <ion-header class="ion-no-border">
   <ion-toolbar class="ion-padding-top">
     <ion-buttons slot="start">
-      <ion-button (click)="modalController.dismiss()" color="primary">
+      <ion-button (click)="modalController.dismiss(null, 'cancel')" color="primary">
         Anuluj
       </ion-button>
     </ion-buttons>
@@ -103,7 +103,7 @@
       </section>
 
       <section>
-        <section *ngIf="(state$ | async)?.canSave">
+        <section *ngIf="(state$ | async)?.canDelete">
           <ion-button color="medium" fill="clear" expand="block" (click)="this.workoutService.stop$.next(workout.id!)">
             <ion-icon name="stop" slot="start"></ion-icon>
             Zatrzymaj trening
@@ -129,15 +129,12 @@
 
   </ion-content>
   <ion-footer class="ion-no-border">
-    <ion-toolbar>
-      <ion-buttons slot="end">
-        <ion-button (click)="this.workoutService.put$.next(this.workout$.value)"
-                    [disabled]="!(state$ | async)?.canSave || workoutName.invalid"
-                    color="success">
-          <ion-icon name="save" slot="start"></ion-icon>
-          Zapisz
-        </ion-button>
-      </ion-buttons>
-    </ion-toolbar>
+    <ion-button (click)="this.workoutService.put$.next(this.workout$.value)"
+                [disabled]="!(state$ | async)?.canSave || workoutName.invalid"
+                expand="full"
+                color="success">
+      <ion-icon name="save" slot="start"></ion-icon>
+      Zapisz
+    </ion-button>
   </ion-footer>
 </ng-container>

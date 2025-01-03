@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { WorkoutSummary } from '../shared/models/Workout';
-import { AsyncPipe, DatePipe, NgForOf, NgIf, NgOptimizedImage } from '@angular/common';
+import { NgForOf, NgIf } from '@angular/common';
 import { WorkoutService } from '../shared/data-access/workout.service';
 import {
   IonBackButton,
@@ -30,12 +30,9 @@ import { animate, style, transition, trigger } from '@angular/animations';
   standalone: true,
   imports: [
     NgIf,
-    AsyncPipe,
     IonProgressBar,
     IonText,
     NgForOf,
-    DatePipe,
-    NgOptimizedImage,
     IonContent,
     IonIcon,
     IonButton,
@@ -60,8 +57,8 @@ export class WorkoutDetailsComponent implements OnInit {
   workoutId?: number;
 
   summary?: WorkoutSummary;
-  nextLevel?: LevelResponse;
-  previousLevel?: LevelResponse;
+  levelAfterAchievements?: LevelResponse;
+  levelBeforeWorkout?: LevelResponse;
 
   private workoutService = inject(WorkoutService);
   private experienceService = inject(ExperienceService);
@@ -77,26 +74,37 @@ export class WorkoutDetailsComponent implements OnInit {
     this.workoutService.getWorkoutSummaryById(this.workoutId).subscribe((summary) => {
       this.summary = summary;
 
-      this.experienceService.getLevelByExperience(this.summary?.exp_after).subscribe((level) => {
-        this.nextLevel = level;
+      this.experienceService.getLevelByExperience(this.getExpAfterAchievements()).subscribe((level) => {
+        this.levelAfterAchievements = level;
       });
 
       this.experienceService.getLevelByExperience(this.summary?.exp_before).subscribe((level) => {
-        this.previousLevel = level;
+        this.levelBeforeWorkout = level;
       });
     });
+
   }
 
-  getTotalExpGranted() {
-    if (!this.summary) {
-      return 0;
-    }
+  getExpGranted() {
+    if (!this.summary) return 0;
+
+    return this.summary.exp_granted + this.getAchievementsExp();
+  }
+
+  getExpAfterAchievements() {
+    if (!this.summary) return 0;
+
+    return this.summary.exp_after + this.getAchievementsExp();
+  }
+
+  getAchievementsExp() {
+    if (!this.summary) return 0;
 
     let achievementsExp = 0;
 
     this.summary.achievements.filter(achievement => achievement.achieved).forEach(achievement => achievementsExp += achievement.achievement.xp);
 
-    return this.summary.exp_granted + achievementsExp;
+    return achievementsExp;
   }
 
   getDuration() {

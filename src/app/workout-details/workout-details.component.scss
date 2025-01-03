@@ -1,0 +1,7 @@
+ion-progress-bar::part(track) {
+  background: linear-gradient(90deg, var(--ion-color-primary), #FDB0B0FF);
+}
+
+ion-progress-bar::part(stream) {
+  background: var(--ion-color-light);
+}

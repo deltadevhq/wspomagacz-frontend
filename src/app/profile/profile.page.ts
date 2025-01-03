@@ -15,22 +15,11 @@ import {
   IonBackButton,
   IonButton,
   IonButtons,
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardSubtitle,
-  IonCardTitle,
   IonContent,
   IonHeader,
   IonIcon,
-  IonItem,
   IonLabel,
-  IonList,
   IonMenuButton,
-  IonMenuToggle,
-  IonProgressBar,
-  IonRippleEffect,
-  IonRouterLinkWithHref,
   IonSegment,
   IonSegmentButton,
   IonSkeletonText,
@@ -41,8 +30,7 @@ import {
 } from '@ionic/angular/standalone';
 import { LevelProgressComponent } from '../shared/ui/level-progress/level-progress.component';
 import { AuthService } from '../shared/data-access/auth.service';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { AvatarLevelProgressComponent } from '../shared/ui/avatar-level-progress/avatar-level-progress.component';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UserActivityFeedComponent } from '../user-details/ui/user-activity-feed/user-activity-feed.component';
 import Swiper from 'swiper';
 import { UserAchievementsComponent } from '../user-details/ui/user-achievements/user-achievements.component';
@@ -57,7 +45,7 @@ import { SettingsComponent } from '../settings/settings.component';
   templateUrl: './profile.page.html',
   styleUrls: ['./profile.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonAvatar, IonRippleEffect, IonItem, IonLabel, LevelProgressComponent, IonText, IonButton, IonIcon, IonButtons, IonBackButton, IonSegment, IonSegmentButton, AvatarLevelProgressComponent, IonList, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonProgressBar, UserActivityFeedComponent, IonSkeletonText, UserAchievementsComponent, IonMenuToggle, IonMenuButton, IonRouterLinkWithHref, RouterLink, NgOptimizedImage],
+  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonAvatar, IonLabel, LevelProgressComponent, IonText, IonButton, IonIcon, IonButtons, IonBackButton, IonSegment, IonSegmentButton, UserActivityFeedComponent, IonSkeletonText, UserAchievementsComponent, IonMenuButton, NgOptimizedImage],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class ProfilePage implements OnInit, AfterViewInit {
@@ -72,7 +60,7 @@ export class ProfilePage implements OnInit, AfterViewInit {
   @ViewChild('profileSwiper') swiperRef: ElementRef | undefined;
   swiper?: Swiper;
 
-  segments = ['feed', 'achievements', 'stats'];
+  segments = ['feed', 'achievements'];
   segment = this.segments[0];
   collapseHeader = false;
 
@@ -88,7 +76,7 @@ export class ProfilePage implements OnInit, AfterViewInit {
     const id = this.route.snapshot.paramMap.get('id');
 
     if (id) {
-      this.userService.getUserSearchById(id).subscribe((user) =>
+      this.userService.getUserById(Number(id)).subscribe((user) =>
         this.user$.next(user),
       );
     } else {
