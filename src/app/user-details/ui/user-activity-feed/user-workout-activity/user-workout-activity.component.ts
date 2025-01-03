@@ -16,4 +16,13 @@ import { NgIf } from '@angular/common';
   ],
 })
 export class UserWorkoutActivityComponent extends UserActivityComponent {
+  getDuration() {
+    if (!this.activity?.data?.started_at || !this.activity?.data?.finished_at) {
+      return '0';
+    }
+
+    const startTime = new Date(this.activity?.data.started_at!);
+    const endTime = new Date(this.activity?.data.finished_at!);
+    return this.dateService.getDurationInMinutes(startTime, endTime);
+  }
 }

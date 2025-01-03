@@ -1,0 +1,48 @@
+<div>
+  <div id="centerLabel" class="w-full text-center">
+    <div class="text-3xl font-semibold">{{ selectedWeight }}<span class="text-base">KG</span></div>
+    <ion-text color="medium">{{ selectedDate }}</ion-text>
+  </div>
+  <div class="w-1/2">
+    <canvas #canvas id="canvas"></canvas>
+  </div>
+  <div>
+    <ion-text color="primary">
+      <div class="flex justify-between items-center">
+        <div class="flex flex-col text-sm">
+          <div>
+            REKORD PERSONALNY
+          </div>
+          <div class="font-semibold">
+            {{ stats.personal_best.date }}
+          </div>
+        </div>
+        <div class="text-3xl font-semibold">{{ stats.personal_best.weight }}<span
+          class="text-base">KG</span></div>
+      </div>
+    </ion-text>
+  </div>
+
+  <section class="mt-4">
+    <ion-text class="text-xl font-semibold">
+      Historia
+    </ion-text>
+    <ion-list lines="none" class="flex gap-2 flex-col">
+      <ion-item *ngFor="let entry of stats.data.reverse()" class="rounded-2xl" color="light">
+        <ion-label>
+          <ion-text class="font-medium">
+            {{ entry.date }}
+          </ion-text>
+          <ion-text class="flex gap-2 text-sm" color="medium">
+            <div class="flex items-center self-stretch gap-1">
+              <ion-icon name="barbell"></ion-icon>
+              {{ entry.weight }} KG
+            </div>
+          </ion-text>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </section>
+</div>
+
+

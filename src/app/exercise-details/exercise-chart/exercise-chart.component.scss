@@ -1,0 +1,13 @@
+div {
+  scroll-snap-type: x mandatory;
+}
+
+canvas {
+  scroll-snap-align: center;
+}
+
+#centerLabel h1,
+#centerLabel p {
+  margin: 0;
+  color: white;
+}
