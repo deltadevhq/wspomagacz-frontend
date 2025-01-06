@@ -101,7 +101,7 @@ export class ExerciseListComponent implements OnInit {
   }
 
   handleInput(event: any) {
-    const query = event.target.value.toLowerCase();
+    const query = event.target.value.toLowerCase().trim();
     this.searchQuery$.next(query);
   }
 
@@ -138,8 +138,6 @@ export class ExerciseListComponent implements OnInit {
 
     this.exerciseService.getExercises(offset, 20, this.searchQuery$.value).subscribe(
       (exercises) => {
-        console.log(exercises);
-
         this.exercises = [...this.exercises, ...exercises];
         event.target.complete();
 

@@ -49,11 +49,12 @@ export class WorkoutSummaryComponent implements OnChanges {
     }
 
     const duration = () => {
-      const startTime = new Date(this.workout!.started_at!);
-      const duration = this.dateService.getDurationInSeconds(startTime, new Date());
-      const hours = Math.floor(duration / 3600);
-      const minutes = Math.floor((duration % 3600) / 60);
-      const seconds = duration % 60;
+      const startTime = new Date(this.workout?.started_at!);
+      const currentDuration = this.dateService.getDurationInSeconds(startTime, new Date());
+
+      const hours = Math.floor(currentDuration / 3600);
+      const minutes = Math.floor((currentDuration % 3600) / 60);
+      const seconds = currentDuration % 60;
       this.duration = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     };
 

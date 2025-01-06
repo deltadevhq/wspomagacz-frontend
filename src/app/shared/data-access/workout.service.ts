@@ -15,6 +15,7 @@ import { environment } from '../../../environments/environment';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { ModalController, ToastController } from '@ionic/angular/standalone';
 import { WorkoutDetailsComponent } from '../../workout-details/workout-details.component';
+import { ExperienceService } from './experience.service';
 
 const WorkoutRoutes = {
   Default: `${environment.baseUrl}workouts`,
@@ -39,6 +40,8 @@ export class WorkoutService {
   private authService = inject(AuthService);
   private authUser$ = toObservable(this.authService.user);
   private http = inject(HttpClient);
+
+  private experienceService = inject(ExperienceService);
 
   // sources
   workouts$ = this.getWorkouts().pipe(
@@ -109,7 +112,7 @@ export class WorkoutService {
       ).subscribe((id) =>
       this.state.update((state) => ({
         ...state,
-        workouts: state.workouts.map((workout) => workout.id === id ? { ...workout, status: 'in_progress' } : workout),
+        workouts: state.workouts.map((workout) => workout.id === id ? { ...workout, status: 'in_progress', started_at: new Date(), finished_at: undefined } : workout),
       })),
     );
 
@@ -120,7 +123,7 @@ export class WorkoutService {
       ).subscribe((id) =>
       this.state.update((state) => ({
         ...state,
-        workouts: state.workouts.map((workout) => workout.id === id ? { ...workout, status: 'planned' } : workout),
+        workouts: state.workouts.map((workout) => workout.id === id ? { ...workout, status: 'planned', started_at: undefined, finished_at: undefined } : workout),
       })),
     );
 
@@ -132,9 +135,18 @@ export class WorkoutService {
       ).subscribe((id) => {
         this.state.update((state) => ({
           ...state,
-          workouts: state.workouts.map((workout) => workout.id === id ? { ...workout, status: 'completed' } : workout),
+          workouts: state.workouts.map((workout) => workout.id === id ? { ...workout, status: 'completed', finished_at: new Date() } : workout),
         }));
-        this.openWorkoutSummaryModal(id);
+        this.openWorkoutSummaryModal(id).then(
+          () => {
+            this.experienceService.getLevelByExperience(this.authService.user()?.exp).subscribe((level) => {
+              this.experienceService.state.update((state) => ({
+                ...state,
+                userLevel: level,
+              }));
+            });
+          }
+        );
       },
     );
 
@@ -409,7 +421,6 @@ export class WorkoutService {
   getWorkoutSummaryById(id: number) {
     return this.http.get<WorkoutSummaryResponse>(WorkoutRoutes.Summary(id)).pipe(
       map(transformWorkoutSummary),
-      tap((summary) => console.log(summary)),
       catchError((err) => {
         switch (err.status) {
           case 400:

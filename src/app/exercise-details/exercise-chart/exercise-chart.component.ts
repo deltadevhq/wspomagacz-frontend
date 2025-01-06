@@ -3,7 +3,7 @@ import { Chart, ChartConfiguration, registerables } from 'chart.js';
 import { ExerciseService } from '../../shared/data-access/exercise.service';
 import { ExerciseStats } from '../../shared/models/Exercise';
 import { IonIcon, IonItem, IonLabel, IonList, IonText } from '@ionic/angular/standalone';
-import { NgForOf } from '@angular/common';
+import { NgForOf, NgIf } from '@angular/common';
 
 @Component({
   standalone: true,
@@ -17,6 +17,7 @@ import { NgForOf } from '@angular/common';
     IonList,
     NgForOf,
     IonIcon,
+    NgIf,
 
   ],
 })
@@ -27,18 +28,13 @@ export class ExerciseChartComponent implements AfterViewInit, OnDestroy {
   @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
 
   private chart!: Chart;
-  selectedDate: string = ''; // Default date
+  selectedDate: string = 'Brak danych'; // Default date
   selectedWeight: number = 0; // Default weight
 
-  stats: ExerciseStats = {
-    exercise_id: 0,
-    exercise_type: '',
-    user_id: 0,
-    data: [],
-    personal_best: {
-      date: '',
-      weight: 0,
-    },
+  stats?: ExerciseStats = {
+    data: [], exercise_id: 0, exercise_type: '', personal_best: {
+      date: '', weight: 0
+    }, user_id: 0
   };
 
   constructor() {
@@ -57,7 +53,14 @@ export class ExerciseChartComponent implements AfterViewInit, OnDestroy {
 
   private initChart(): void {
     this.exerciseService.getExerciseStats(this.exerciseId).subscribe((stats) => {
-      this.stats = stats;
+      if (!stats) {
+        return;
+      }
+
+      this.stats = {
+        ...stats,
+        data: stats.data.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+      };
 
       this.selectedDate = this.stats.data[this.stats.data.length - 1].date;
       this.selectedWeight = this.stats.data[this.stats.data.length - 1].weight;
@@ -73,27 +76,26 @@ export class ExerciseChartComponent implements AfterViewInit, OnDestroy {
       gradient.addColorStop(0.2, '#5DC551');
       gradient.addColorStop(0.8, '#F87171');
 
-
       // Add padding to the range
       const rangePadding = (maxValue - minValue) * 0.4; // 40% padding
 
       const data = {
-        labels: this.stats.data.map((entry) => entry.date),
+        labels: this.stats.data.map((entry) => entry.date).slice(-5),
         datasets: [
           {
-            data: this.stats.data.map((entry) => entry.weight),
+            data: this.stats.data.map((entry) => entry.weight).slice(-5),
             borderColor: gradient,
             backgroundColor: gradient,
             pointBackgroundColor: gradient,
             pointRadius: 4,
             hoverRadius: 6,
-            tension: 0.1,
+            tension: 0.4,
           },
         ],
       };
 
       // Keep track of the last hovered index (default is the last data point)
-      let lastHoveredIndex = this.stats.data.length - 1;
+      let lastHoveredIndex = data.datasets[0].data.length - 1;
 
       const options: ChartConfiguration['options'] = {
         responsive: true,

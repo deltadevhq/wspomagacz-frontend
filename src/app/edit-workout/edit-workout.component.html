@@ -104,13 +104,6 @@
 
       <section>
         <section *ngIf="(state$ | async)?.canDelete">
-          <ion-button color="medium" fill="clear" expand="block" (click)="this.workoutService.stop$.next(workout.id!)">
-            <ion-icon name="stop" slot="start"></ion-icon>
-            Zatrzymaj trening
-          </ion-button>
-        </section>
-
-        <section *ngIf="(state$ | async)?.canDelete">
           <ion-button color="primary" fill="clear" expand="block" id="delete-workout">
             <ion-icon name="trash-bin" slot="start"></ion-icon>
             Usuń trening

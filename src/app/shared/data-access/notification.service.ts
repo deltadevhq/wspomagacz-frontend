@@ -105,7 +105,6 @@ export class NotificationService implements OnDestroy {
       );
 
     this.getNotificationsEvents().subscribe((notification) => {
-      console.log(notification);
       this.state.update((state) => ({
         ...state,
         notifications: [notification, ...state.notifications],
@@ -142,8 +141,6 @@ export class NotificationService implements OnDestroy {
 
       this.eventSource.onmessage = (event) => {
         const notification = JSON.parse(JSON.parse(event.data));
-
-        console.log(notification);
 
         observer.next(transformNotification(notification));
       };

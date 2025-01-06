@@ -1,8 +1,8 @@
 {
   "name": "wspomagacz",
-  "version": "0.0.1",
-  "author": "Ionic Framework",
-  "homepage": "https://ionicframework.com/",
+  "version": "1.0.0",
+  "author": "DELTADEV",
+  "homepage": "",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -69,5 +69,5 @@
     "tailwindcss": "^3.4.10",
     "typescript": "~5.4.0"
   },
-  "description": "An Ionic project"
+  "description": "Aplikacja wieloplatformowa wspomagająca ćwiczenia na siłowni"
 }

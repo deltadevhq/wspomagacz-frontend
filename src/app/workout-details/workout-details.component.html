@@ -17,15 +17,6 @@
 <ion-content class="ion-padding">
   <ng-container *ngIf="summary">
     <div class="flex flex-col gap-6">
-      <ng-container *ngIf="summary.lvl_after > summary.lvl_before">
-        <ion-text class="text-2xl font-semibold" color="primary">
-          OSIĄGNIĘTO {{ summary.lvl_after }} POZIOM!
-        </ion-text>
-        <ion-text>
-
-        </ion-text>
-      </ng-container>
-
       <ng-container *ngIf="levelAfterAchievements && levelBeforeWorkout">
         <section class="flex flex-col gap-1">
           <div class="flex items-center self-stretch font-semibold text-base text-primary">
@@ -42,13 +33,7 @@
           }
           <div class="flex justify-end items-center gap-2 self-stretch">
             <div class="text-xs">
-              brakuje
-              @if (summary.lvl_before === levelAfterAchievements.level) {
-                {{ levelAfterAchievements.missing_xp - getExpGranted() }}
-              } @else {
-                {{ levelAfterAchievements.missing_xp }}
-              }
-              PD do
+              brakuje {{ levelAfterAchievements.missing_xp }} PD do
             </div>
             <div class="text-primary text-sm">
               POZIOMU {{ levelAfterAchievements.level + 1 }}

@@ -94,14 +94,25 @@ export class FriendService {
     });
 
     this.accept$.subscribe((userId) => {
-      this.acceptFriend(userId).subscribe(
-        (friendRequest) => this.state.update(
-          (state) => ({
-            ...state,
-            friendRequests: state.friendRequests.filter((request) => request.sender.id !== userId),
+      this.acceptFriend(userId).subscribe((friendRequest) => {
+        // Update friend requests in the state
+        this.state.update((state) => ({
+          ...state,
+          friendRequests: state.friendRequests.filter((request) => request.sender.id !== userId),
+        }));
+
+        // Add friend to the friends list
+        this.getFriends().pipe(
+          retry({
+            delay: () => this.authUser$.pipe(filter((user) => !!user)),
           }),
-        ),
-      );
+        ).subscribe((friends) => {
+          this.state.update((state) => ({
+            ...state,
+            friends,
+          }));
+        });
+      });
     });
 
     this.remove$.subscribe((userId) => {

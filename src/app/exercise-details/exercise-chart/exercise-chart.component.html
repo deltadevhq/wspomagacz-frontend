@@ -1,4 +1,4 @@
-<div>
+<div *ngIf="stats; else noData">
   <div id="centerLabel" class="w-full text-center">
     <div class="text-3xl font-semibold">{{ selectedWeight }}<span class="text-base">KG</span></div>
     <ion-text color="medium">{{ selectedDate }}</ion-text>
@@ -36,7 +36,7 @@
           <ion-text class="flex gap-2 text-sm" color="medium">
             <div class="flex items-center self-stretch gap-1">
               <ion-icon name="barbell"></ion-icon>
-              {{ entry.weight }} KG
+              {{ entry.weight }}kg
             </div>
           </ion-text>
         </ion-label>
@@ -45,4 +45,12 @@
   </section>
 </div>
 
+<ng-template #noData>
+  <div class="flex items-center justify-center gap-2">
+    <ion-icon class="text-2xl" color="medium" name="alert-circle-outline"></ion-icon>
+    <ion-text class="text-center" color="medium">
+      Brak historii.
+    </ion-text>
+  </div>
+</ng-template>
 

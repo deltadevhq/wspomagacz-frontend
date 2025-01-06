@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { IonIcon, IonProgressBar, IonText } from '@ionic/angular/standalone';
+import { Component } from '@angular/core';
+import { IonIcon, IonText } from '@ionic/angular/standalone';
 import { NgIf, NgTemplateOutlet } from '@angular/common';
 import { UserActivityComponent } from '../user-activity/user-activity.component';
-import { UserAchievementComponent } from '../../user-achievements/user-achievement/user-achievement.component';
 
 @Component({
   selector: 'app-user-achievement-activity',
@@ -14,13 +13,8 @@ import { UserAchievementComponent } from '../../user-achievements/user-achieveme
     IonText,
     NgIf,
     UserActivityComponent,
-    IonProgressBar,
-    UserAchievementComponent,
     NgTemplateOutlet,
   ],
 })
-export class UserAchievementActivityComponent extends UserActivityComponent implements OnInit {
-  ngOnInit() {
-    console.log(this.activity);
-  }
+export class UserAchievementActivityComponent extends UserActivityComponent {
 }

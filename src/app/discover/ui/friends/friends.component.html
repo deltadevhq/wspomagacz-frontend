@@ -49,8 +49,8 @@
         </div>
 
         <div class="flex justify-between">
-          <ion-button expand="block" color="success" size="small">Akceptuj</ion-button>
-          <ion-button expand="block" color="light" size="small">Ignoruj</ion-button>
+          <ion-button expand="block" color="success" size="small" (click)="friendService.accept$.next(request.sender.id)">Akceptuj</ion-button>
+          <ion-button expand="block" color="light" size="small" (click)="friendService.reject$.next(request.sender.id)">Ignoruj</ion-button>
         </div>
       </div>
     </ion-item>
